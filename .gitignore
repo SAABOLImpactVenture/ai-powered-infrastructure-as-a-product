@@ -205,3 +205,133 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# -----------------------------
+# Core Python Ignores
+# -----------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+*.manifest
+*.spec
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+env.old/
+
+# Jupyter / Notebook artifacts
+.ipynb_checkpoints/
+*.ipynb_out/
+
+# Local test runs and temp files
+.local-outbox/
+*.pytest_cache/
+.pytest_cache/
+.tox/
+coverage.xml
+*.cover
+htmlcov/
+.mypy_cache/
+.dmypy.json
+.pyre/
+
+# -----------------------------
+# Terraform & IaC Ignores
+# -----------------------------
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.terraform/
+*.terraform.lock.hcl
+crash.log
+override.tf
+override.tf.json
+terraform.tfplan
+plan.out
+
+# -----------------------------
+# Node / Backstage Templates
+# -----------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp.*
+.pnpm-debug.log*
+
+# -----------------------------
+# Docker
+# -----------------------------
+*.dockerfile.tmp
+*.tar
+*.tar.gz
+docker-compose.override.yml
+.dockerignore
+.cache/
+build/
+dist/
+
+# -----------------------------
+# VSCode / IDE Config
+# -----------------------------
+.vscode/
+.idea/
+*.iml
+*.sublime-workspace
+*.sublime-project
+*.DS_Store
+
+# -----------------------------
+# GitHub / CI Generated Artifacts
+# -----------------------------
+# Actions runner logs, artifacts, etc.
+*.zip
+*.tar.gz
+*.tar
+server.log
+# Local Action caches
+**/actions-runner/_work/
+# Uploads and result bundles
+*.artifact/
+artifacts/
+.github/workflows/__pycache__/
+.github/workflows/*.log
+
+# -----------------------------
+# Repo-specific Folders
+# -----------------------------
+# Prompt-generated files
+ai-powered-infrastructure-as-a-product-main.zip
+ai-powered-infrastructure-as-a-product-main-markdown-prompt.zip
+ai-powered-infrastructure-as-a-product-main-prompt.zip
+# Diagram generation cache
+docs/observability/diagrams/*.pdf
+# Non-source local exports
+export/
+out/
+output/
+results/
+tmp/
+temp/
+logs/
+
+# -----------------------------
+# OS and Misc
+# -----------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+Icon?
+*.lnk
