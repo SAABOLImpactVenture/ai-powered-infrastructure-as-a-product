@@ -1,0 +1,12 @@
+{
+  "id": "adr-ops-aoai-requests-001",
+  "title": "AOAI Request Logging",
+  "status": "accepted",
+  "date": "2025-01-11",
+  "context": "We require minimal AOAI metadata for troubleshooting and cost control.",
+  "decision": "Log operation, model, latency_ms, status, tokens_in, tokens_out, correlation_id.",
+  "consequences": [
+    "Improved troubleshooting",
+    "Token-aware cost and performance insights"
+  ]
+}

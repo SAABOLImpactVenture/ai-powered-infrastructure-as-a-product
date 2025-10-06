@@ -1,0 +1,12 @@
+{
+  "id": "adr-ops-aoai-latency-001",
+  "title": "AOAI Latency Alert Strategy",
+  "status": "accepted",
+  "date": "2025-01-12",
+  "context": "We need visibility into AOAI latency regressions.",
+  "decision": "Alert on AOAI request logs when p95 latency exceeds SLO for 3 consecutive periods.",
+  "consequences": [
+    "Faster feedback on model/routing issues",
+    "Enables correlation with infra evidence"
+  ]
+}

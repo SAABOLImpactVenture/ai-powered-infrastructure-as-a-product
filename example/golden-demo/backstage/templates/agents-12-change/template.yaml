@@ -1,0 +1,35 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: agents-12-change
+  title: Agents 1.2 Change
+  description: Generates a simple change skeleton for the agents 1.2 spec.
+spec:
+  owner: platform-team
+  type: service
+  parameters:
+    - title: Change Info
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          title: Change name
+          description: A short, URL-safe name for the change (e.g., "bump-foo-lib")
+  steps:
+    - id: fetch
+      name: Fetch Skeleton
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: "{{ parameters.name }}"
+    - id: register
+      name: Register Output
+      action: catalog:register
+      input:
+        repoContentsUrl: "{{ steps['fetch'].output.remoteUrl }}"
+  output:
+    links:
+      - title: Generated repository
+        url: "{{ steps['fetch'].output.remoteUrl }}"

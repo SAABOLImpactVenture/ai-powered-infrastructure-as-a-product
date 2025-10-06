@@ -1,0 +1,18 @@
+// List recent infra evidence
+IaapInfraEvidence_CL
+| extend CorrelationId = tostring(extra.correlation_id)
+| project TimeGenerated, kind, status, detail, repo, workflow, run_id=run_id_s, CorrelationId
+| order by TimeGenerated desc
+| take 100
+
+// Failures in last 24h
+IaapInfraEvidence_CL
+| where TimeGenerated > ago(24h)
+| where tostring(status) =~ "failure"
+| summarize count() by kind
+
+// Golden demo success ratio in last 7d
+IaapInfraEvidence_CL
+| where kind == "golden-demo" and TimeGenerated > ago(7d)
+| summarize successes = countif(status == "success"), failures = countif(status != "success")
+| extend success_rate = toreal(successes) / (toreal(successes) + toreal(failures))

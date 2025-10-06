@@ -1,0 +1,20 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": { "json": "## IaaP - Infra Evidence\nThis workbook surfaces recent evidence and failure counts." },
+      "name": "text - title"
+    },
+    {
+      "type": 9,
+      "content": { "version": "KqlItem/1.0", "query": "IaapInfraEvidence_CL | order by TimeGenerated desc | take 200", "size": 1, "timeContext": { "durationMs": 604800000 } },
+      "name": "Recent Evidence"
+    },
+    {
+      "type": 9,
+      "content": { "version": "KqlItem/1.0", "query": "IaapInfraEvidence_CL | where TimeGenerated > ago(24h) | where tostring(status) =~ 'failure' | summarize count() by kind", "size": 1 },
+      "name": "Failures (24h) by Kind"
+    }
+  ]
+}

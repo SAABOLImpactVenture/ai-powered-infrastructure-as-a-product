@@ -1,0 +1,13 @@
+{
+  "id": "adr-infra-evidence-001",
+  "title": "Infra Evidence Contract",
+  "status": "accepted",
+  "date": "2025-01-10",
+  "context": "We need a portable, machine-readable contract for infra evidence.",
+  "decision": "Use JSON with CloudEvents-like fields plus repo/workflow metadata. Route to Log Analytics and support local mode.",
+  "consequences": [
+    "Uniform payloads across pipelines",
+    "Easy adoption for agentic tooling",
+    "Local development without creds"
+  ]
+}
