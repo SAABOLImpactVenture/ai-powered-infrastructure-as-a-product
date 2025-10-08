@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512">
+  <rect width="100%" height="100%" rx="32" ry="32" fill="#111827"/>
+  <circle cx="256" cy="256" r="140" fill="#0ea5e9"/>
+  <text x="50%" y="54%" text-anchor="middle" font-family="Inter, Arial" font-size="120" fill="#ffffff">IαP</text>
+</svg>
