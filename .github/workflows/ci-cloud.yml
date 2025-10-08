@@ -19,3 +19,30 @@ jobs:
           cd platform/modules/kubernetes/gatekeeper_required_labels
           terraform init -input=false
           terraform validate
+      - name: Validate Azure VNet Module
+        run: |
+          cd platform/modules/networking/azure_vnet
+          terraform init -input=false
+          terraform validate
+      - name: Validate Diagnostic Settings Module
+        run: |
+          cd platform/modules/logging/diagnostic_settings_to_la
+          terraform init -input=false
+          terraform validate
+      - name: Validate Entra SP Module
+        run: |
+          cd platform/modules/identity/entra_service_principal
+          terraform init -input=false
+          terraform validate
+
+  opa-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install OPA
+        run: |
+          curl -L -o opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64
+          chmod +x opa
+          ./opa version
+      - name: Run OPA tests
+        run: ./opa test governance/opa -v
