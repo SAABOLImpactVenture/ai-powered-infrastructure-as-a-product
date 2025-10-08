@@ -1,0 +1,19 @@
+name: Marketplace Metadata Validate
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check files
+        run: |
+          test -f .github/marketplace.yml
+          test -f LICENSE-MIT
+          test -f LICENSE-COMMERCIAL.md
+          test -f SUPPORT.md
+          test -f assets/marketplace/banner.svg
+          test -f assets/marketplace/logo.svg
+          echo "Marketplace metadata files are present."
