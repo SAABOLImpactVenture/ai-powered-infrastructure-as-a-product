@@ -1,0 +1,55 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "# AOAI Requests"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "TimeRangeItem/1.0",
+        "parameters": {
+          "timeRange": {
+            "name": "timeRangeParam",
+            "type": "TimeRange",
+            "isRequired": true,
+            "value": {
+              "durationMs": 7200000
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": 7,
+      "content": {
+        "version": "ParameterItem/1.0",
+        "parameters": [
+          {
+            "name": "modelParam",
+            "type": "text",
+            "label": "Model",
+            "value": ""
+          },
+          {
+            "name": "statusParam",
+            "type": "text",
+            "label": "Status",
+            "value": ""
+          }
+        ]
+      }
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AoaiRequests_CL | where (isempty('{modelParam}') or model_s == '{modelParam}') | where (isempty('{statusParam}') or status_s == '{statusParam}') | where TimeGenerated between ( {timeRangeParam:start} .. {timeRangeParam:end} ) | summarize p95_latency=percentile(latency_ms_d,95) by bin(TimeGenerated, 1h) | order by TimeGenerated desc",
+        "size": 1
+      }
+    }
+  ]
+}
