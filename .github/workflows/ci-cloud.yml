@@ -1,0 +1,21 @@
+name: CI Cloud Modules
+on:
+  workflow_dispatch:
+
+jobs:
+  validate-cloud-modules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Terraform
+        run: terraform -version
+      - name: Validate Azure Log Analytics Module
+        run: |
+          cd platform/modules/observability/log_analytics
+          terraform init -input=false
+          terraform validate
+      - name: Validate Gatekeeper Module
+        run: |
+          cd platform/modules/kubernetes/gatekeeper_required_labels
+          terraform init -input=false
+          terraform validate
