@@ -1,0 +1,5 @@
+# Code ownership
+*       @your-org/platform-team
+/scripts @your-org/ai-team
+/platform/modules @your-org/infra-team
+/.github @your-org/devops-team
