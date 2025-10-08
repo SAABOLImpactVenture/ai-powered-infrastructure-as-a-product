@@ -1,0 +1,31 @@
+{
+  "location": "global",
+  "properties": {
+    "displayName": "IaaP Drift Freshness - No Infra Evidence in 30m",
+    "description": "Alert when no infra evidence logs arrive within 30 minutes.",
+    "severity": 2,
+    "enabled": true,
+    "evaluationFrequency": "PT5M",
+    "scopes": [
+      "<REPLACE_WITH_WORKSPACE_RESOURCE_ID>"
+    ],
+    "windowSize": "PT30M",
+    "criteria": {
+      "allOf": [
+        {
+          "query": "let interval=30m; IaapInfraEvidence_CL | where TimeGenerated > ago(interval) | summarize count() | where count_ == 0",
+          "timeAggregation": "Count",
+          "dimensions": [],
+          "operator": "GreaterThan",
+          "threshold": 0,
+          "failingPeriods": {
+            "minFailingPeriodsToAlert": 1,
+            "numberOfEvaluationPeriods": 1
+          }
+        }
+      ]
+    },
+    "autoMitigate": true,
+    "skipQueryValidation": false
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "location": "global",
+  "properties": {
+    "displayName": "IaaP Infra Evidence Failures > 0 (15m)",
+    "description": "Alert when failures appear in Infra Evidence within the last 15 minutes.",
+    "severity": 2,
+    "enabled": true,
+    "evaluationFrequency": "PT5M",
+    "scopes": [
+      "<REPLACE_WITH_WORKSPACE_RESOURCE_ID>"
+    ],
+    "windowSize": "PT15M",
+    "criteria": {
+      "allOf": [
+        {
+          "query": "IaapInfraEvidence_CL | where TimeGenerated > ago(15m) | where status_s == 'failure' | summarize count() | where count_ > 0",
+          "timeAggregation": "Count",
+          "dimensions": [],
+          "operator": "GreaterThan",
+          "threshold": 0,
+          "failingPeriods": {
+            "minFailingPeriodsToAlert": 1,
+            "numberOfEvaluationPeriods": 1
+          }
+        }
+      ]
+    },
+    "autoMitigate": true,
+    "skipQueryValidation": false
+  }
+}
