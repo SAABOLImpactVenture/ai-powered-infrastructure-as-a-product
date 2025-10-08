@@ -1,0 +1,15 @@
+name: CI Bicep Validate
+on:
+  push:
+  pull_request:
+
+jobs:
+  bicep-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/cli@v2
+      - name: Validate compile
+        run: |
+          az bicep version
+          az bicep build --file iac/azure/main.bicep
