@@ -1,0 +1,31 @@
+# Marketplace listing metadata
+name: AI-Powered Infrastructure-as-a-Product
+short_description: Self-contained infra accelerator with Terraform, AI emitters, governance, and dashboards.
+long_description: |
+  The AI-Powered Infrastructure-as-a-Product (IaaP) accelerator delivers a paved path for
+  cloud infrastructure with evidence-first operations, Azure-as-control-plane, and policy enforcement.
+  Offline-first demos run locally; cloud modules and dashboards are included for production use.
+tags:
+  - infrastructure
+  - devops
+  - terraform
+  - azure
+  - observability
+  - governance
+  - ai
+license: proprietary
+pricing:
+  - tier: free
+    description: Offline modules, local emitters, MVP-03 demo; community support.
+    price: 0
+  - tier: professional
+    description: Cloud modules (Log Analytics, Gatekeeper), dashboards, CI-cloud workflow.
+    price: 49
+    currency: USD
+  - tier: enterprise
+    description: Full CI matrix, policy packs, support SLAs, roadmap guidance.
+    price: 199
+    currency: USD
+documentation_url: https://github.com/OWNER/REPO#readme
+support_url: https://github.com/OWNER/REPO/discussions
+release_notes_url: https://github.com/OWNER/REPO/releases
