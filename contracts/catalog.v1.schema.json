@@ -1,1 +1,56 @@
-<placeholder for schema content>
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ProductCatalog",
+  "type": "object",
+  "properties": {
+    "products": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "cloud": {
+            "type": "string",
+            "enum": [
+              "azure",
+              "aws",
+              "gcp",
+              "oci"
+            ]
+          },
+          "version": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "cloud",
+          "version",
+          "path",
+          "owner"
+        ]
+      }
+    }
+  },
+  "required": [
+    "products"
+  ]
+}

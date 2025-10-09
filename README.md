@@ -21,18 +21,18 @@ Most teams ship raw building blocks (VMs, clusters, networks) and stop there. Pr
 
 ## Quickstart
 
-Requires: Python 3.10+, Terraform (optional for demo), Docker (optional for containerized mock server).
+Requires: Python 3.10+, Terraform (optional for demo), Docker (optional for containerized reference server).
 
 ```bash
 # 1) Create & activate a venv
 python -m venv .venv
 . .venv/bin/activate  # Windows: .\.venv\Scripts\activate
 
-# 2) Install demo deps (mock server)
-pip install -r example/golden-demo/mock-server/requirements.txt
+# 2) Install demo deps (reference server)
+pip install -r examples/golden-demo/reference-server/requirements.txt
 
-# 3) Start the mock server (http://127.0.0.1:5000/health)
-python example/golden-demo/mock-server/app.py
+# 3) Start the reference server (http://127.0.0.1:5000/health)
+python examples/golden-demo/reference-server/app.py
 ```
 
 In another terminal:
@@ -41,8 +41,8 @@ In another terminal:
 # 4) Validate local readiness
 python scripts/validate_agents_readiness.py
 
-# 5) Run the mock Terraform change
-cd example/golden-demo/mock-change
+# 5) Run the reference Terraform change
+cd examples/golden-demo/reference-change
 terraform init
 terraform apply -auto-approve
 ```
@@ -59,7 +59,7 @@ Set env vars (if you have a workspace):
 Then:
 
 ```bash
-python scripts/emitters/infra-evidence/emit_evidence_to_log_analytics.py   --kind "validate" --status "success" --detail "Terraform mock change applied"
+python scripts/emitters/infra-evidence/emit_evidence_to_log_analytics.py   --kind "validate" --status "success" --detail "Terraform reference change applied"
 ```
 
 Without env vars, emitters run in **local mode**, printing the payload and writing to `./.local-outbox/`.
@@ -84,13 +84,13 @@ See diagram: ![Evidence Flow](docs/observability/diagrams/evidence-flow.png)
 - `scripts/` – readiness validator and emitters (Python + PowerShell).
 - `docs/observability/` – KQL, alerts, workbook, ADRs, **diagrams**.
 - `workloads/` – ADRs, glossary, reference notes.
-- `example/golden-demo/` – mock server, Backstage template, Terraform change.
+- `examples/golden-demo/` – reference server, Backstage template, Terraform change.
 
 ## Troubleshooting
 
 - **`terraform` not found**: install HashiCorp Terraform and ensure it’s on PATH.
 - **Emitter fails**: missing `requests`? Install via `pip install requests` or rely on local mode.
-- **Ports**: mock server binds to `127.0.0.1:5000`; ensure port is free.
+- **Ports**: reference server binds to `127.0.0.1:5000`; ensure port is free.
 
 ## License
 

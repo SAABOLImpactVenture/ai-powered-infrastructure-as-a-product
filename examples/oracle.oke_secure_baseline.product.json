@@ -1,1 +1,24 @@
-<placeholder for full OKE example>
+{
+  "id": "oracle.oke_secure_baseline.product",
+  "name": "ORACLE OKE_SECURE_BASELINE",
+  "cloud": "oci",
+  "version": "1.0.0",
+  "owner": "platform-team",
+  "description": "Secure baseline product definition generated from validated modules.",
+  "inputs": {
+    "region": "us-east-1",
+    "name": "baseline"
+  },
+  "outputs": {
+    "notes": "Outputs will be emitted from Terraform apply."
+  },
+  "policies": [
+    {
+      "id": "labels",
+      "type": "k8s_gatekeeper",
+      "path": "policies/kubernetes/gatekeeper/constraints/required-labels.yaml",
+      "severity": "high"
+    }
+  ],
+  "evidence": []
+}

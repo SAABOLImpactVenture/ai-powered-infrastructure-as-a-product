@@ -1,6 +1,6 @@
 import json, os, shutil, subprocess, sys, pathlib, pytest
 
-MVP_DIR = pathlib.Path("example/mvps/mvp-03-terraform-null-resource")
+MVP_DIR = pathlib.Path("examples/mvps/mvp-03-terraform-null-resource")
 
 @pytest.mark.skipif(shutil.which("terraform") is None, reason="terraform not installed")
 def test_plan_json_offline_mvp(tmp_path):

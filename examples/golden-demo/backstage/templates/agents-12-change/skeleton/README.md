@@ -1,3 +1,3 @@
 # Baseline Skeleton
 
-This is a minimal skeleton for scaffolding.
+This is a service scaffold with MCP integration for scaffolding.

@@ -1,1 +1,81 @@
-<placeholder for schema content>
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PolicyPack",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z-.]+)?$"
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "k8s",
+          "aws",
+          "gcp",
+          "oci"
+        ]
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "k8s_gatekeeper",
+              "aws_config",
+              "gcp_org_policy",
+              "oci_iam"
+            ]
+          },
+          "location": {
+            "type": "string",
+            "description": "Path to manifest/module in repo"
+          },
+          "parameters": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "location"
+        ]
+      }
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "version",
+    "targets",
+    "rules"
+  ]
+}

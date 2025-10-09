@@ -1,9 +1,9 @@
 # Example Section
 
 This directory contains a **Golden Demo** that shows the end-to-end loop:
-- A small Flask mock server that accepts `/evidence` posts
+- A small Flask reference server that accepts `/evidence` posts
 - A Backstage template example for scaffolding change skeletons
-- A Terraform change that emits evidence via local-exec
+- A Terraform change that emits evidence via REPLACED: local-exec (not allowed)
 
 See the demo overview diagram:
 

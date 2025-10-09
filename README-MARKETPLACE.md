@@ -21,7 +21,7 @@
 - Run the offline MVP and see `.local-outbox/` evidence in minutes.
 
 ## Licensing
-- `/example/**` → MIT (see `LICENSE-MIT`).
+- `/examples/**` → MIT (see `LICENSE-MIT`).
 - Core → Commercial (see `LICENSE-COMMERCIAL.md`).
 
 ## Links

@@ -4,18 +4,18 @@ End-to-end rehearsal to build confidence before touching production.
 
 ## Steps
 
-1. Start the mock server:
+1. Start the reference server:
    ```bash
-   pip install -r mock-server/requirements.txt
-   python mock-server/app.py
+   pip install -r reference-server/requirements.txt
+   python reference-server/app.py
    ```
 2. Validate agents readiness:
    ```bash
    python ../../scripts/validate_agents_readiness.py
    ```
-3. Apply the mock change:
+3. Apply the reference change:
    ```bash
-   cd mock-change
+   cd reference-change
    terraform init && terraform apply -auto-approve
    ```
 4. Emit infra evidence (optional cloud mode if creds exist):

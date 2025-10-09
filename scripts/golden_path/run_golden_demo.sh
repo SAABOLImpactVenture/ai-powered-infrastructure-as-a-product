@@ -17,7 +17,7 @@ else
 fi
 
 echo "==[2/3] Terraform MVP (offline) =="#
-pushd example/mvps/mvp-03-terraform-null-resource >/dev/null
+pushd examples/mvps/mvp-03-terraform-null-resource >/dev/null
 terraform init -input=false
 terraform apply -auto-approve
 popd >/dev/null

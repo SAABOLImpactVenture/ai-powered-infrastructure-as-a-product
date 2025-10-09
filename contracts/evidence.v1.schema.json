@@ -1,1 +1,46 @@
-<placeholder for schema content>
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EvidenceRecord",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "description": "Type of evidence: plan|apply|policy|error"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "OK",
+        "ERROR",
+        "DRIFT",
+        "VIOLATIONS"
+      ]
+    },
+    "detail": {
+      "type": "string"
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "type": "string"
+    },
+    "hash": {
+      "type": "string",
+      "description": "SHA-256 of detail payload (optional)"
+    },
+    "path": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "kind",
+    "status",
+    "ts",
+    "source"
+  ]
+}

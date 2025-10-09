@@ -1,16 +1,14 @@
+
 terraform {
   required_version = ">= 1.4.0"
 }
 
-resource "null_resource" "mock_change" {
-  triggers = {
-    timestamp = timestamp()
-  }
+variable "name" {
+  type = string
+  default = "golden-demo"
+}
 
-  provisioner "local-exec" {
-    command = <<EOT
-      python ../../scripts/emitters/infra-evidence/emit_evidence_to_log_analytics.py         --kind "validate" --status "success" --detail "null_resource applied"
-    EOT
-    interpreter = ["bash", "-c"]
-  }
+# This module creates only in-memory plan output (for demo). No null_resource or local-exec.
+output "demo_plan_message" {
+  value = "Plan for ${var.name} computed successfully."
 }
