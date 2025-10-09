@@ -1,25 +1,26 @@
-
 name: policy-k8s
-on:
-  workflow_dispatch:
-    inputs:
-      kube_context:
-        description: Optional context name
-        required: false
+on: [workflow_dispatch]
+permissions: { contents: read, id-token: write }
+concurrency: ci-${{ github.workflow }}-${{ github.ref }}
+
 jobs:
-  apply:
+  apply-k8s:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v4
-      - name: Write kubeconfig from secret
+      - name: AKS context via OIDC (example)
+        uses: azure/aks-set-context@v4
+        with:
+          creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}"}'
+          resource-group: ${{ secrets.AKS_RG }}
+          cluster-name: ${{ secrets.AKS_NAME }}
+      - name: Apply policies with retry
         run: |
-          echo "${KUBE_CONFIG}" | base64 -d > $HOME/.kube/config
-          [ -n "${{ inputs.kube_context }}" ] && kubectl config use-context "${{ inputs.kube_context }}" || true
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_B64 }}
-      - name: Apply Gatekeeper templates
-        run: kubectl apply -f policies/kubernetes/gatekeeper/templates/
-      - name: Apply Gatekeeper constraints
-        run: kubectl apply -f policies/kubernetes/gatekeeper/constraints/
+          set -e
+          n=0
+          until [ $n -ge 5 ]; do
+            kubectl apply -f k8s/policy && break
+            n=$((n+1)); sleep 5
+          done
+      - name: Wait for admission controllers
+        run: kubectl wait --for=condition=Available -n gatekeeper-system deployment/gatekeeper-controller-manager --timeout=120s

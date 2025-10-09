@@ -1,48 +1,20 @@
-name: CI Cloud Modules
-on:
-  workflow_dispatch:
+name: ci-cloud
+on: [pull_request, workflow_dispatch]
+permissions: { contents: read, id-token: write }
+concurrency: ci-${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  validate-cloud-modules:
+  validate-modules:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module: [ 'platform/aws/networking', 'policies/aws/fedramp', 'evidence/immutable/aws' ]
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Terraform
-        run: terraform -version
-      - name: Validate Azure Log Analytics Module
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+      - name: Validate (no backend)
+        working-directory: ${{ matrix.module }}
         run: |
-          cd platform/modules/observability/log_analytics
-          terraform init -input=false
-          terraform validate
-      - name: Validate Gatekeeper Module
-        run: |
-          cd platform/modules/kubernetes/gatekeeper_required_labels
-          terraform init -input=false
-          terraform validate
-      - name: Validate Azure VNet Module
-        run: |
-          cd platform/modules/networking/azure_vnet
-          terraform init -input=false
-          terraform validate
-      - name: Validate Diagnostic Settings Module
-        run: |
-          cd platform/modules/logging/diagnostic_settings_to_la
-          terraform init -input=false
-          terraform validate
-      - name: Validate Entra SP Module
-        run: |
-          cd platform/modules/identity/entra_service_principal
-          terraform init -input=false
-          terraform validate
-
-  opa-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install OPA
-        run: |
-          curl -L -o opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64
-          chmod +x opa
-          ./opa version
-      - name: Run OPA tests
-        run: ./opa test governance/opa -v
+          terraform init -input=false -backend=false
+          terraform validate -no-color

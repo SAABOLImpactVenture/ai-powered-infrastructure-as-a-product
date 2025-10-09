@@ -1,26 +1,17 @@
-name: Example OIDC to Azure
-on:
-  workflow_dispatch:
-
-permissions:
-  id-token: write
-  contents: read
+name: example-oidc-azure
+on: [pull_request, workflow_dispatch]
+permissions: { contents: read, id-token: write }
+concurrency: ci-${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  plan-log-analytics:
+  validate-log-analytics:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Azure login (OIDC)
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}          # federated credential (App registration)
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Terraform validate (Log Analytics module)
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+      - name: Terraform validate (Log Analytics module, no backend)
+        working-directory: iac/azure/log-analytics
         run: |
-          cd platform/modules/observability/log_analytics
-          terraform init -input=false
+          terraform init -backend=false -input=false
           terraform validate

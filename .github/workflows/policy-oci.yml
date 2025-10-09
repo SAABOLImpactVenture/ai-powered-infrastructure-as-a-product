@@ -1,27 +1,29 @@
-
 name: policy-oci
-on:
-  workflow_dispatch:
-    inputs:
-      compartment_ocid:
-        description: Target compartment OCID
-        required: true
-      policy_name:
-        description: Policy name
-        required: true
-        default: baseline-deny-public
+on: [workflow_dispatch]
+permissions: { contents: read, id-token: write }
+concurrency: ci-${{ github.workflow }}-${{ github.ref }}
+
 jobs:
-  apply:
+  plan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: oracle-actions/setup-oci-cli@v1
       - uses: hashicorp/setup-terraform@v3
-      - name: Terraform apply OCI IAM policies
-        working-directory: policies/oci/iam-policies
-        env:
-          TF_VAR_compartment_ocid: ${{ inputs.compartment_ocid }}
-          TF_VAR_name: ${{ inputs.policy_name }}
-        run: |
-          terraform init -backend=false
-          terraform apply -auto-approve
+        with: { terraform_version: 1.8.6 }
+      - run: terraform init -input=false
+      - run: terraform plan -out=tfplan.bin -input=false -lock=false -detailed-exitcode
+      - uses: actions/upload-artifact@v4
+        with: { name: tfplan, path: tfplan.bin }
+
+  apply:
+    runs-on: ubuntu-latest
+    environment: platform-policy
+    needs: plan
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+      - uses: actions/download-artifact@v4
+        with: { name: tfplan }
+      - run: terraform init -input=false
+      - run: terraform apply -input=false -lock-timeout=10m tfplan.bin

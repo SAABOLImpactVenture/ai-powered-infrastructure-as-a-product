@@ -1,38 +1,29 @@
-
 name: policy-aws
-on:
-  workflow_dispatch:
-    inputs:
-      region:
-        description: AWS region
-        required: true
-        default: us-east-1
-      bucket_name:
-        description: Unique S3 bucket for AWS Config
-        required: true
-      delivery_channel_name:
-        description: Delivery channel name
-        required: true
-        default: default
+on: [workflow_dispatch]
+permissions: { contents: read, id-token: write }
+concurrency: ci-${{ github.workflow }}-${{ github.ref }}
+
 jobs:
-  apply:
+  plan:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
     steps:
       - uses: actions/checkout@v4
-      - uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
-          aws-region: ${{ inputs.region }}
       - uses: hashicorp/setup-terraform@v3
-      - name: Terraform apply AWS policy pack
-        working-directory: policies/aws/config
-        env:
-          TF_VAR_region: ${{ inputs.region }}
-          TF_VAR_bucket_name: ${{ inputs.bucket_name }}
-          TF_VAR_delivery_channel_name: ${{ inputs.delivery_channel_name }}
-        run: |
-          terraform init -backend=false
-          terraform apply -auto-approve
+        with: { terraform_version: 1.8.6 }
+      - run: terraform init -input=false
+      - run: terraform plan -out=tfplan.bin -input=false -lock=false -detailed-exitcode
+      - uses: actions/upload-artifact@v4
+        with: { name: tfplan, path: tfplan.bin }
+
+  apply:
+    runs-on: ubuntu-latest
+    environment: platform-policy
+    needs: plan
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+      - uses: actions/download-artifact@v4
+        with: { name: tfplan }
+      - run: terraform init -input=false
+      - run: terraform apply -input=false -lock-timeout=10m tfplan.bin

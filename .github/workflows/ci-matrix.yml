@@ -1,10 +1,6 @@
 name: ci-matrix
-on:
-  pull_request:
-  workflow_dispatch:
-permissions:
-  contents: read
-  id-token: write
+on: [pull_request, workflow_dispatch]
+permissions: { contents: read, id-token: write, security-events: write }
 concurrency: ci-${{ github.workflow }}-${{ github.ref }}
 
 jobs:
@@ -13,21 +9,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        path:
-          - platform/azure/observability/log_analytics
-          - workloads/iaap/modules/aws/networking
-          - platform/gcp/audit/log_sink
+        path: [ 'workloads/product/sample-aws', 'workloads/product/sample-azure', 'workloads/product/sample-gcp' ]
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
         with: { terraform_version: 1.8.6 }
-      - name: Init & Validate (read-only; no backend)
+      - name: Init & Validate (no backend)
         working-directory: ${{ matrix.path }}
         run: |
           terraform init -input=false -backend=false
-          terraform validate -no-color
+          terraform validate
 
-  iac-policy-gates:
+  iac-gates:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -38,11 +31,16 @@ jobs:
         run: |
           tflint --init
           tflint -f compact
-      - name: Checkov (Terraform/Kubernetes/Helm)
+      - name: Checkov (TF/K8s/Helm) — SARIF
         uses: bridgecrewio/checkov-action@v12
         with:
           directory: .
           soft_fail: false
           framework: terraform,kubernetes,helm
-      - name: Conftest policy gate (OPA)
+          output_format: sarif
+          output_file_path: checkov.sarif
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with: { sarif_file: checkov.sarif }
+      - name: Conftest (OPA)
         run: conftest test --policy policy/ .

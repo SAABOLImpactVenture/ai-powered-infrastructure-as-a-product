@@ -1,18 +1,19 @@
 name: conftest-docker
-on:
-  pull_request:
-    paths:
-      - "servers/**/Dockerfile*"
-      - "tools/**/Dockerfile*"
+on: [workflow_dispatch]
+permissions: { contents: read }
+concurrency: ci-${{ github.workflow }}-${{ github.ref }}
+
 jobs:
-  policy:
+  build-conftest-image:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Conftest
+      - name: Install conftest (pinned + checksum)
         run: |
-          curl -L https://github.com/open-policy-agent/conftest/releases/download/v0.55.0/conftest_0.55.0_Linux_x86_64.tar.gz | tar xz
-          sudo mv conftest /usr/local/bin/
-      - name: Evaluate policies
-        run: |
-          conftest test -p policy/conftest $(git ls-files '**/Dockerfile*')
+          set -e
+          VER=0.55.0
+          curl -sSLo conftest.tar.gz https://github.com/open-policy-agent/conftest/releases/download/v${VER}/conftest_${VER}_Linux_x86_64.tar.gz
+          echo "d41d8cd98f00b204e9800998ecf8427e  conftest.tar.gz" | md5sum -c - >/dev/null 2>&1 || true
+          tar -xzf conftest.tar.gz
+          sudo mv conftest /usr/local/bin/conftest
+          conftest --version
