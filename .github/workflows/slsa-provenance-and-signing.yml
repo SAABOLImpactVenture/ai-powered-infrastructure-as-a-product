@@ -1,0 +1,96 @@
+name: slsa-provenance-and-signing
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+  packages: write
+jobs:
+  build-push-sign:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: mcp-azure,       dockerfile: servers/mcp/azure/Dockerfile.distroless,       context: . }
+          - { name: mcp-policy-azure, dockerfile: servers/mcp-policy/azure/Dockerfile.distroless, context: . }
+          - { name: mcp-aws,         dockerfile: servers/mcp/aws/Dockerfile.distroless,         context: . }
+          - { name: mcp-policy-aws,   dockerfile: servers/mcp-policy/aws/Dockerfile.distroless,   context: . }
+          - { name: mcp-gcp,         dockerfile: servers/mcp/gcp/Dockerfile.distroless,         context: . }
+          - { name: mcp-policy-gcp,   dockerfile: servers/mcp-policy/gcp/Dockerfile.distroless,   context: . }
+          - { name: mcp-oci,         dockerfile: servers/mcp/oci/Dockerfile.distroless,         context: . }
+          - { name: mcp-policy-oci,   dockerfile: servers/mcp-policy/oci/Dockerfile.distroless,   context: . }
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push (multi-arch)
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          push: true
+          tags: ghcr.io/${{ github.repository }}:${{ matrix.name }}-latest
+          platforms: linux/amd64,linux/arm64
+          provenance: false
+
+      - name: Extract pushed digest
+        id: digest
+        run: |
+          echo "digest=$(crane digest ghcr.io/${{ github.repository }}:${{ matrix.name }}-latest)" >> $GITHUB_OUTPUT
+        env:
+          # install crane via gh api (lightweight); fall back to skopeo if needed
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.7.0
+
+      - name: Sign container (keyless OIDC)
+        env:
+          COSIGN_EXPERIMENTAL: "1"
+        run: |
+          cosign sign --yes ghcr.io/${{ github.repository }}@${{ steps.digest.outputs.digest }}
+
+      - name: Verify signature (gate)
+        env:
+          COSIGN_EXPERIMENTAL: "1"
+        run: |
+          cosign verify ghcr.io/${{ github.repository }}@${{ steps.digest.outputs.digest }}
+
+  slsa-provenance:
+    needs: build-push-sign
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: mcp-azure }
+          - { name: mcp-policy-azure }
+          - { name: mcp-aws }
+          - { name: mcp-policy-aws }
+          - { name: mcp-gcp }
+          - { name: mcp-policy-gcp }
+          - { name: mcp-oci }
+          - { name: mcp-policy-oci }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate SLSA provenance (GitHub Generator)
+        uses: slsa-framework/slsa-github-generator/actions/delegator@v2.0.0
+        with:
+          upload-assets: true
+          compile-generator: true

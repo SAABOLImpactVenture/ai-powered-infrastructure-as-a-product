@@ -1,0 +1,32 @@
+name: cosign-verify-gate
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: mcp-azure }
+          - { name: mcp-policy-azure }
+          - { name: mcp-aws }
+          - { name: mcp-policy-aws }
+          - { name: mcp-gcp }
+          - { name: mcp-policy-gcp }
+          - { name: mcp-oci }
+          - { name: mcp-policy-oci }
+    steps:
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.7.0
+      - name: Verify signed image (latest)
+        env:
+          COSIGN_EXPERIMENTAL: "1"
+        run: |
+          set -e
+          IMG="ghcr.io/${{ github.repository }}:${{ matrix.name }}-latest"
+          cosign verify "$IMG"
