@@ -5,7 +5,7 @@ provider "google" {}
 
 variable "org_id" { type=string }
 
-resource "google_org_policy_policy" "restrict_sa_key" {
+resource "google_org_policy_policy" "disable_sa_keys" {
   name   = "organizations/${var.org_id}/policies/iam.disableServiceAccountKeyCreation"
   parent = "organizations/${var.org_id}"
   spec { rules { enforce = true } }

@@ -1,9 +1,8 @@
-# Required checks (Rulesets → Branch protection)
+# Make `ci-security` REQUIRED
 
-Mark as **Required**:
+In **Settings → Rulesets / Branch protection**, mark these as **Required**:
 - `ci-security (iac-policy)`
-- `cosign-verify-gate-pinned`
-- `terraform-validate-and-scan` (or `ci-matrix` equivalents)
-- `e2e-suite` (optional)
+- `validate (terraform-validate)` and `validate (iac-gates)` if present
+- `deploy (policy)` and `deploy (cosign-verify)` for protected environments
 
-Enable PR reviews by code owners and conversation resolution.
+Enable CODEOWNERS reviews for `platform/`, `policies/`, and `policy/**`.

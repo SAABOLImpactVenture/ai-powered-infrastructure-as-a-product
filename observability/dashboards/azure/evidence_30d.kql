@@ -1,0 +1,6 @@
+// Evidence by status and kind (30 days)
+Evidence
+| where timestamp > ago(30d)
+| summarize count() by status, kind
+| order by count_ desc
+| render barchart
