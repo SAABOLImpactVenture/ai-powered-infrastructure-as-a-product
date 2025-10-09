@@ -1,22 +1,15 @@
-
 name: plan-policy-apply
-description: Plan → Policy → (optional) Apply via MCP/Policy endpoints
+description: Secure plan -> policy -> apply with signed requests
 inputs:
-  mcp-url: { required: true, description: "MCP base URL" }
-  policy-url: { required: true, description: "Policy check URL" }
-  path: { required: true, description: "Terraform path" }
-  apply: { required: false, default: "false" }
+  mcp-url: { required: true, type: string }
+  policy-url: { required: true, type: string }
 runs:
   using: "composite"
   steps:
     - shell: bash
       run: |
         set -e
-        echo "Planning ${{ inputs.path }}"
-        curl -sS -X POST "${{ inputs.mcp-url }}/plan" -H 'content-type: application/json' -d "{"path":"${{ inputs.path }}"}" | tee plan.json
-        echo "Policy check"
-        curl -sS -X POST "${{ inputs.policy-url }}" -H 'content-type: application/json' -d "{"path":"${{ inputs.path }}"}" | tee policy.json
-        if [ "${{ inputs.apply }}" = "true" ]; then
-          echo "Apply"
-          curl -sS -X POST "${{ inputs.mcp-url }}/apply" -H 'content-type: application/json' -d "{"path":"${{ inputs.path }}"}" | tee apply.json
-        fi
+        TOKEN="${{ github.token }}"
+        curl -fsS -H "Authorization: Bearer $TOKEN" "${{ inputs.policy-url }}/health"
+        curl -fsS -H "Authorization: Bearer $TOKEN" -X POST "${{ inputs.policy-url }}/evaluate" -d @tfplan.json
+        curl -fsS -H "Authorization: Bearer $TOKEN" -X POST "${{ inputs.mcp-url }}/apply" -d @tfplan.bin
