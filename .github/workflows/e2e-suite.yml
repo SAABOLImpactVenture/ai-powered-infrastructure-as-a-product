@@ -1,0 +1,24 @@
+name: e2e-suite
+on:
+  workflow_dispatch:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install yq
+        run: sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.44.3/yq_linux_amd64 && sudo chmod +x /usr/local/bin/yq
+      - name: Docker Compose (distroless + dashboard)
+        run: docker compose -f docker/docker-compose.distroless.yml -f docker/docker-compose.distroless.dashboard.yml --profile distroless up -d --build
+      - name: Run E2E harness
+        run: |
+          bash tools/e2e/run-e2e.sh
+      - name: Archive evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-evidence
+          path: evidence/**
