@@ -1,0 +1,96 @@
+
+version: "3.9"
+services:
+  mcp-azure:
+    build: ./servers/mcp/azure
+    container_name: mcp-azure
+    environment:
+      - TF_DIR=/work/platform/azure/observability/log_analytics
+    volumes:
+      - ./:/work
+      - evidence:/var/mcp/evidence
+    ports: [ "8080:8080" ]
+  mcp-aws:
+    build: ./servers/mcp/aws
+    container_name: mcp-aws
+    environment:
+      - TF_DIR=/work/platform/aws/networking
+    volumes:
+      - ./:/work
+      - evidence:/var/mcp/evidence
+    ports: [ "8083:8080" ]
+  mcp-gcp:
+    build: ./servers/mcp/gcp
+    container_name: mcp-gcp
+    environment:
+      - TF_DIR=/work/platform/gcp/networking
+    volumes:
+      - ./:/work
+      - evidence:/var/mcp/evidence
+    ports: [ "8084:8080" ]
+  mcp-oci:
+    build: ./servers/mcp/oci
+    container_name: mcp-oci
+    environment:
+      - TF_DIR=/work/platform/oci/networking
+    volumes:
+      - ./:/work
+      - evidence:/var/mcp/evidence
+    ports: [ "8085:8080" ]
+
+  mcp-policy-aws:
+    build: ./servers/mcp-policy/aws
+    container_name: mcp-policy-aws
+    volumes:
+      - ./:/work
+      - evidence:/var/mcp/evidence
+    environment:
+      - POLICY_DIR=/work/policies/aws/config
+    ports: [ "8181:8081" ]
+  mcp-policy-gcp:
+    build: ./servers/mcp-policy/gcp
+    container_name: mcp-policy-gcp
+    volumes:
+      - ./:/work
+      - evidence:/var/mcp/evidence
+    environment:
+      - POLICY_DIR=/work/policies/gcp/org-policy
+    ports: [ "8182:8081" ]
+  mcp-policy-oci:
+    build: ./servers/mcp-policy/oci
+    container_name: mcp-policy-oci
+    volumes:
+      - ./:/work
+      - evidence:/var/mcp/evidence
+    environment:
+      - POLICY_DIR=/work/policies/oci/iam-policies
+    ports: [ "8183:8081" ]
+  mcp-policy-k8s:
+    build: ./servers/mcp-policy/k8s
+    container_name: mcp-policy-k8s
+    # mount kubeconfig if needed: - ~/.kube:/root/.kube
+    volumes:
+      - evidence:/var/mcp/evidence
+    ports: [ "8184:8082" ]
+
+  policy-dashboard:
+    build: ./tools/policy-dashboard
+    container_name: policy-dashboard
+    environment:
+      - TARGETS_JSON=[
+          {"name":"aws","url":"http://mcp-policy-aws:8081/policy/check","method":"POST","body":{}},
+          {"name":"gcp","url":"http://mcp-policy-gcp:8081/policy/check","method":"POST","body":{}},
+          {"name":"oci","url":"http://mcp-policy-oci:8081/policy/check","method":"POST","body":{}},
+          {"name":"k8s","url":"http://mcp-policy-k8s:8082/policy/check","method":"POST","body":{}}
+        ]
+    depends_on:
+      - mcp-policy-aws
+      - mcp-policy-gcp
+      - mcp-policy-oci
+      - mcp-policy-k8s
+    ports: [ "8090:8090" ]
+    volumes:
+      - evidence:/var/mcp/evidence
+
+volumes:
+  evidence: {}
