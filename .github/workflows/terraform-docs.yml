@@ -1,0 +1,26 @@
+name: terraform-docs
+on:
+  pull_request:
+    paths:
+      - "**/*.tf"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency: ci-${{ github.workflow }}-${{ github.ref }}
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install terraform-docs (pinned)
+        run: |
+          set -euo pipefail
+          VER=0.19.0
+          URL="https://github.com/terraform-docs/terraform-docs/releases/download/v${VER}/terraform-docs-v${VER}-linux-amd64.tar.gz"
+          curl -sSLo td.tar.gz "$URL"
+          echo "REPLACE_WITH_REAL_SHA256  td.tar.gz" > sha.txt
+          sha256sum -c sha.txt || { echo "Checksum failed"; exit 1; }
+          tar -xzf td.tar.gz
+          sudo mv terraform-docs /usr/local/bin/terraform-docs
+      - name: Run terraform-docs (dry run)
+        run: terraform-docs --version

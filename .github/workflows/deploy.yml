@@ -1,0 +1,62 @@
+name: deploy
+on:
+  workflow_dispatch:
+    inputs:
+      path:
+        description: Terraform module path
+        required: true
+      environment:
+        description: Environment to deploy (requires approvals)
+        default: prod
+        required: true
+permissions:
+  contents: read
+  id-token: write
+concurrency: deploy-${{ github.ref }}
+
+jobs:
+  prereqs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Ensure cosign verify & SBOM scans are required checks before apply."
+
+  plan:
+    runs-on: ubuntu-latest
+    needs: prereqs
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+      - name: terraform init
+        working-directory: ${{ inputs.path }}
+        run: terraform init -input=false
+      - name: terraform plan
+        working-directory: ${{ inputs.path }}
+        run: terraform plan -out=tfplan.bin -input=false -lock=false -detailed-exitcode || exit_code=$?; echo "exit_code=${exit_code:-0}" >> $GITHUB_OUTPUT
+      - uses: actions/upload-artifact@v4
+        with: { name: tfplan, path: ${{ inputs.path }}/tfplan.bin }
+
+  policy:
+    runs-on: ubuntu-latest
+    needs: plan
+    steps:
+      - uses: actions/checkout@v4
+      - name: Policy gate (Conftest)
+        run: conftest test --policy policy/ .
+
+  apply:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    needs: [plan, policy]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+      - uses: actions/download-artifact@v4
+        with: { name: tfplan, path: ${{ inputs.path }} }
+      - name: terraform init
+        working-directory: ${{ inputs.path }}
+        run: terraform init -input=false
+      - name: terraform apply
+        working-directory: ${{ inputs.path }}
+        run: terraform apply -input=false -lock-timeout=10m tfplan.bin

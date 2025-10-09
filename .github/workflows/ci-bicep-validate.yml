@@ -1,15 +1,26 @@
-name: CI Bicep Validate
+name: ci-bicep-validate
 on:
-  push:
   pull_request:
+    paths:
+      - "iac/azure/**/*.bicep"
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+concurrency: ci-${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  bicep-validate:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ~/.azure
+          key: azcli-${{ runner.os }}-v2
       - uses: azure/cli@v2
-      - name: Validate compile
+      - name: Pin Bicep version & build
         run: |
           az bicep version
-          az bicep build --file iac/azure/main.bicep
+          az bicep upgrade --version 0.31.92
+          find iac/azure -name "*.bicep" -print0 | xargs -0 -I{} az bicep build --file {}

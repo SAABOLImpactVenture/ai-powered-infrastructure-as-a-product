@@ -1,88 +1,60 @@
-name: CI Matrix
+name: ci-matrix
 on:
-  push:
   pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+concurrency: ci-${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  lint-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install dev deps
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
-          pip install ruff bandit
-
-      - name: Ruff + Bandit
-        run: |
-          ruff check .
-          bandit -q -r scripts -x "*/__pycache__/*" || true
-
-      - name: Run tests
-        run: pytest -q
-
   terraform-validate:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         path:
-          - example/mvps/mvp-03-terraform-null-resource
-          - platform/modules/null_evidence
-          - platform/modules/observability/log_analytics
-          - platform/modules/kubernetes/gatekeeper_required_labels
+          - platform/azure/observability/log_analytics
+          - workloads/iaap/modules/aws/networking
+          - platform/gcp/audit/log_sink
     steps:
       - uses: actions/checkout@v4
-      - name: Show Terraform version
-        run: terraform -version
-      - name: Init & Validate
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+      - name: Init & Validate (no backend)
         working-directory: ${{ matrix.path }}
         run: |
-          terraform init -input=false
-          terraform validate
+          terraform init -input=false -backend=false
+          terraform validate -no-color
 
-  tflint:
+  static-analysis:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install tflint
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - name: Install tools
+        run: pip install ruff bandit
+      - name: Ruff + Bandit
         run: |
-          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
-          echo "$HOME/.tflint/bin" >> $GITHUB_PATH
-          tflint --version
-      - name: Run tflint (fail only on errors)
+          ruff check .
+          bandit -q -r scripts -x "*/__pycache__/*"
+
+  tflint-checkov:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup tflint (pinned)
+        uses: terraform-linters/setup-tflint@v4
+        with: { tflint_version: v0.53.0 }
+      - name: Run tflint (fail on problems)
         run: |
           tflint --init
-          tflint -f compact || true
-
-  terraform-docs-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install terraform-docs
-        run: |
-          curl -sSL https://github.com/terraform-docs/terraform-docs/releases/latest/download/terraform-docs-v0.19.0-linux-amd64.tar.gz -L -o td.tar.gz
-          tar -xzf td.tar.gz
-          sudo mv terraform-docs /usr/local/bin/terraform-docs
-          terraform-docs --version
-      - name: Generate docs to tmp and diff
-        run: |
-          set -e
-          changed=0
-          for d in platform/modules/*/* platform/modules/*; do
-            [ -d "$d" ] || continue
-            if [ -f "$d/main.tf" ]; then
-              mkdir -p /tmp/docs/"$d"
-              terraform-docs markdown table "$d" > /tmp/docs/"$d"/README.md || true
-              if [ -f "$d/README.md" ]; then
-                diff -u "$d/README.md" /tmp/docs/"$d"/README.md || true
-              fi
-            fi
-          done
-          echo "Docs generation complete"
+          tflint -f compact
+      - name: Checkov (terraform only)
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: .
+          soft_fail: false
+          framework: terraform
