@@ -1,0 +1,44 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: app-pdb
+  namespace: workloads
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels: { app: app }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  namespace: workloads
+spec:
+  replicas: 2
+  strategy: { type: RollingUpdate, rollingUpdate: { maxSurge: 1, maxUnavailable: 0 } }
+  selector:
+    matchLabels: { app: app }
+  template:
+    metadata:
+      labels: { app: app }
+    spec:
+      securityContext: { runAsNonRoot: true }
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector: { matchExpressions: [ { key: app, operator: In, values: ["app"] } ] }
+              topologyKey: "kubernetes.io/hostname"
+            weight: 100
+      containers:
+      - name: app
+        image: ghcr.io/org/app@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: { drop: ["ALL"] }
+        resources:
+          requests: { cpu: "100m", memory: "256Mi" }
+          limits:   { cpu: "500m", memory: "512Mi" }
+        readinessProbe: { httpGet: { path: /healthz, port: 8080 }, periodSeconds: 5, failureThreshold: 6 }
+        livenessProbe:  { httpGet: { path: /livez,   port: 8080 }, initialDelaySeconds: 30, periodSeconds: 10 }
