@@ -1,0 +1,14 @@
+name: unit-tests
+on:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  node-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npm i node-fetch@3
+      - name: run tests
+        run: node workloads/agents-mcp-aoai/tests/role-summaries.test.mjs
