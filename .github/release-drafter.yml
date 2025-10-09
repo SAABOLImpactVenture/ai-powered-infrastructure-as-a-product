@@ -1,0 +1,26 @@
+{
+  "name-template": "v$RESOLVED_VERSION",
+  "tag-template": "v$RESOLVED_VERSION",
+  "categories": [
+    {
+      "title": "\ud83d\ude80 Features",
+      "labels": [
+        "feature"
+      ]
+    },
+    {
+      "title": "\ud83d\udc1b Fixes",
+      "labels": [
+        "bug"
+      ]
+    },
+    {
+      "title": "\ud83e\uddf0 Maintenance",
+      "labels": [
+        "chore"
+      ]
+    }
+  ],
+  "change-template": "- $TITLE (#$NUMBER)",
+  "template": "## Changes\n$CHANGES"
+}
