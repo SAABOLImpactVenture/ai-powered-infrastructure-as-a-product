@@ -1,0 +1,16 @@
+name: preflight-quotas
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  quotas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: AWS quota reachability
+        run: bash tools/preflight/aws_quota.sh
+      - name: Azure quota reachability
+        run: bash tools/preflight/azure_quota.sh
+      - name: GCP quota reachability
+        run: bash tools/preflight/gcp_quota.sh
