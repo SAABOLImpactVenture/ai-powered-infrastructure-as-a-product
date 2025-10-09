@@ -1,0 +1,75 @@
+version: "3.9"
+
+# This file spins up distroless variants alongside (or instead of) your default services.
+# Use either:
+#   docker compose -f docker/docker-compose.distroless.yml up --build
+# or combine with your base:
+#   docker compose -f docker/docker-compose.yml -f docker/docker-compose.distroless.yml --profile distroless up --build
+
+x-common-env: &common_env
+  TZ: UTC
+
+services:
+  mcp-azure:
+    profiles: ["distroless"]
+    build:
+      context: ../..
+      dockerfile: servers/mcp/azure/Dockerfile.distroless
+    environment: *common_env
+    ports: ["8080:8080"]
+
+  mcp-policy-azure:
+    profiles: ["distroless"]
+    build:
+      context: ../..
+      dockerfile: servers/mcp-policy/azure/Dockerfile.distroless
+    environment: *common_env
+    ports: ["8181:8081"]
+
+  mcp-aws:
+    profiles: ["distroless"]
+    build:
+      context: ../..
+      dockerfile: servers/mcp/aws/Dockerfile.distroless
+    environment: *common_env
+    ports: ["8082:8080"]
+
+  mcp-policy-aws:
+    profiles: ["distroless"]
+    build:
+      context: ../..
+      dockerfile: servers/mcp-policy/aws/Dockerfile.distroless
+    environment: *common_env
+    ports: ["8182:8081"]
+
+  mcp-gcp:
+    profiles: ["distroless"]
+    build:
+      context: ../..
+      dockerfile: servers/mcp/gcp/Dockerfile.distroless
+    environment: *common_env
+    ports: ["8083:8080"]
+
+  mcp-policy-gcp:
+    profiles: ["distroless"]
+    build:
+      context: ../..
+      dockerfile: servers/mcp-policy/gcp/Dockerfile.distroless
+    environment: *common_env
+    ports: ["8183:8081"]
+
+  mcp-oci:
+    profiles: ["distroless"]
+    build:
+      context: ../..
+      dockerfile: servers/mcp/oci/Dockerfile.distroless
+    environment: *common_env
+    ports: ["8084:8080"]
+
+  mcp-policy-oci:
+    profiles: ["distroless"]
+    build:
+      context: ../..
+      dockerfile: servers/mcp-policy/oci/Dockerfile.distroless
+    environment: *common_env
+    ports: ["8184:8081"]
