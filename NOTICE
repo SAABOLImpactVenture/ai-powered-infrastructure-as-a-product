@@ -1,1 +1,4 @@
-This repository includes both MIT-licensed examples and proprietary core assets under COMMERCIAL terms.
+# NOTICE
+
+This repository is licensed under Apache-2.0.
+Third-party components are tracked via SBOM (SPDX) and summarized in OSCAL metadata.
