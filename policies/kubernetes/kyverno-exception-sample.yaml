@@ -1,0 +1,17 @@
+apiVersion: kyverno.io/v2alpha1
+kind: PolicyException
+metadata:
+  name: signed-images-exception-sample
+  namespace: workloads
+  annotations:
+    expires: "2026-01-01T00:00:00Z"
+spec:
+  exceptions:
+  - policyName: require-signed-images
+    ruleNames: ["verify-signature"]
+  match:
+    any:
+    - resources:
+        kinds: ["Pod","Deployment"]
+        namespaces: ["workloads"]
+        names: ["legacy-*"]
