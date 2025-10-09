@@ -1,0 +1,16 @@
+{
+  "component-definition": {
+    "uuid": "6f7e1091-f99a-46c7-b995-cb242290612c",
+    "metadata": {
+      "title": "Third-Party Inventory (SPDX)",
+      "oscal-version": "1.0.4",
+      "props": [
+        {
+          "name": "license",
+          "value": "Apache-2.0"
+        }
+      ]
+    },
+    "components": []
+  }
+}
