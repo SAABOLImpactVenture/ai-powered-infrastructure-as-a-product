@@ -1,0 +1,16 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": {
+          "version": "KqlItem/1.0",
+          "query": "Evidence_CL | summarize count() by kind_s, status_s",
+          "size": 1
+        }
+      },
+      "name": "Evidence Summary"
+    }
+  ]
+}
