@@ -1,0 +1,37 @@
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: agents-12-change
+  title: Multi-Cloud Baseline via MCP
+  description: Plans, checks policy, applies, and emits evidence through MCP.
+spec:
+  owner: platform-team
+  type: service
+  parameters:
+    - title: Baseline Inputs
+      required: [cloud]
+      properties:
+        cloud:
+          type: string
+          enum: [azure, aws, gcp, oci]
+  steps:
+    - id: fetch
+      name: Fetch skeleton
+      action: fetch:template
+      input:
+        url: ./skeleton
+    - id: plan
+      name: MCP Plan
+      action: debug:log
+      input:
+        message: "Invoke MCP server plan for ${{ parameters.cloud }}"
+    - id: done
+      name: Complete
+      action: debug:log
+      input:
+        message: "Scaffolded."
+  output:
+    links:
+      - title: Skeleton
+        url: ./skeleton
