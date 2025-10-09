@@ -1,0 +1,54 @@
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: apply-policy-pack
+  title: Apply Policy Pack
+  description: Applies policy packs for a selected cloud via GitHub Actions.
+spec:
+  owner: platform-team
+  type: service
+  parameters:
+    - title: Select Cloud
+      required: [cloud]
+      properties:
+        cloud:
+          type: string
+          enum: [aws, gcp, oci, k8s]
+        region:
+          type: string
+          default: us-east-1
+        project_id:
+          type: string
+        bucket_name:
+          type: string
+        delivery_channel_name:
+          type: string
+          default: default
+        compartment_ocid:
+          type: string
+        policy_name:
+          type: string
+          default: baseline-deny-public
+        kube_context:
+          type: string
+  steps:
+    - id: trigger
+      name: Trigger Workflow
+      action: github:actions:dispatch
+      input:
+        repoUrl: github.com?owner=${{ parameters.repo_owner || 'YOUR_ORG' }}&repo=${{ parameters.repo_name || 'YOUR_REPO' }}
+        workflowId: ${{ parameters.cloud == 'aws' ? 'policy-aws.yml' : parameters.cloud == 'gcp' ? 'policy-gcp.yml' : parameters.cloud == 'oci' ? 'policy-oci.yml' : 'policy-k8s.yml' }}
+        branchOrTagName: main
+        workflowInputs:
+          region: ${{ parameters.region }}
+          project_id: ${{ parameters.project_id }}
+          bucket_name: ${{ parameters.bucket_name }}
+          delivery_channel_name: ${{ parameters.delivery_channel_name }}
+          compartment_ocid: ${{ parameters.compartment_ocid }}
+          policy_name: ${{ parameters.policy_name }}
+          kube_context: ${{ parameters.kube_context }}
+  output:
+    text:
+      - title: "Triggered"
+        content: "Policy workflow dispatched for ${{ parameters.cloud }}"
