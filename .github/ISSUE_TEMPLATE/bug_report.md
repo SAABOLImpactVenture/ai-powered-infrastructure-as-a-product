@@ -1,21 +1,10 @@
+
 ---
 name: Bug report
 about: Create a report to help us improve
-labels: bug
 ---
-
 **Describe the bug**
-A clear description of the problem.
-
-**To Reproduce**
-Steps and commands:
-
+**Steps to reproduce**
 **Expected behavior**
-
-**Logs / Evidence**
-Attach `.local-outbox/*` or CI logs.
-
+**Evidence/Logs**
 **Environment**
-- OS:
-- Terraform version:
-- Python version:

@@ -1,0 +1,14 @@
+
+name: mermaid-lint
+on: pull_request
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fail on <br> in mermaid
+        run: |
+          if grep -R --line-number '```mermaid' -n README.md | grep -q .; then
+            if grep -R '<br' README.md; then
+              echo "::error ::README contains <br> inside mermaid code blocks"; exit 1; fi
+          fi

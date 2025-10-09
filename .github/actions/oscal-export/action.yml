@@ -1,0 +1,11 @@
+
+name: oscal-export
+description: Convert evidence JSON to OSCAL assessment-results
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        set -e
+        python3 tools/oscal-export/export.py --paths evidence --out artifacts/oscal/assessment-results.json
+        echo "Wrote artifacts/oscal/assessment-results.json"
