@@ -1,0 +1,30 @@
+{
+  "assessment-results": [
+    {
+      "uuid": "00000000-0000-0000-0000-000000000001",
+      "metadata": {
+        "title": "Sample Assessment Results",
+        "version": "1.0.0"
+      },
+      "results": [
+        {
+          "uuid": "00000000-0000-0000-0000-000000000002",
+          "title": "Seeded Evidence",
+          "reviewed-controls": [
+            {
+              "control-id": "AU-6"
+            },
+            {
+              "control-id": "CM-6"
+            }
+          ],
+          "collected-evidence": [
+            {
+              "description": "Seed plan OK"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
