@@ -1,0 +1,13 @@
+
+# syntax=docker/dockerfile:1
+FROM node:20-slim as build
+WORKDIR /srv
+COPY . .
+RUN npm ci --omit=dev || true
+
+FROM gcr.io/distroless/nodejs18-debian12
+WORKDIR /srv
+COPY --from=build /srv /srv
+USER 65532:65532
+EXPOSE 8081
+CMD ["server.js"]
