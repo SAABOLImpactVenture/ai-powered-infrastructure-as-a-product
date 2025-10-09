@@ -1,0 +1,14 @@
+name: preflight-quotas
+on: { workflow_dispatch: {} }
+jobs:
+  quotas:
+    runs-on: ubuntu-latest
+    permissions: { contents: read, id-token: write }
+    steps:
+      - uses: actions/checkout@v4
+      - name: AWS quotas
+        run: bash tools/preflight/aws_quota.sh || { echo 'AWS quota preflight failed'; exit 1; }
+      - name: Azure quotas
+        run: bash tools/preflight/azure_quota.sh || { echo 'Azure quota preflight failed'; exit 1; }
+      - name: GCP quotas
+        run: bash tools/preflight/gcp_quota.sh || { echo 'GCP quota preflight failed'; exit 1; }

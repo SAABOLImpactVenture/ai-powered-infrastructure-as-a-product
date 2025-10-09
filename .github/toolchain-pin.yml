@@ -1,0 +1,21 @@
+name: toolchain-pin
+on:
+  workflow_dispatch:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  pin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-kubectl@v4
+        with: { version: 'v1.30.3' }
+      - uses: azure/setup-helm@v4
+        with: { version: 'v3.15.3' }
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+      - run: |
+          kubectl version --client --output=yaml
+          helm version
+          terraform version
