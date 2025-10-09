@@ -1,0 +1,5 @@
+Control,Capability,Location
+AU-2,CloudTrail/Diag/SCC,policies/*/fedramp
+SI-7,Gatekeeper/AWS Config/Org Policy,policies/**
+SC-13,KMS/CMEK defaults,platform/**
+CM-6,Plan/Policy gates,.github/workflows/**
