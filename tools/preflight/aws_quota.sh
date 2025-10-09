@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
-region="${1:-${AWS_REGION:-us-east-1}}"
-if ! command -v aws >/dev/null; then echo "aws CLI not found; skipping"; exit 0; fi
-echo "Checking AWS EC2 vCPU quotas in $region..."
-aws service-quotas get-service-quota --service-code ec2 --quota-code L-1216C47A --region "$region" >/dev/null && echo "OK: quota API reachable"
+REGION="${AWS_REGION:-us-east-1}"
+echo "Checking AWS quotas in $REGION..."
+aws sts get-caller-identity >/dev/null
+aws service-quotas list-service-quotas --service-code ec2 --max-results 10 --region "$REGION" >/dev/null
+echo "AWS quota probe OK"
