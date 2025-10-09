@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  policy-dashboard:
+    profiles: ["distroless"]
+    build:
+      context: ../..
+      dockerfile: tools/policy-dashboard/proxy/Dockerfile
+    environment:
+      POLICY_AZURE: http://mcp-policy-azure:8081/policy/check
+      POLICY_AWS:   http://mcp-policy-aws:8081/policy/check
+      POLICY_GCP:   http://mcp-policy-gcp:8081/policy/check
+      POLICY_OCI:   http://mcp-policy-oci:8081/policy/check
+    ports:
+      - "8090:8090"
+    depends_on:
+      - mcp-policy-azure
+      - mcp-policy-aws
+      - mcp-policy-gcp
+      - mcp-policy-oci
