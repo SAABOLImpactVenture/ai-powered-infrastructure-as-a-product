@@ -1,0 +1,5 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sDenyHostPID
+metadata: { name: deny-hostpid }
+spec:
+  match: { kinds: [ { apiGroups: [""], kinds: ["Pod"] } ] }

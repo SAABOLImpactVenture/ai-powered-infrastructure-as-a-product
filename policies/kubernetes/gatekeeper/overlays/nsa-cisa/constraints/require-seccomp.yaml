@@ -1,0 +1,7 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sSeccomp
+metadata: { name: require-seccomp }
+spec:
+  match: { kinds: [ { apiGroups: [""], kinds: ["Pod"] } ] }
+  parameters:
+    allowedProfiles: ["RuntimeDefault"]

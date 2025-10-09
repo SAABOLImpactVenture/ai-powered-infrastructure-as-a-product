@@ -1,0 +1,11 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sAllowedRegistries
+metadata: { name: allowed-registries }
+spec:
+  match: { kinds: [ { apiGroups: [""], kinds: ["Pod"] } ] }
+  parameters:
+    prefixes:
+      - "mcr.microsoft.com/"
+      - "ghcr.io/"
+      - "public.ecr.aws/"
+      - "gcr.io/"

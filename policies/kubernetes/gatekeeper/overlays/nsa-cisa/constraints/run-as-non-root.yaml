@@ -1,0 +1,5 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sDropRoot
+metadata: { name: run-as-non-root }
+spec:
+  match: { kinds: [ { apiGroups: [""], kinds: ["Pod"] } ] }

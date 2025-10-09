@@ -1,0 +1,19 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8sdroproot
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sDropRoot
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8sdroproot
+        violation[{"msg": msg}] {
+          input.review.kind.kind == "Pod"
+          c := input.review.object.spec.containers[_]
+          not c.securityContext.runAsNonRoot
+          msg := "Containers must runAsNonRoot"
+        }

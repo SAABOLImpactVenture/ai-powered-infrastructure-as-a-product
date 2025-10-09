@@ -1,0 +1,19 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8sreadonlyrootfs
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sReadOnlyRootFS
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8sreadonlyrootfs
+        violation[{"msg": msg}] {
+          input.review.kind.kind == "Pod"
+          c := input.review.object.spec.containers[_]
+          not c.securityContext.readOnlyRootFilesystem
+          msg := "Containers must enable readOnlyRootFilesystem"
+        }
