@@ -1,154 +1,145 @@
 <p align="center">
-  <a href="#governance--fedramp"><img src="https://img.shields.io/badge/FedRAMP-ready-blue" alt="FedRAMP ready"></a>
-  <a href="#supply-chain-security"><img src="https://img.shields.io/badge/SBOM-SPDX-success" alt="SBOM SPDX"></a>
-  <a href="#oscal-export"><img src="https://img.shields.io/badge/OSCAL-export-green" alt="OSCAL export"></a>
+  <img src="docs/assets/multicloud-hero.png" alt="Agent-Driven IaaP across Azure • AWS • GCP • OCI" width="900"/>
 </p>
 
-# AI-Powered Infrastructure-as-a-Product (IaaP)
+<h1 align="center">Agent‑Driven IaaP — from Idea to Governed Multi‑Cloud in Minutes</h1>
+<p align="center">
+  Azure orchestrates • AWS/GCP/OCI execute • Autonomous agents productize services • Backstage delivers the DX
+</p>
 
-An accelerator that treats **infrastructure as a product** with golden demos, operational evidence, and AI/observability hooks. Everything is self-contained—no external downloads required.
+<p align="center">
+  <a href="#10-minute-hands-on">⏱ 10‑Minute Hands‑On</a> •
+  <a href="#why-this-exists">Why this exists</a> •
+  <a href="#how-it-hangs-together">How it hangs together</a> •
+  <a href="#security--gov-ready">Security & Gov‑Ready</a> •
+  <a href="#whats-in-the-box">What’s in the box</a>
+</p>
 
-> Status: **Production-ready starter**. Cloud integrations are opt-in via environment variables and never block local runs.
+---
+
+## One‑liner
+
+**Give developers an off‑the‑shelf multi‑cloud experience** (pick a product → plan → policy → apply) while platform teams keep **governance, evidence, and velocity**.
+
+## Show me the flow
+
+```mermaid
+flowchart LR
+  A[Backstage Template<br/> + Inputs] --> B[MCP Server<br/>(cloud specific)]
+  B --> C[Terraform Plan]
+  C --> D{Policy Check<br/>K8s/AWS/GCP/OCI}
+  D -->|OK| E[Apply]
+  D -->|VIOLATIONS/DRIFT| F[Stop + Explain]
+  E --> G[Emit Evidence JSON]
+  C --> G
+  G --> H[Azure Monitor / LA<br/>+ Dashboard]
+```
+
+```mermaid
+sequenceDiagram
+  actor Dev as Developer
+  participant BS as Backstage
+  participant MCP as MCP (Azure/AWS/GCP/OCI)
+  participant POL as Policy Server
+  participant AOAI as AOAI (optional)
+  participant LA as Log Analytics
+
+  Dev->>BS: choose product & params
+  BS->>MCP: POST /plan (tfPath)
+  MCP-->>BS: plan result
+  BS->>POL: POST /policy/check
+  POL-->>BS: status (OK/VIOLATIONS/DRIFT)
+  alt AOAI configured
+    BS->>AOAI: summarize plan & risks
+    AOAI-->>BS: executive summary
+  end
+  BS->>MCP: POST /apply (if OK)
+  MCP-->>BS: apply result
+  BS->>LA: ship evidence
+```
 
 ## Why this exists
 
-Most teams ship raw building blocks (VMs, clusters, networks) and stop there. Product teams, however, need a curated, **reliable experience** with documentation, SLAs, and evidence. This repo demonstrates how to:
-- rehearse changes safely with a **Golden Demo**,
-- produce **machine-readable evidence** for audits and SLOs,
-- centralize **observability** using KQL, workbooks, and alert rules,
-- and keep everything runnable **fully offline**.
+- **Reduce time‑to‑first‑commit**: golden paths + productized modules.  
+- **Keep guardrails on**: preventive policy across clouds and clusters.  
+- **Own your evidence**: signed, structured, queryable.  
+- **Meet gov standards**: FedRAMP overlays, NSA/CISA K8s, SBOM/signing, OSCAL.
 
-## Architecture (at a glance)
+## How it hangs together
 
-![Architecture](docs/observability/diagrams/iaap-architecture.png)
-
-**Control Plane (Azure)** provides policy/identity/conformance.
-**Execution Planes** can be Azure, AWS, GCP, or on‑prem. Evidence flows back to a single pane of glass.
-
-## Quickstart
-
-Requires: Python 3.10+, Terraform (optional for demo), Docker (optional for containerized reference server).
-
-```bash
-# 1) Create & activate a venv
-python -m venv .venv
-. .venv/bin/activate  # Windows: .\.venv\Scripts\activate
-
-# 2) Install demo deps (reference server)
-pip install -r examples/golden-demo/reference-server/requirements.txt
-
-# 3) Start the reference server (http://127.0.0.1:5000/health)
-python examples/golden-demo/reference-server/app.py
+```mermaid
+graph TB
+  subgraph Dev Portal
+    BSC[Backstage<br/>Templates & Actions]
+  end
+  subgraph Agents
+    MCP1[MCP Azure]:::agent
+    MCP2[MCP AWS]:::agent
+    MCP3[MCP GCP]:::agent
+    MCP4[MCP OCI]:::agent
+    POL1[Policy K8s]:::policy
+    POL2[Policy AWS]:::policy
+    POL3[Policy GCP]:::policy
+    POL4[Policy OCI]:::policy
+  end
+  subgraph Platform
+    MODS[Product Modules<br/>platform/<cloud>]
+    POLP[Policy Packs]
+    OBS[Evidence + Workbooks]
+  end
+  BSC-->MCP1 & BSC-->MCP2 & BSC-->MCP3 & BSC-->MCP4
+  MCP1-->MODS; MCP2-->MODS; MCP3-->MODS; MCP4-->MODS
+  MCP1-->POL1; MCP2-->POL2; MCP3-->POL3; MCP4-->POL4
+  MCP1-->OBS; MCP2-->OBS; MCP3-->OBS; MCP4-->OBS
+  classDef agent fill:#eef,stroke:#77f;
+  classDef policy fill:#efe,stroke:#7c7;
 ```
 
-In another terminal:
+## 10‑Minute Hands‑On
 
 ```bash
-# 4) Validate local readiness
-python scripts/validate_agents_readiness.py
+# 1) Bring up agents + policy dashboard
+docker compose -f docker/docker-compose.yml up --build
 
-# 5) Run the reference Terraform change
-cd examples/golden-demo/reference-change
-terraform init
-terraform apply -auto-approve
+# 2) Plan a module (Azure sample)
+curl -sS -X POST http://localhost:8080/plan -H 'content-type: application/json'   -d '{"path":"platform/azure/observability/log_analytics"}' | jq
+
+# 3) Check policy (K8s/AWS/GCP/OCI)
+open http://localhost:8090   # live status
+
+# 4) Optionally run the agentic orchestrator
+node --experimental-modules workloads/agents-mcp-aoai/service/agent-orchestrator.ts azure platform/azure/observability/log_analytics
 ```
 
-### Optional: Emit to Azure Log Analytics
+## Security & Gov‑Ready
 
-Set env vars (if you have a workspace):
+- **FedRAMP packs**: `policies/*/fedramp/` (Azure Policy, AWS Config/SecHub, GCP Org Policy/SCC, OCI Cloud Guard)  
+- **NSA/CISA K8s overlay**: deny hostPID/hostNetwork, require seccomp RuntimeDefault, read‑only root FS, runAsNonRoot, allowed registries  
+- **Supply chain**: SBOM (SPDX via syft) + cosign attestations; tfsec & checkov with SARIF in CI  
+- **OSCAL export**: `tools/oscal-export/export.py` builds `assessment-results` from evidence
 
-- `LA_WORKSPACE_ID` – Log Analytics Workspace ID (GUID)
-- `LA_SHARED_KEY` – Primary/Secondary shared key
-- `LA_LOG_TYPE` – Custom log table name (defaults to `IaapInfraEvidence_CL`)
-- `LA_ENDPOINT` – (optional) Data Collector API URL override
+> Short‑lived identity only (OIDC/WIF). No `null_resource` / `local-exec` in product modules.
 
-Then:
+## What’s in the box
 
-```bash
-python scripts/emitters/infra-evidence/emit_evidence_to_log_analytics.py   --kind "validate" --status "success" --detail "Terraform reference change applied"
-```
+- **Workloads**: `workloads/agents-mcp-aoai`, `workloads/iaap`, `workloads/identity`, `workloads/multi-cloud`
+- **Agents**: `servers/mcp/*` and `servers/mcp-policy/*`
+- **Policies**: `policies/kubernetes/**`, `policies/*/fedramp/**`
+- **Evidence**: schema + ingestion & workbook under `observability/**`
+- **Dev Portal**: Backstage templates/actions + Policy Status card and backend proxy
+- **Docs**: Government deployment notes, readme quickstarts, diagrams
 
-Without env vars, emitters run in **local mode**, printing the payload and writing to `./.local-outbox/`.
+## Who gets what
 
-## CI/CD Workflows
+| Persona | Value |
+|---|---|
+| Developer | One‑click product provisioning, explainable plans, fast feedback |
+| Platform | Guardrails + evidence + golden paths, multi‑cloud at scale |
+| Security/AO | FedRAMP overlays, continuous policy checks, OSCAL export |
 
-See `.github/workflows/`:
-- `golden-demo-e2e.yml` – PR + push flow running the full demo.
-- `validators-hosted.yml` – quick hosted validations (lint-like checks).
-- `validators-selfhosted.yml` – deep validation, including Terraform plan, for self‑hosted runners.
+---
 
-## Evidence & Observability
-
-- **KQL:** `docs/observability/infra-evidence/kql/infra_evidence_queries.kql`
-- **Workbook:** `docs/observability/infra-evidence/workbooks/infra-evidence-workbook.json`
-- **Alerts:** drift freshness & verify failures; AOAI latency examples.
-
-See diagram: ![Evidence Flow](docs/observability/diagrams/evidence-flow.png)
-
-## Contents
-
-- `scripts/` – readiness validator and emitters (Python + PowerShell).
-- `docs/observability/` – KQL, alerts, workbook, ADRs, **diagrams**.
-- `workloads/` – ADRs, glossary, reference notes.
-- `examples/golden-demo/` – reference server, Backstage template, Terraform change.
-
-## Troubleshooting
-
-- **`terraform` not found**: install HashiCorp Terraform and ensure it’s on PATH.
-- **Emitter fails**: missing `requests`? Install via `pip install requests` or rely on local mode.
-- **Ports**: reference server binds to `127.0.0.1:5000`; ensure port is free.
-
-## License
-
-MIT.
-
-
-
-## Governance & FedRAMP
-
-This accelerator now ships **government-ready** packs and workflows:
-
-- **FedRAMP baselines** for Azure/AWS/GCP/OCI under `policies/*/fedramp/`  
-  - Azure policy initiative + diagnostics to Log Analytics  
-  - AWS Config + Security Hub + org CloudTrail + WORM logging bucket  
-  - GCP SCC enablement + Org Policies (no serial, no external IPs)  
-  - OCI Cloud Guard + deny public storage
-- **NSA/CISA K8s overlay**: Gatekeeper constraints that enforce RuntimeDefault seccomp, read-only root FS, no host PID/network, non-root, allowed registries.
-- **Supply chain**: GitHub workflows for SBOM (SPDX) + cosign attestations, plus IaC scanning (tfsec/checkov) with SARIF.
-- **OSCAL export**: `tools/oscal-export/export.py` converts evidence JSON → OSCAL assessment-results for ATO packages.
-
-### Quickstarts
-
-**FedRAMP (AWS example)**
-```bash
-terraform -chdir=policies/aws/fedramp init
-terraform -chdir=policies/aws/fedramp apply -var="region=us-east-1" -var="org_account_id=<ID>" -var="s3_log_bucket=<UNIQUE>"
-```
-
-**K8s NSA/CISA overlay**
-```bash
-kubectl apply -f policies/kubernetes/gatekeeper/overlays/nsa-cisa/templates/
-kubectl apply -f policies/kubernetes/gatekeeper/overlays/nsa-cisa/constraints/
-```
-
-**Supply chain (GitHub Actions)**
-- `supply-chain.yml`: SBOM + cosign attestations  
-- `iac-security.yml`: tfsec & checkov with SARIF upload
-
-**OSCAL export**
-```bash
-python3 tools/oscal-export/export.py --paths evidence --out artifacts/oscal/assessment-results.json
-```
-
-### Control Coverage (examples)
-
-| Capability | NIST 800-53r5 | Notes |
-|---|---|---|
-| Identity federation (OIDC/WIF) | AC-2, IA-2, IA-5 | Short‑lived tokens only |
-| Logging & audit (CloudTrail/Diag to LA/SCC) | AU‑2/6/8, CA‑7 | Multi‑region, validated logs |
-| Encryption at rest | SC‑12/SC‑13 | CMEK/HSM options per cloud |
-| Preventive policy | CM‑2/CM‑6, SI‑7 | Azure Policy, Org Policies, Config, Cloud Guard |
-| K8s hardening | CM‑7, SI‑7, SC‑7 | Gatekeeper overlay + Pod Security |
-| Supply chain (SBOM/signing) | SA‑11, RA‑5, SR‑4 | SPDX, cosign attestations |
-| Evidence & OSCAL export | AU‑6, CA‑2, CA‑7 | ATO/cATO friendly |
-
+### Next
+- Add your first product module or consume ours in `workloads/iaap/modules/*`  
+- Point the **Policy Status Card** to `/api/policy/aggregate`  
+- Roll out the **NSA/CISA overlay** to clusters and turn on the **FedRAMP packs** in CI
