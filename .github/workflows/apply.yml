@@ -1,0 +1,24 @@
+name: apply
+on:
+  workflow_dispatch:
+    inputs:
+      path: { description: Terraform dir, required: true, default: platform }
+permissions: { contents: read, id-token: write }
+concurrency: deploy-${{ github.ref }}
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+      - uses: actions/download-artifact@v4
+        with: { name: tfplan, path: ${{ inputs.path }} }
+      - name: Init (with backend)
+        working-directory: ${{ inputs.path }}
+        run: terraform init -input=false
+      - name: Apply from artifacted plan
+        working-directory: ${{ inputs.path }}
+        run: terraform apply -input=false -lock-timeout=10m tfplan.bin

@@ -1,0 +1,35 @@
+name: policy
+on:
+  workflow_run:
+    workflows: ["plan"]
+    types: [completed]
+  workflow_dispatch:
+permissions: { contents: read, id-token: write, security-events: write }
+concurrency: ci-${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  policy:
+    if: (github.event_name == 'workflow_dispatch') || (github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: tfplan-json, path: . }
+      - name: Setup tflint
+        uses: terraform-linters/setup-tflint@v4
+        with: { tflint_version: v0.53.0 }
+      - run: tflint --init && tflint -f compact
+      - name: Checkov (SARIF)
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: .
+          soft_fail: false
+          framework: terraform,kubernetes,helm
+          output_format: sarif
+          output_file_path: checkov.sarif
+      - uses: github/codeql-action/upload-sarif@v3
+        with: { sarif_file: checkov.sarif }
+      - name: OPA on plan
+        run: conftest test --policy policy/ tfplan.json
+      - uses: actions/upload-artifact@v4
+        with: { name: sarif, path: checkov.sarif }

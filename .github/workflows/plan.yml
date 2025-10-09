@@ -1,0 +1,19 @@
+name: plan
+on: [pull_request, workflow_dispatch]
+permissions: { contents: read, id-token: write, security-events: write }
+concurrency: ci-${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+      - run: terraform init -backend=false -input=false
+      - run: terraform plan -out=tfplan.bin -input=false -lock=false -detailed-exitcode || true
+      - run: terraform show -json tfplan.bin > tfplan.json
+      - uses: actions/upload-artifact@v4
+        with: { name: tfplan-json, path: tfplan.json }
+      - uses: actions/upload-artifact@v4
+        with: { name: tfplan, path: tfplan.bin }

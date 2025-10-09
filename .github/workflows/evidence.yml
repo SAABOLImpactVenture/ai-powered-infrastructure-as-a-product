@@ -1,0 +1,58 @@
+name: evidence
+on:
+  workflow_run:
+    workflows: ["plan", "policy"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  security-events: write
+
+concurrency: ci-${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  oscal:
+    if: >
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download artifacts (plan JSON + SARIF)
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan-json
+          path: .
+      - uses: actions/download-artifact@v4
+        with:
+          name: sarif
+          path: .
+      - name: OSCAL conversion
+        run: |
+          python3 scripts/oscal/sarif_to_oscal.py             --repository "${{ github.repository }}"             --run-id "${{ github.run_id }}"             --sarif checkov.sarif             --plan tfplan.json             --out artifacts/oscal/assessment-results.json
+      - uses: actions/upload-artifact@v4
+        with: { name: oscal-results, path: artifacts/oscal/assessment-results.json }
+
+  archive:
+    needs: oscal
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: oscal-results, path: . }
+      - name: Login to Azure (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Upload immutable evidence (CMK + immutability)
+        env:
+          STORAGE_ACCOUNT: ${{ secrets.EVIDENCE_SA }}
+          CONTAINER: ${{ secrets.EVIDENCE_CONTAINER }}
+        run: |
+          set -e
+          az storage blob upload --account-name "$STORAGE_ACCOUNT" --container-name "$CONTAINER"             --name "assessment-results/${{ github.run_id }}.json" --file artifacts/oscal/assessment-results.json --auth-mode login
+          az storage blob immutability-policy set --account-name "$STORAGE_ACCOUNT" --container-name "$CONTAINER"             --name "assessment-results/${{ github.run_id }}.json" --period 365d --allow-protected-append-writes true
