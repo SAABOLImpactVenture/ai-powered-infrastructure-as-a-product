@@ -1,0 +1,27 @@
+# EXAMPLE — condensed Terraform plan (text form)
+
+Plan: 2 to add, 1 to change, 0 to destroy.
+
+  # aws_s3_bucket.logs will be created
+  + resource "aws_s3_bucket" "logs" {
+      + bucket = "org-logs-1234"
+      + force_destroy = false
+    }
+
+  # aws_iam_policy.public will be changed
+  ~ policy = jsonencode({
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+-           "Action": "*",
+-           "Effect": "Allow",
+-           "Resource": "*",
+-           "Principal": "*"
++           "Action": ["s3:ListBucket"],
++           "Effect": "Allow",
++           "Resource": "arn:aws:s3:::org-logs-1234",
++           "Principal": {"AWS":"arn:aws:iam::111111111111:role/SecurityAudit"}
+          }
+        ]
+      })
+    }

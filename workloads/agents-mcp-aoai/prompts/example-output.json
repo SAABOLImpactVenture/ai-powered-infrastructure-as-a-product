@@ -1,0 +1,30 @@
+{
+  "summary": "Create immutable logging bucket and tighten IAM policy from wildcard to scoped read-only; no deletes.",
+  "deltas": {
+    "add": 2,
+    "change": 1,
+    "destroy": 0
+  },
+  "risk": 18,
+  "status": "GREEN",
+  "rationale": "No public access, encryption implied; IAM tightened; no data plane exposure; no destroys.",
+  "highlights": {
+    "identity": "IAM narrowed from * to SecurityAudit role.",
+    "keys": "Ensure bucket SSE and KMS key if required by policy.",
+    "network": "S3 is public service; bucket public access blocked.",
+    "data": "Audit logs only; Object Lock optional.",
+    "policy": "Aligns with FedRAMP logging baseline; no exceptions required."
+  },
+  "controls": [
+    "AU-2",
+    "AU-6",
+    "CM-6",
+    "SC-13"
+  ],
+  "rollback": "If issues, delete new bucket (no prod data) and revert policy change.",
+  "observability": "CloudTrail + S3 access logs; verify no public access via AWS Config rule s3-bucket-public-read-prohibited.",
+  "evidence": [
+    "plan.json",
+    "policy.json"
+  ]
+}

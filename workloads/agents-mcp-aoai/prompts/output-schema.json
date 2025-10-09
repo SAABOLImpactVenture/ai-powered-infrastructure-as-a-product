@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PlanReview",
+  "type": "object",
+  "required": [
+    "summary",
+    "deltas",
+    "risk",
+    "status",
+    "rationale",
+    "highlights",
+    "controls",
+    "rollback",
+    "observability"
+  ],
+  "properties": {
+    "summary": {
+      "type": "string"
+    },
+    "deltas": {
+      "type": "object",
+      "properties": {
+        "add": {
+          "type": "integer"
+        },
+        "change": {
+          "type": "integer"
+        },
+        "destroy": {
+          "type": "integer"
+        }
+      }
+    },
+    "risk": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "GREEN",
+        "AMBER",
+        "RED"
+      ]
+    },
+    "rationale": {
+      "type": "string"
+    },
+    "highlights": {
+      "type": "object",
+      "properties": {
+        "identity": {
+          "type": "string"
+        },
+        "keys": {
+          "type": "string"
+        },
+        "network": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string"
+        },
+        "policy": {
+          "type": "string"
+        }
+      }
+    },
+    "controls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rollback": {
+      "type": "string"
+    },
+    "observability": {
+      "type": "string"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "uncertainty": {
+      "type": "boolean"
+    }
+  }
+}
