@@ -1,0 +1,17 @@
+name: deploy-call
+on:
+  workflow_dispatch:
+    inputs:
+      path: { description: Terraform module path, required: true }
+      environment: { description: Environment, required: true, default: prod }
+permissions:
+  contents: read
+  id-token: write
+concurrency: deploy-${{ github.ref }}
+jobs:
+  deploy:
+    uses: ./.github/workflows/_terraform-reusable.yml
+    with:
+      path: ${{ inputs.path }}
+      environment: ${{ inputs.environment }}
+    secrets: inherit
