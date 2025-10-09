@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hardened-app
+  labels: { app: hardened-app }
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: { maxSurge: 1, maxUnavailable: 0 }
+  selector: { matchLabels: { app: hardened-app } }
+  template:
+    metadata:
+      labels: { app: hardened-app }
+    spec:
+      securityContext: { runAsNonRoot: true }
+      containers:
+      - name: app
+        image: ghcr.io/org/app@sha256:REPLACEME_DIGEST
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: { drop: ["ALL"] }
+        resources:
+          requests: { cpu: "100m", memory: "256Mi" }
+          limits:   { cpu: "500m", memory: "512Mi" }
+        readinessProbe: { httpGet: { path: /healthz, port: 8080 }, periodSeconds: 5, failureThreshold: 6 }
+        livenessProbe:  { httpGet: { path: /livez,   port: 8080 }, initialDelaySeconds: 30, periodSeconds: 10 }
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: hardened-app-pdb
+spec:
+  minAvailable: 1
+  selector: { matchLabels: { app: hardened-app } }
