@@ -1,0 +1,16 @@
+site_name: Agent-Driven IaaP
+repo_url: https://github.com/your-org/your-repo
+theme:
+  name: mkdocs
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - Government: government.md
+  - Workloads:
+      - Agents · MCP · AOAI: workloads/agents.md
+      - IaaP: workloads/iaap.md
+      - Identity: workloads/identity.md
+      - Multi-Cloud: workloads/multicloud.md
+  - Compliance:
+      - Control Matrix: compliance/control-matrix.md
+      - OSCAL Export: compliance/oscal.md
