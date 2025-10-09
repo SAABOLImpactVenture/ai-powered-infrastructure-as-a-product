@@ -1,0 +1,17 @@
+apiVersion: policy.sigstore.dev/v1beta1
+kind: ClusterImagePolicy
+metadata:
+  name: signed-images
+spec:
+  images:
+  - glob: ghcr.io/*/*
+  authorities:
+  - keyless:
+      url: https://fulcio.sigstore.dev
+      identities:
+      - issuer: https://token.actions.githubusercontent.com
+        subjectRegExp: ^https://github.com/.+
+    ctlog:
+      url: https://rekor.sigstore.dev
+  policy:
+    type: any

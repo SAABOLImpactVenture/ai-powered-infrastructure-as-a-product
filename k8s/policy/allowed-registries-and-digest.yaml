@@ -1,0 +1,45 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequireddigest
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequiredDigest
+      validation:
+        openAPIV3Schema:
+          properties:
+            allowedRegistries:
+              type: array
+              items: { type: string }
+  targets:
+  - target: admission.k8s.gatekeeper.sh
+    rego: |
+      package k8srequireddigest
+      violation[{"msg": msg}] {
+        input.review.kind.kind == "Pod"
+        some c
+        img := input.review.object.spec.containers[c].image
+        not contains(img, "@sha256:")
+        msg := sprintf("image must be pinned by digest: %v", [img])
+      }
+      violation[{"msg": msg}] {
+        input.review.kind.kind == "Pod"
+        some c
+        img := input.review.object.spec.containers[c].image
+        count(input.parameters.allowedRegistries) > 0
+        not startswith(img, allowed)
+        allowed := input.parameters.allowedRegistries[_]
+        msg := sprintf("image registry not allowed: %v", [img])
+      }
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredDigest
+metadata:
+  name: require-digest-and-registries
+spec:
+  parameters:
+    allowedRegistries:
+      - ghcr.io/
+      - mcr.microsoft.com/
