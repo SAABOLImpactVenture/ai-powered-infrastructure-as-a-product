@@ -1,0 +1,11 @@
+{
+  "name": "AI-Powered Infrastructure-as-a-Product",
+  "version": "1.0.0",
+  "release_date": "2025-10-09",
+  "license": "CC BY 4.0",
+  "artifacts": {
+    "repository_bundle": "ai-powered-infrastructure-as-a-product-main-v1.0.0.zip",
+    "executive_deck": "AI-Powered-Infrastructure-as-a-Product-v1.0.0-Executive-Deck.pptx",
+    "distribution": "Deck is separate from ZIP"
+  }
+}
