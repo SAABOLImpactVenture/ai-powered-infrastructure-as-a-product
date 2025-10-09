@@ -1,0 +1,11 @@
+{
+  "name": "mcp-azure",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node index.js --self-test"
+  },
+  "dependencies": {}
+}

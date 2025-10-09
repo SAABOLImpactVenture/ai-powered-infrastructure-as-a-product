@@ -1,0 +1,2 @@
+// Evidence summary by kind/status
+Evidence_CL | summarize count() by kind_s, status_s
