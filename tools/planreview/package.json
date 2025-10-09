@@ -1,0 +1,11 @@
+{
+  "name": "planreview-validator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "glob": "^11.0.0"
+  }
+}
