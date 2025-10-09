@@ -1,0 +1,128 @@
+name: ga-plan-policy-evidence-apply
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      path:        { description: Terraform module path, required: true, default: platform }
+      environment: { description: Protected environment to deploy, required: true, default: prod }
+permissions:
+  contents: read
+  id-token: write
+  security-events: write
+concurrency: deploy-${{ github.ref }}
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+
+  plan:
+    runs-on: ubuntu-latest
+    needs: dependency-review
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+      - name: Validate only (no backend)
+        working-directory: ${{ inputs.path }}
+        run: |
+          terraform init -backend=false -input=false
+          terraform validate -no-color
+      - name: Plan (artifact)
+        working-directory: ${{ inputs.path }}
+        run: |
+          terraform init -input=false
+          terraform plan -out=tfplan.bin -input=false -lock=false -detailed-exitcode || exit_code=$?; echo "exit_code=${exit_code:-0}" >> $GITHUB_OUTPUT
+          terraform show -json tfplan.bin > tfplan.json
+      - uses: actions/upload-artifact@v4
+        with: { name: tfplan, path: ${{ inputs.path }}/tfplan.bin }
+      - uses: actions/upload-artifact@v4
+        with: { name: tfplan-json, path: ${{ inputs.path }}/tfplan.json }
+
+  policy:
+    runs-on: ubuntu-latest
+    needs: plan
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: tfplan-json, path: . }
+      - name: Setup tflint
+        uses: terraform-linters/setup-tflint@v4
+        with: { tflint_version: v0.53.0 }
+      - name: TFLint (fail on issues)
+        run: |
+          tflint --init
+          tflint -f compact
+      - name: Checkov (TF/K8s/Helm) — SARIF
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: .
+          soft_fail: false
+          framework: terraform,kubernetes,helm
+          output_format: sarif
+          output_file_path: checkov.sarif
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with: { sarif_file: checkov.sarif }
+      - name: OPA on plan (deny on violations)
+        run: conftest test --policy policy/ tfplan.json
+      - uses: actions/upload-artifact@v4
+        with: { name: sarif, path: checkov.sarif }
+
+  evidence:
+    runs-on: ubuntu-latest
+    needs: policy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: tfplan-json, path: . }
+      - uses: actions/download-artifact@v4
+        with: { name: sarif, path: . }
+      - name: Build OSCAL assessment-results
+        run: |
+          python3 scripts/oscal/sarif_to_oscal.py             --repository "${{ github.repository }}"             --run-id "${{ github.run_id }}"             --sarif checkov.sarif             --plan tfplan.json             --out artifacts/oscal/assessment-results.json
+      - uses: actions/upload-artifact@v4
+        with: { name: oscal-results, path: artifacts/oscal/assessment-results.json }
+
+  archive:
+    runs-on: ubuntu-latest
+    needs: evidence
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: oscal-results, path: . }
+      - name: Login to Azure (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Upload to immutable evidence store
+        env:
+          STORAGE_ACCOUNT: ${{ secrets.EVIDENCE_SA }}
+          CONTAINER: ${{ secrets.EVIDENCE_CONTAINER }}
+        run: |
+          set -e
+          az storage blob upload --account-name "$STORAGE_ACCOUNT" --container-name "$CONTAINER"             --name "assessment-results/${{ github.run_id }}.json" --file artifacts/oscal/assessment-results.json --auth-mode login
+          az storage blob immutability-policy set --account-name "$STORAGE_ACCOUNT" --container-name "$CONTAINER"             --name "assessment-results/${{ github.run_id }}.json" --period 365d --allow-protected-append-writes true
+
+  apply:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    needs: [archive]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+      - uses: actions/download-artifact@v4
+        with: { name: tfplan, path: ${{ inputs.path }} }
+      - name: Re-init (with backend)
+        working-directory: ${{ inputs.path }}
+        run: terraform init -input=false
+      - name: Apply from artifacted plan (env protected)
+        working-directory: ${{ inputs.path }}
+        run: terraform apply -input=false -lock-timeout=10m tfplan.bin
