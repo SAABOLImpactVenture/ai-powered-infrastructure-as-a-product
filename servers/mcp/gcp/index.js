@@ -26,8 +26,8 @@ async function apply(dir) {
 }
 
 function emitEvidence(kind, status, detail) {
-  const rec = { kind, status, detail, ts: new Date().toISOString(), source: 'mcp-azure' };
-  const outDir = path.join(process.cwd(), 'evidence', 'mcp-azure');
+  const rec = { kind, status, detail, ts: new Date().toISOString(), source: 'mcp-gcp' };
+  const outDir = path.join(process.cwd(), 'evidence', 'mcp-gcp');
   fs.mkdirSync(outDir, { recursive: true });
   const fp = path.join(outDir, `${Date.now()}-${kind}.json`);
   fs.writeFileSync(fp, JSON.stringify(rec, null, 2));
@@ -72,4 +72,4 @@ const srv = http.createServer(async (req, res) => {
 });
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 8080;
-srv.listen(PORT, () => console.log('MCP server (mcp-azure) listening on', PORT));
+srv.listen(PORT, () => console.log('MCP server (mcp-gcp) listening on', PORT));

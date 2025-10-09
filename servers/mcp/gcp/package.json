@@ -1,5 +1,5 @@
 {
-  "name": "mcp-azure",
+  "name": "mcp-gcp",
   "version": "1.0.0",
   "type": "module",
   "main": "index.js",
