@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  policy-evidence-adapter:
+    build: ./services/policy-evidence-adapter
+    environment:
+      - EVIDENCE_LAKE=adx
+      - ADX_URI=${ADX_URI}
+      - ADX_DB=${ADX_DB}
+      - ADX_TOKEN=${ADX_TOKEN}
+      - AWS_REGION=${AWS_REGION}
+      - ATHENA_DB=${ATHENA_DB}
+      - ATHENA_TBL=${ATHENA_TBL}
+      - ATHENA_OUTPUT=${ATHENA_OUTPUT}
+    ports:
+      - "127.0.0.1:8088:8088"
