@@ -1,0 +1,10 @@
+
+name: oci-cli
+on: [workflow_dispatch]
+jobs:
+  auth:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oracle-actions/setup-oci-cli@v1
+      - run: oci iam region list

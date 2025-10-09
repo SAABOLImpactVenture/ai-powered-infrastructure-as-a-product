@@ -1,0 +1,29 @@
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: agentic-plan
+  title: Agentic Plan → Policy → Evidence
+spec:
+  owner: platform-team
+  type: service
+  parameters:
+    - title: Inputs
+      required: [cloud, path]
+      properties:
+        cloud:
+          type: string
+          enum: [azure, aws, gcp, oci]
+        path:
+          type: string
+          description: Terraform directory (relative to repo root)
+  steps:
+    - id: plan
+      name: Plan/Policy via Agent
+      action: roadiehq:utils:run
+      input:
+        command: node -e "import('./workloads/agents-mcp-aoai/service/agent-orchestrator.js').then(m=>m.run({cloud:'${{ parameters.cloud }}', tfPath:'${{ parameters.path }}'})).then(o=>console.log(JSON.stringify(o,null,2)))"
+  output:
+    links:
+      - title: Evidence Folder
+        url: ./evidence/agent/${{ parameters.cloud }}

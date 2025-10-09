@@ -1,0 +1,25 @@
+
+name: agent-plan
+on:
+  pull_request:
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npm i node-fetch@3
+      - name: Run Agent Orchestrator (Azure sample)
+        env:
+          MCP_ENDPOINT: http://localhost:8080
+          POLICY_ENDPOINT: http://localhost:8181/policy/check
+        run: |
+          node --experimental-modules workloads/agents-mcp-aoai/service/agent-orchestrator.ts azure platform/azure/observability/log_analytics || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent-evidence
+          path: evidence/agent/**

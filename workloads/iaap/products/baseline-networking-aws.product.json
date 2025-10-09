@@ -1,0 +1,24 @@
+{
+  "id": "baseline-networking-aws",
+  "name": "Baseline Networking (AWS)",
+  "cloud": "aws",
+  "version": "1.0.0",
+  "owner": "platform-team",
+  "description": "VPC + private subnets + flow logs (encrypted) with Config/CloudTrail integrated.",
+  "inputs": {
+    "region": "us-east-1",
+    "name": "baseline"
+  },
+  "outputs": {
+    "vpc_id": "tbd-at-apply"
+  },
+  "policies": [
+    {
+      "id": "s3-public-block",
+      "type": "aws_config",
+      "path": "policies/aws/fedramp/main.tf",
+      "severity": "high"
+    }
+  ],
+  "evidence": []
+}
