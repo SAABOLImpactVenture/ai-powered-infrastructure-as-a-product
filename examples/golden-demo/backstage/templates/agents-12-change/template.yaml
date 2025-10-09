@@ -23,12 +23,13 @@ spec:
         url: ./skeleton
     - id: plan
       name: MCP Plan
-      action: debug:log
+      action: mcp:plan
       input:
-        message: "Invoke MCP server plan for ${{ parameters.cloud }}"
+        cloud: ${{ parameters.cloud }}
+          path: platform/${{ parameters.cloud }}/networking
     - id: done
       name: Complete
-      action: debug:log
+      action: mcp:plan
       input:
         message: "Scaffolded."
   output:

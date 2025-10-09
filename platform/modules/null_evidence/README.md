@@ -1,2 +1,3 @@
-# Module: null_evidence (offline)
-Emits local JSON evidence.
+# Deprecated
+
+This module is deprecated and excluded from the accelerator. Use real modules under `platform/<cloud>/...`.

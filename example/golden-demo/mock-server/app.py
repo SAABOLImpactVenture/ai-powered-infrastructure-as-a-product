@@ -1,20 +1,20 @@
-from __future__ import annotations
-from flask import Flask, request, jsonify
+from fastapi import FastAPI
+import glob, json, os
 
-app = Flask(__name__)
+app = FastAPI()
 
-@app.get("/health")
-def health():
-    return jsonify({"status": "ok"}), 200
+@app.get("/healthz")
+def healthz():
+    return {"ok": True}
 
-@app.post("/evidence")
+@app.get("/evidence")
 def evidence():
-    data = request.get_json(silent=True) or {}
-    import json, time, pathlib
-    outdir = pathlib.Path(".local-outbox"); outdir.mkdir(exist_ok=True)
-    fp = outdir / f"mock-server-evidence-{int(time.time())}.json"
-    fp.write_text(json.dumps(data, indent=2))
-    return jsonify({"received": True, "path": str(fp)}), 200
-
-if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    files = glob.glob(os.path.join("evidence", "**", "*.json"), recursive=True)
+    records = []
+    for fp in files[:100]:
+        try:
+            with open(fp, "r") as f:
+                records.append(json.load(f))
+        except Exception:
+            pass
+    return {"count": len(records), "samples": records[:5]}
