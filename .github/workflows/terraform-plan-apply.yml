@@ -1,0 +1,84 @@
+name: terraform-plan-apply
+on:
+  workflow_dispatch:
+    inputs:
+      path:
+        description: Terraform working dir (relative)
+        required: true
+        default: platform/azure/observability/log_analytics
+      environment:
+        description: Target environment for apply (requires approvals)
+        required: false
+        default: dev
+permissions:
+  contents: read
+  id-token: write
+concurrency: deploy-${{ github.ref }}
+env:
+  TF_IN_AUTOMATION: "true"
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+      - name: Configure cloud auth (OIDC) — Azure
+        if: ${{ contains(inputs.path, 'platform/azure') }}
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Configure AWS OIDC
+        if: ${{ contains(inputs.path, 'aws') }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION || 'us-east-1' }}
+      - name: Configure GCP WIF
+        if: ${{ contains(inputs.path, 'gcp') }}
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      - name: Init
+        working-directory: ${{ inputs.path }}
+        run: terraform init -input=false
+      - name: Validate
+        working-directory: ${{ inputs.path }}
+        run: terraform validate -no-color
+      - name: Plan
+        id: plan
+        working-directory: ${{ inputs.path }}
+        run: terraform plan -out=tfplan.bin -lock=false -input=false -detailed-exitcode || exit_code=$?; echo "exit_code=${exit_code:-0}" >> $GITHUB_OUTPUT
+      - name: Upload plan artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan-${{ inputs.environment }}
+          path: ${{ inputs.path }}/tfplan.bin
+    outputs:
+      path: ${{ inputs.path }}
+      environment: ${{ inputs.environment }}
+
+  apply:
+    needs: plan
+    runs-on: ubuntu-latest
+    environment: ${{ needs.plan.outputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+      - name: Download plan
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan-${{ needs.plan.outputs.environment }}
+          path: ${{ needs.plan.outputs.path }}
+      - name: Configure auth (same as plan)
+        run: echo "Configure OIDC here as in plan job"
+      - name: Apply (gated by environment approvals)
+        working-directory: ${{ needs.plan.outputs.path }}
+        run: terraform apply -lock-timeout=10m -input=false tfplan.bin

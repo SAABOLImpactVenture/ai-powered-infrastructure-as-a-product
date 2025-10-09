@@ -1,0 +1,35 @@
+name: terraform-validate-and-scan
+on:
+  pull_request:
+    paths:
+      - '**/*.tf'
+      - '**/*.tfvars'
+      - '!**/.terraform/**'
+permissions:
+  contents: read
+concurrency: lint-${{ github.ref }}
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+      - name: Terraform fmt
+        run: terraform fmt -check -recursive
+      - name: Terraform validate
+        run: |
+          for d in $(git ls-files '**/*.tf' | xargs -n1 dirname | sort -u); do
+            (cd "$d" && terraform init -backend=false -input=false && terraform validate -no-color) || exit 1
+          done
+      - name: Setup tflint
+        uses: terraform-linters/setup-tflint@v4
+        with: { tflint_version: v0.53.0 }
+      - name: TFLint
+        run: tflint --recursive
+      - name: Checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: .
+          soft_fail: false
+          framework: terraform
