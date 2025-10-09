@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  policy-badge:
+    profiles: ["distroless"]
+    build:
+      context: ../..
+      dockerfile: tools/status-badge/Dockerfile
+    environment:
+      AGGREGATE_URL: http://policy-dashboard:8090/api/policy/aggregate
+    ports:
+      - "8091:8091"
+    depends_on:
+      - policy-dashboard
