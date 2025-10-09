@@ -1,0 +1,49 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: identity-federation-bootstrap
+  title: Identity Federation Bootstrap
+  description: Provision OIDC/WIF trust and least-priv roles per environment for AWS/Azure/GCP.
+spec:
+  owner: platform-team
+  type: service
+  parameters:
+    - title: Target repo and environments
+      required: [repo, envs]
+      properties:
+        repo:
+          type: string
+          description: GitHub org/repo for OIDC subject
+        envs:
+          type: array
+          items: { type: string }
+          default: [dev, test, prod]
+  steps:
+    - id: aws
+      name: AWS Federation
+      action: fetch:template
+      input:
+        url: ./modules/federation/aws/github_oidc_abac
+        values:
+          repo: '{{ parameters.repo }}'
+          envs: '{{ parameters.envs }}'
+    - id: azure
+      name: Azure Federation
+      action: fetch:template
+      input:
+        url: ./modules/federation/azure/github_oidc_per_env
+        values:
+          repo: '{{ parameters.repo }}'
+          envs: '{{ parameters.envs }}'
+    - id: gcp
+      name: GCP Federation
+      action: fetch:template
+      input:
+        url: ./modules/federation/gcp/github_wif_per_env
+        values:
+          repo: '{{ parameters.repo }}'
+          envs: '{{ parameters.envs }}'
+  output:
+    links:
+      - title: View PR
+        url: '{{ steps.publish.output.remoteUrl }}'

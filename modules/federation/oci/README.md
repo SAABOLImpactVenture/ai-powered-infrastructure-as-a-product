@@ -1,0 +1,1 @@
+Use identity/oci/saml_federation as the federation module for OCI.

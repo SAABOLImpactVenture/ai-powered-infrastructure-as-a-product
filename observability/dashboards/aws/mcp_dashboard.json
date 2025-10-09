@@ -1,0 +1,17 @@
+{
+  "widgets": [
+    {
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "CWAgent", "procstat_lookup_pid_count", "process_name", "mcp" ]
+        ],
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "stat": "Average",
+        "period": 60,
+        "title": "MCP Process Count"
+      }
+    }
+  ]
+}
