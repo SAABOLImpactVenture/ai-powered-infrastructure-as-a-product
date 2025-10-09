@@ -1,0 +1,41 @@
+name: buildx-distroless-multiarch
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: mcp-azure,       dockerfile: servers/mcp/azure/Dockerfile.distroless,       context: . }
+          - { name: mcp-policy-azure, dockerfile: servers/mcp-policy/azure/Dockerfile.distroless, context: . }
+          - { name: mcp-aws,         dockerfile: servers/mcp/aws/Dockerfile.distroless,         context: . }
+          - { name: mcp-policy-aws,   dockerfile: servers/mcp-policy/aws/Dockerfile.distroless,   context: . }
+          - { name: mcp-gcp,         dockerfile: servers/mcp/gcp/Dockerfile.distroless,         context: . }
+          - { name: mcp-policy-gcp,   dockerfile: servers/mcp-policy/gcp/Dockerfile.distroless,   context: . }
+          - { name: mcp-oci,         dockerfile: servers/mcp/oci/Dockerfile.distroless,         context: . }
+          - { name: mcp-policy-oci,   dockerfile: servers/mcp-policy/oci/Dockerfile.distroless,   context: . }
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build multi-arch OCI archive
+        run: |
+          mkdir -p out
+          docker buildx build             --platform linux/amd64,linux/arm64             -f "${{ matrix.dockerfile }}" "${{ matrix.context }}"             --output "type=oci,dest=out/${{ matrix.name }}.oci.tar"
+
+      - name: Upload OCI archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}-oci
+          path: out/${{ matrix.name }}.oci.tar

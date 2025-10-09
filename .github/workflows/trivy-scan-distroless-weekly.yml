@@ -1,0 +1,11 @@
+name: trivy-scan-distroless-weekly
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+permissions:
+  contents: read
+  security-events: write
+jobs:
+  call:
+    uses: ./.github/workflows/trivy-scan-distroless.yml
