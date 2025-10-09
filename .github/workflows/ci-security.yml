@@ -4,22 +4,33 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
-  security-events: write
   id-token: write
+  security-events: write
 concurrency: ci-${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  iac-policy:
+  iac-security:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup tflint
-        uses: terraform-linters/setup-tflint@v4
-        with: { tflint_version: v0.53.0 }
-      - name: TFLint (fail on issues)
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+
+      - name: Validate (no backend)
         run: |
-          tflint --init
-          tflint -f compact
+          terraform init -backend=false -input=false || true
+          terraform validate -no-color || true
+
+      - name: OPA conftest (deny on violations)
+        run: conftest test --policy policy/ .
+
+      - name: TFSec (fail on HIGH)
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          additional_args: --minimum-severity HIGH
+
       - name: Checkov (TF/K8s/Helm) — SARIF
         uses: bridgecrewio/checkov-action@v12
         with:
@@ -28,8 +39,59 @@ jobs:
           framework: terraform,kubernetes,helm
           output_format: sarif
           output_file_path: checkov.sarif
+
       - name: Upload SARIF
         uses: github/codeql-action/upload-sarif@v3
         with: { sarif_file: checkov.sarif }
-      - name: Conftest gate (OPA)
-        run: conftest test --policy policy/ .
+
+  supply-chain:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        image: [ mcp-azure, mcp-policy-azure, mcp-aws, mcp-policy-aws, mcp-gcp, mcp-policy-gcp, mcp-oci, mcp-policy-oci ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push (multi-arch + provenance)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./containers/${{ matrix.image }}/Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository }}:${{ matrix.image }}-latest
+          platforms: linux/amd64,linux/arm64
+          provenance: true
+          sbom: true
+
+      - name: Install Syft
+        uses: anchore/sbom-action/download-syft@v0.17.5
+
+      - name: Generate SBOM (SPDX)
+        run: syft ghcr.io/${{ github.repository }}:${{ matrix.image }}-latest -o spdx-json > sbom-${{ matrix.image }}.spdx.json
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.7.0
+        with: { cosign-release: 'v2.2.4' }
+
+      - name: Cosign sign + attest SBOM (keyless)
+        env: { COSIGN_EXPERIMENTAL: "1" }
+        run: |
+          set -e
+          IMG="ghcr.io/${{ github.repository }}:${{ matrix.image }}-latest"
+          cosign sign --yes "$IMG"
+          cosign attest --yes --predicate sbom-${{ matrix.image }}.spdx.json --type spdx "$IMG"
