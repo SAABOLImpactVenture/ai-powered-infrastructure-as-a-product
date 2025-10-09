@@ -1,0 +1,19 @@
+receivers:
+  otlp:
+    protocols:
+      http:
+      grpc:
+exporters:
+  logging:
+    loglevel: info
+  otlphttp/azure:
+    endpoint: ${OTEL_AZURE_ENDPOINT}
+    headers: { "Authorization": "Bearer ${OTEL_AZURE_TOKEN}" }
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [logging]
+    metrics:
+      receivers: [otlp]
+      exporters: [logging]
