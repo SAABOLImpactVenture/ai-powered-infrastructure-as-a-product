@@ -1,0 +1,6 @@
+# Example S3 backend config
+bucket         = "tf-state-dev"
+key            = "global/terraform.tfstate"
+region         = "us-east-1"
+dynamodb_table = "tf-state-dev-locks"
+encrypt        = true

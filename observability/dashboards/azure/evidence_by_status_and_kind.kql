@@ -1,0 +1,4 @@
+// Evidence by status and kind
+Evidence
+| summarize count() by status, kind
+| order by count_ desc
