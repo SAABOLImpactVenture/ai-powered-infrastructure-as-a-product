@@ -24,4 +24,4 @@ jobs:
             sleep 1
           done
       - name: Note
-        run: echo "Manually induce a failure on primary and watch DNS failover via health check."
+        run: echo "Induce a primary failure and observe DNS failover."
