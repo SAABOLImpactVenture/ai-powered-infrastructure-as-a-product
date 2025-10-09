@@ -1,0 +1,27 @@
+
+name: policy-oci
+on:
+  workflow_dispatch:
+    inputs:
+      compartment_ocid:
+        description: Target compartment OCID
+        required: true
+      policy_name:
+        description: Policy name
+        required: true
+        default: baseline-deny-public
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oracle-actions/setup-oci-cli@v1
+      - uses: hashicorp/setup-terraform@v3
+      - name: Terraform apply OCI IAM policies
+        working-directory: policies/oci/iam-policies
+        env:
+          TF_VAR_compartment_ocid: ${{ inputs.compartment_ocid }}
+          TF_VAR_name: ${{ inputs.policy_name }}
+        run: |
+          terraform init -backend=false
+          terraform apply -auto-approve

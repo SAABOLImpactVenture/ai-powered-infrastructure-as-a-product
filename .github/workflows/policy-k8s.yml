@@ -1,0 +1,25 @@
+
+name: policy-k8s
+on:
+  workflow_dispatch:
+    inputs:
+      kube_context:
+        description: Optional context name
+        required: false
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+      - name: Write kubeconfig from secret
+        run: |
+          echo "${KUBE_CONFIG}" | base64 -d > $HOME/.kube/config
+          [ -n "${{ inputs.kube_context }}" ] && kubectl config use-context "${{ inputs.kube_context }}" || true
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_B64 }}
+      - name: Apply Gatekeeper templates
+        run: kubectl apply -f policies/kubernetes/gatekeeper/templates/
+      - name: Apply Gatekeeper constraints
+        run: kubectl apply -f policies/kubernetes/gatekeeper/constraints/
