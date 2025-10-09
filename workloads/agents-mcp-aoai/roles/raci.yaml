@@ -1,0 +1,26 @@
+
+roles:
+  - id: pm
+    name: Product Manager
+  - id: da
+    name: Delivery Architect
+  - id: re
+    name: Responsible Engineer
+  - id: sie
+    name: Security & Identity Expert
+tasks:
+  - id: intent
+    name: Define product change intent
+    raci: { pm: RA, da: C, re: C, sie: C }
+  - id: arch_policy
+    name: Architecture & policy impact review
+    raci: { pm: C, da: RA, re: C, sie: R }
+  - id: impl_test
+    name: Implement & test
+    raci: { pm: C, da: C, re: RA, sie: C }
+  - id: id_secrets
+    name: Identity & secrets review
+    raci: { pm: C, da: C, re: C, sie: RA }
+  - id: prod_apply
+    name: Approve apply to prod
+    raci: { pm: A, da: A, re: A, sie: A }

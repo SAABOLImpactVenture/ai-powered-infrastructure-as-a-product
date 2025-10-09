@@ -1,0 +1,16 @@
+{
+  "requiredEvidence": [
+    "plan",
+    "policy"
+  ],
+  "policyStatusesAllowed": [
+    "OK"
+  ],
+  "labelsRequired": [
+    "approved-pm",
+    "approved-da",
+    "approved-re",
+    "approved-sie"
+  ],
+  "blockOnDrift": true
+}
