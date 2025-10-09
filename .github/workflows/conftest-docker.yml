@@ -1,0 +1,18 @@
+name: conftest-docker
+on:
+  pull_request:
+    paths:
+      - "servers/**/Dockerfile*"
+      - "tools/**/Dockerfile*"
+jobs:
+  policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Conftest
+        run: |
+          curl -L https://github.com/open-policy-agent/conftest/releases/download/v0.55.0/conftest_0.55.0_Linux_x86_64.tar.gz | tar xz
+          sudo mv conftest /usr/local/bin/
+      - name: Evaluate policies
+        run: |
+          conftest test -p policy/conftest $(git ls-files '**/Dockerfile*')
