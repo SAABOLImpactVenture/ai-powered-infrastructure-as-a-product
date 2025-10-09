@@ -1,0 +1,27 @@
+name: dr-gameday
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: Primary health URL (https://.../healthz)
+        required: true
+      max_fail_secs:
+        description: Seconds to wait before considering failover
+        default: "120"
+permissions:
+  contents: read
+jobs:
+  simulate-failure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe health
+        run: |
+          set +e
+          for i in $(seq 1 ${{ inputs.max_fail_secs }}); do
+            code=$(curl -sk -o /dev/null -w "%{http_code}" "${{ inputs.url }}")
+            echo "Attempt $i -> HTTP $code"
+            [ "$code" = "200" ] || exit 1
+            sleep 1
+          done
+      - name: Note
+        run: echo "Manually induce a failure on primary and watch DNS failover via health check."

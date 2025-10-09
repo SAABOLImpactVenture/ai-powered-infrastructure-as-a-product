@@ -1,0 +1,94 @@
+name: ci-security
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+  security-events: write
+  id-token: write
+concurrency: ci-${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  sbom-sign-and-scan:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - mcp-azure
+          - mcp-policy-azure
+          - mcp-aws
+          - mcp-policy-aws
+          - mcp-gcp
+          - mcp-policy-gcp
+          - mcp-oci
+          - mcp-policy-oci
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Syft
+        uses: anchore/sbom-action/download-syft@v0.17.5
+
+      - name: Generate SBOM (Syft)
+        id: sbom
+        run: |
+          set -euo pipefail
+          IMG="ghcr.io/${{ github.repository }}:${{ matrix.image }}-latest"
+          syft "$IMG" -o spdx-json > sbom-${{ matrix.image }}.spdx.json
+          echo "sbom=sbom-${{ matrix.image }}.spdx.json" >> $GITHUB_OUTPUT
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ matrix.image }}
+          path: ${{ steps.sbom.outputs.sbom }}
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.7.0
+        with: { cosign-release: 'v2.2.4' }
+
+      - name: Attest SBOM (keyless, OIDC)
+        env:
+          COSIGN_EXPERIMENTAL: "1"
+        run: |
+          set -euo pipefail
+          IMG="ghcr.io/${{ github.repository }}:${{ matrix.image }}-latest"
+          cosign attest --yes --type spdx --predicate "${{ steps.sbom.outputs.sbom }}" "$IMG"
+
+      - name: Trivy scan (SARIF)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ghcr.io/${{ github.repository }}:${{ matrix.image }}-latest
+          format: sarif
+          output: trivy-${{ matrix.image }}.sarif
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+      - name: Upload Trivy SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with: { sarif_file: trivy-${{ matrix.image }}.sarif }
+
+  iac-policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - name: Install tfsec & checkov
+        run: |
+          pip install checkov
+          curl -sSfL https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash -s -- -b /usr/local/bin v1.28.5
+      - name: tfsec (HIGH fail) + SARIF
+        run: |
+          tfsec . --severity HIGH --format sarif > tfsec.sarif
+      - name: Upload tfsec SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with: { sarif_file: tfsec.sarif }
+      - name: Checkov (Terraform only) SARIF
+        run: |
+          checkov -d . --framework terraform -o sarif --output-file checkov.sarif --quiet
+      - name: Upload Checkov SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with: { sarif_file: checkov.sarif }
+      - name: Conftest gate (fail on deny)
+        run: conftest test --policy policy/ .
