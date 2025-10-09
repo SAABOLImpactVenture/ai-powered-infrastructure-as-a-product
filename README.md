@@ -1,97 +1,91 @@
-# AI-Powered Infrastructure-as-a-Product (IaaP)
+<p align="center">
+  <img src="docs/assets/multicloud-hero.png" alt="AI-Powered Multi-Cloud Modernization — Agent-Driven IaaP" width="820"/>
+</p>
 
-An accelerator that treats **infrastructure as a product** with golden demos, operational evidence, and AI/observability hooks. Everything is self-contained—no external downloads required.
+<h1 align="center">Agent‑Driven Infrastructure‑as‑a‑Product (IaaP)</h1>
+<p align="center">
+  Azure orchestrates • AWS / GCP / OCI execute • Autonomous Agents productize services • Backstage delivers the developer experience
+</p>
 
-> Status: **Production-ready starter**. Cloud integrations are opt-in via environment variables and never block local runs.
+---
 
-## Why this exists
 
-Most teams ship raw building blocks (VMs, clusters, networks) and stop there. Product teams, however, need a curated, **reliable experience** with documentation, SLAs, and evidence. This repo demonstrates how to:
-- rehearse changes safely with a **Golden Demo**,
-- produce **machine-readable evidence** for audits and SLOs,
-- centralize **observability** using KQL, workbooks, and alert rules,
-- and keep everything runnable **fully offline**.
+## TL;DR
 
-## Architecture (at a glance)
+This accelerator turns a multi‑cloud estate into **governed, productized modules** delivered through **Backstage** and operated by **autonomous agents**.
 
-![Architecture](docs/observability/diagrams/iaap-architecture.png)
+- **AI / Agent Autonomy** → MCP servers plan/apply and emit signed evidence.
+- **Autonomous Accelerator** → “golden paths” for identity, networking, Kubernetes, and policies across Azure, AWS, GCP, OCI.
+- **Infrastructure‑as‑Product** → secure‑by‑default modules with policy enforcement and developer‑friendly templates.
 
-**Control Plane (Azure)** provides policy/identity/conformance.
-**Execution Planes** can be Azure, AWS, GCP, or on‑prem. Evidence flows back to a single pane of glass.
+
+## Why this repo
+
+Platform teams get a **federated control plane on Azure** with execution planes in AWS/GCP/OCI. Developers get an **off‑the‑shelf** experience: pick a product, fill a few inputs, and let agents plan → check policy → apply → emit evidence.
+
+
+## How it works (at a glance)
+
+1. **Backstage template** provisions a baseline (identity, networking, k8s, observability).  
+2. **MCP server** for the target cloud runs `terraform plan` → **policy check** → `apply`.  
+3. **Evidence** is written as JSON and optionally ingested to Azure Log Analytics via DCR.  
+4. **Dashboards** show policy/evidence status across clouds.
+
+```text
+Backstage → MCP (plan/policy/apply) → Evidence → (optional) LA Workspace + Workbook
+```
+
+> Quick demo: `docker compose -f docker/docker-compose.yml up --build` then open the dashboard on http://localhost:8090
+
+
+## What’s inside
+
+- **Productized modules**: `platform/azure/*`, `platform/aws/*`, `platform/gcp/*`, `platform/oci/*`
+- **MCP servers**: `servers/mcp/{azure,aws,gcp,oci}` (`/plan`, `/apply`) + policy servers `servers/mcp-policy/*` (`/policy/check`)
+- **Backstage**: Scaffolder actions `mcp:plan`, `mcp:policyCheck`, templates in `examples/golden-demo/backstage/templates/*`
+- **Policy packs**: Gatekeeper (K8s), AWS Config, GCP Org Policy, OCI IAM (`policies/**`)
+- **Evidence**: schema + ingestion (DCR + Workbook) in `evidence/**` and `observability/**`
+- **Docker Compose**: all servers + a lightweight policy dashboard in `docker/docker-compose.yml` and `tools/policy-dashboard/`
+
 
 ## Quickstart
 
-Requires: Python 3.10+, Terraform (optional for demo), Docker (optional for containerized reference server).
-
 ```bash
-# 1) Create & activate a venv
-python -m venv .venv
-. .venv/bin/activate  # Windows: .\.venv\Scripts\activate
+# 1) Run everything locally (agents, policy servers, dashboard)
+docker compose -f docker/docker-compose.yml up --build
 
-# 2) Install demo deps (reference server)
-pip install -r examples/golden-demo/reference-server/requirements.txt
+# 2) Trigger a plan
+curl -sS -X POST http://localhost:8080/plan   -H 'content-type: application/json'   -d '{"path":"platform/azure/observability/log_analytics"}' | jq
 
-# 3) Start the reference server (http://127.0.0.1:5000/health)
-python examples/golden-demo/reference-server/app.py
+# 3) View policy status
+open http://localhost:8090
 ```
 
-In another terminal:
+> CI usage: use GitHub OIDC / Workload Identity to run `terraform validate/plan` for each cloud in PRs.
 
-```bash
-# 4) Validate local readiness
-python scripts/validate_agents_readiness.py
 
-# 5) Run the reference Terraform change
-cd examples/golden-demo/reference-change
-terraform init
-terraform apply -auto-approve
-```
+## Secure by default
 
-### Optional: Emit to Azure Log Analytics
+- **Identity**: GitHub → Azure OIDC, AWS role federation, GCP Workload Identity, OCI dynamic groups.
+- **Policies**: K8s Gatekeeper constraints; AWS Config/GCP Org/OCI IAM baselines.
+- **Evidence**: structured JSON schema, optional hash, DCR ingestion, workbook visualization.
+- **No `null_resource` / `local-exec`** in product modules.
 
-Set env vars (if you have a workspace):
 
-- `LA_WORKSPACE_ID` – Log Analytics Workspace ID (GUID)
-- `LA_SHARED_KEY` – Primary/Secondary shared key
-- `LA_LOG_TYPE` – Custom log table name (defaults to `IaapInfraEvidence_CL`)
-- `LA_ENDPOINT` – (optional) Data Collector API URL override
+## Repo map
 
-Then:
+- `platform/<cloud>/...` — product modules
+- `servers/mcp/*` — plan/apply agents
+- `servers/mcp-policy/*` — policy check agents
+- `policies/*` — policy packs
+- `examples/*` — golden demo & Backstage templates
+- `evidence/*`, `observability/*` — evidence schema & ingestion
+- `docker/docker-compose.yml` — one‑command demo
 
-```bash
-python scripts/emitters/infra-evidence/emit_evidence_to_log_analytics.py   --kind "validate" --status "success" --detail "Terraform reference change applied"
-```
 
-Without env vars, emitters run in **local mode**, printing the payload and writing to `./.local-outbox/`.
+## Next steps
 
-## CI/CD Workflows
+- Register the Backstage **Policy Status Card** and point it to `/api/policy/aggregate` (or the dashboard).  
+- Wire CI to run `terraform validate/plan` across all product modules.  
+- Ingest evidence to your Log Analytics workspace and pin the workbook.
 
-See `.github/workflows/`:
-- `golden-demo-e2e.yml` – PR + push flow running the full demo.
-- `validators-hosted.yml` – quick hosted validations (lint-like checks).
-- `validators-selfhosted.yml` – deep validation, including Terraform plan, for self‑hosted runners.
-
-## Evidence & Observability
-
-- **KQL:** `docs/observability/infra-evidence/kql/infra_evidence_queries.kql`
-- **Workbook:** `docs/observability/infra-evidence/workbooks/infra-evidence-workbook.json`
-- **Alerts:** drift freshness & verify failures; AOAI latency examples.
-
-See diagram: ![Evidence Flow](docs/observability/diagrams/evidence-flow.png)
-
-## Contents
-
-- `scripts/` – readiness validator and emitters (Python + PowerShell).
-- `docs/observability/` – KQL, alerts, workbook, ADRs, **diagrams**.
-- `workloads/` – ADRs, glossary, reference notes.
-- `examples/golden-demo/` – reference server, Backstage template, Terraform change.
-
-## Troubleshooting
-
-- **`terraform` not found**: install HashiCorp Terraform and ensure it’s on PATH.
-- **Emitter fails**: missing `requests`? Install via `pip install requests` or rely on local mode.
-- **Ports**: reference server binds to `127.0.0.1:5000`; ensure port is free.
-
-## License
-
-MIT.
