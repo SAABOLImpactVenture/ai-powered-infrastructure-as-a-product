@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  mcp:
+    ports:
+      - "127.0.0.1:8080:8080"
+    deploy:
+      resources:
+        limits: { cpus: "0.50", memory: "512M" }
+  policy-dashboard:
+    ports:
+      - "127.0.0.1:8090:8090"
+    deploy:
+      resources:
+        limits: { cpus: "0.50", memory: "512M" }
