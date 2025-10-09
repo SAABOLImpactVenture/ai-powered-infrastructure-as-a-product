@@ -1,0 +1,50 @@
+name: validate
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+concurrency: ci-${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  terraform-validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        path:
+          - platform/azure
+          - platform/aws
+          - platform/gcp
+          - platform/oci
+          - workloads
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.8.6 }
+      - name: Init & Validate (read-only; no backend)
+        working-directory: ${{ matrix.path }}
+        run: |
+          terraform init -input=false -backend=false
+          terraform validate -no-color
+
+  iac-gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup tflint
+        uses: terraform-linters/setup-tflint@v4
+        with: { tflint_version: v0.53.0 }
+      - name: TFLint (fail on issues)
+        run: |
+          tflint --init
+          tflint -f compact
+      - name: Checkov (TF/K8s/Helm)
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: .
+          soft_fail: false
+          framework: terraform,kubernetes,helm
+      - name: Conftest (OPA) — block on denies
+        run: conftest test --policy policy/ .
