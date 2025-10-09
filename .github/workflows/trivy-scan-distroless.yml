@@ -1,0 +1,45 @@
+name: trivy-scan-distroless
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+jobs:
+  build-and-scan:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: mcp-azure,       dockerfile: servers/mcp/azure/Dockerfile.distroless,       context: . }
+          - { name: mcp-policy-azure, dockerfile: servers/mcp-policy/azure/Dockerfile.distroless, context: . }
+          - { name: mcp-aws,         dockerfile: servers/mcp/aws/Dockerfile.distroless,         context: . }
+          - { name: mcp-policy-aws,   dockerfile: servers/mcp-policy/aws/Dockerfile.distroless,   context: . }
+          - { name: mcp-gcp,         dockerfile: servers/mcp/gcp/Dockerfile.distroless,         context: . }
+          - { name: mcp-policy-gcp,   dockerfile: servers/mcp-policy/gcp/Dockerfile.distroless,   context: . }
+          - { name: mcp-oci,         dockerfile: servers/mcp/oci/Dockerfile.distroless,         context: . }
+          - { name: mcp-policy-oci,   dockerfile: servers/mcp-policy/oci/Dockerfile.distroless,   context: . }
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: |
+          docker build -f "${{ matrix.dockerfile }}" -t "ghcr.io/${{ github.repository }}:${{ matrix.name }}-${{ github.sha }}" "${{ matrix.context }}"
+
+      - name: Install Trivy
+        uses: aquasecurity/trivy-action@0.21.0
+        with:
+          scan-type: 'image'
+          image-ref: "ghcr.io/${{ github.repository }}:${{ matrix.name }}-${{ github.sha }}"
+          format: 'sarif'
+          output: "trivy-${{ matrix.name }}.sarif"
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+          ignore-unfixed: true
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-${{ matrix.name }}.sarif"
