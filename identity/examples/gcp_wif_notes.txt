@@ -1,0 +1,5 @@
+Workload Identity attribute mapping:
+- google.subject = assertion.sub
+- attribute.repository = assertion.repository
+- attribute.environment = assertion.environment
+Grant roles/iam.workloadIdentityUser to: principalSet://iam.googleapis.com/POOL/attribute.repository/ORG/REPO

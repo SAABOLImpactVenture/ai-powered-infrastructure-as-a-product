@@ -1,0 +1,4 @@
+Dynamic Group example:
+ANY { request.principal.tag.platform.env == 'prod' }
+Policy example:
+Allow dynamic-group dg-prod to manage all-resources in compartment <ocid>
