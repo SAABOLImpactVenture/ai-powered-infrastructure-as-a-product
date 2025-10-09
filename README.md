@@ -25,14 +25,14 @@
 
 ```mermaid
 flowchart LR
-  A[Backstage Template<br/> + Inputs] --> B[MCP Server<br/>(cloud specific)]
-  B --> C[Terraform Plan]
-  C --> D{Policy Check<br/>K8s/AWS/GCP/OCI}
+  A["Backstage Template\n + Inputs"] --> B["MCP Server\n(cloud specific)"]
+  B --> C["Terraform Plan"]
+  C --> D{"Policy Check\nK8s/AWS/GCP/OCI"}
   D -->|OK| E[Apply]
-  D -->|VIOLATIONS/DRIFT| F[Stop + Explain]
-  E --> G[Emit Evidence JSON]
+  D -->|VIOLATIONS/DRIFT| F["Stop + Explain"]
+  E --> G["Emit Evidence JSON"]
   C --> G
-  G --> H[Azure Monitor / LA<br/>+ Dashboard]
+  G --> H["Azure Monitor / LA\n+ Dashboard"]
 ```
 
 ```mermaid
@@ -70,22 +70,22 @@ sequenceDiagram
 ```mermaid
 graph TB
   subgraph Dev Portal
-    BSC[Backstage<br/>Templates & Actions]
+    BSC["Backstage\nTemplates & Actions"]
   end
   subgraph Agents
-    MCP1[MCP Azure]:::agent
-    MCP2[MCP AWS]:::agent
-    MCP3[MCP GCP]:::agent
-    MCP4[MCP OCI]:::agent
-    POL1[Policy K8s]:::policy
-    POL2[Policy AWS]:::policy
-    POL3[Policy GCP]:::policy
-    POL4[Policy OCI]:::policy
+    MCP1["MCP Azure"]:::agent
+    MCP2["MCP AWS"]:::agent
+    MCP3["MCP GCP"]:::agent
+    MCP4["MCP OCI"]:::agent
+    POL1["Policy K8s"]:::policy
+    POL2["Policy AWS"]:::policy
+    POL3["Policy GCP"]:::policy
+    POL4["Policy OCI"]:::policy
   end
   subgraph Platform
-    MODS[Product Modules<br/>platform/<cloud>]
-    POLP[Policy Packs]
-    OBS[Evidence + Workbooks]
+    MODS["Product Modules\nplatform/<cloud>"]
+    POLP["Policy Packs"]
+    OBS["Evidence + Workbooks"]
   end
   BSC-->MCP1 & BSC-->MCP2 & BSC-->MCP3 & BSC-->MCP4
   MCP1-->MODS; MCP2-->MODS; MCP3-->MODS; MCP4-->MODS
