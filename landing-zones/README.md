@@ -1,10 +1,11 @@
-# Turnkey Landing Zones
+# Turnkey Landing Zones (minimal, deployable)
 
-Deploy baseline enterprise controls per cloud with **region allow-lists**, **CMEK-required** storage, and **private-only** endpoints.
+- **Azure Enterprise-Scale (lite)**: `landing-zones/azure/enterprise-scale-lite/`
+  - Management Groups, Allowed Locations, CMEK-required Storage, Private Endpoint policies
+- **AWS Control Plane**: `landing-zones/aws/orgs_control_baseline/`
+  - AWS Organizations + SCP deny outside approved regions; attach to OUs; pair with Control Tower where available
+- **GCP Org Policies**: `landing-zones/gcp/org_policies/`
+  - Disable SA Key creation, extend with CMEK/TLS policies
+- **OCI Compartments**: `landing-zones/oci/compartments/`
 
-- Azure: `landing-zones/azure/enterprise-scale-lite/` (Management Groups + Policy Assignments)
-- AWS: `landing-zones/aws/orgs_control_baseline/` (Organizations + SCP deny outside approved regions)
-- GCP: `landing-zones/gcp/org_policies/` (disable SA key creation; extend with CMEK & TLS policies)
-- OCI: `landing-zones/oci/compartments/`
-
-> Apply these at org/root scope first, then layer product modules.
+Apply these at **org/root scope**, then layer governed product modules. Region allow-lists and CMEK requirements block drift by default.
