@@ -1,0 +1,11 @@
+{
+  "policy": "kyverno-verify-signed-images",
+  "exceptions": [
+    {
+      "namespace": "workloads",
+      "image": "ghcr.io/org/legacy@sha256:deadbeef...",
+      "reason": "Legacy base image pending re-sign",
+      "expires": "2026-01-01T00:00:00Z"
+    }
+  ]
+}
