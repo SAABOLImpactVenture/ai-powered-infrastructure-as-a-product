@@ -1,0 +1,13 @@
+
+version: 1
+title: "Agentic Change Review"
+steps:
+  - id: collect-plan
+    title: Collect Plan Evidence
+    run: node workloads/agents-mcp-aoai/service/agent-orchestrator.ts $CLOUD $TF_PATH
+  - id: role-summaries
+    title: Build Role Summaries
+    run: node workloads/agents-mcp-aoai/service/role-summaries.ts evidence/agent/$CLOUD/*-plan.json $CLOUD
+  - id: check-gates
+    title: Enforce Gates
+    run: echo "CI enforces gates via agent-governance workflow"

@@ -1,0 +1,49 @@
+{
+  "roles": {
+    "product-manager": [
+      "RA-3",
+      "PM-9",
+      "CA-6"
+    ],
+    "delivery-architect": [
+      "CM-2",
+      "SC-7",
+      "SC-12",
+      "SC-13"
+    ],
+    "responsible-engineer": [
+      "SA-11",
+      "CP-2",
+      "RA-5"
+    ],
+    "security-identity-expert": [
+      "AC-2",
+      "IA-2",
+      "IA-5",
+      "SI-7",
+      "SC-7",
+      "AU-6"
+    ]
+  },
+  "evidenceToControls": {
+    "plan": [
+      "CM-2",
+      "CM-3",
+      "CM-6",
+      "CA-7"
+    ],
+    "policy": [
+      "SI-7",
+      "CM-7",
+      "SC-7"
+    ],
+    "summary": [
+      "CA-2",
+      "CA-7"
+    ],
+    "sbom": [
+      "SA-11",
+      "SR-4"
+    ]
+  }
+}
