@@ -1,0 +1,36 @@
+name: apply-azure
+on:
+  push:
+    branches: [ main ]
+    paths: ['products/azure/**']
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    environment: lz-prod
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.APP_SUB_ID }}
+      - uses: hashicorp/setup-terraform@v3
+      - name: Apply & Evidence
+        env:
+          ARM_USE_AZUREAD: true
+          ARM_USE_OIDC: true
+          ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ vars.PLATFORM_SUB_ID }}
+        run: |
+          terraform -chdir=products/azure/example init             -backend-config="storage_account_name=${{ vars.STATE_STORAGE_ACCOUNT }}"             -backend-config="container_name=${{ vars.STATE_CONTAINER }}"
+          terraform -chdir=products/azure/example apply -auto-approve
+          mkdir -p evidence
+          terraform -chdir=products/azure/example show -json > evidence/post-apply.json
+          jq -n --arg repo "${GITHUB_REPOSITORY}" --arg run "${GITHUB_RUN_ID}"             '{generated_at:(now|todate),repo:$repo,run_id:$run,artifacts:["post-apply.json"]}'             > evidence/manifest.json
+      - name: Upload evidence to immutable container
+        run: |
+          az storage blob upload-batch             --account-name "${{ vars.STATE_STORAGE_ACCOUNT }}"             -d "${{ vars.EVIDENCE_CONTAINER }}" -s evidence --overwrite false
