@@ -14,7 +14,6 @@ SA="staiap$RANDOM"             # must be globally unique
 CT_STATE="tfstate"
 CT_EVID="evidence"
 
-# ====== Login & context ======
 echo ">> az login (interactive if needed)"
 az account show >/dev/null 2>&1 || az login --use-device-code
 
@@ -68,7 +67,7 @@ for SUB in "$SUB_DEV" "$SUB_APP"; do
 done
 
 echo
-echo "==== OUTPUT (save these as GitHub Variables) ===="
+echo "==== OUTPUT (save these as GitHub *SECRETS*) ===="
 echo "AZURE_TENANT_ID=$TENANT_ID"
 echo "AZURE_CLIENT_ID=$APP_ID"
 echo "PLATFORM_SUB_ID=$SUB_MGMT"
@@ -77,3 +76,16 @@ echo "APP_SUB_ID=$SUB_APP"
 echo "STATE_STORAGE_ACCOUNT=$SA"
 echo "STATE_CONTAINER=$CT_STATE"
 echo "EVIDENCE_CONTAINER=$CT_EVID"
+
+cat <<'EOF'
+
+# Optional: set them via GitHub CLI (ensure gh is authenticated: gh auth login)
+# gh secret set AZURE_TENANT_ID --body "$TENANT_ID"
+# gh secret set AZURE_CLIENT_ID --body "$APP_ID"
+# gh secret set PLATFORM_SUB_ID --body "$SUB_MGMT"
+# gh secret set DEV_SUB_ID --body "$SUB_DEV"
+# gh secret set APP_SUB_ID --body "$SUB_APP"
+# gh secret set STATE_STORAGE_ACCOUNT --body "$SA"
+# gh secret set STATE_CONTAINER --body "$CT_STATE"
+# gh secret set EVIDENCE_CONTAINER --body "$CT_EVID"
+EOF
