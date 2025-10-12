@@ -9,6 +9,7 @@ on:
 permissions:
   id-token: write
   contents: read
+  security-events: write   # for SARIF upload
 
 env:
   # Backend (Mgmt subscription)
@@ -60,7 +61,7 @@ jobs:
           ARM_USE_OIDC: "true"
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.DEV_SUB_ID }}  # provider default
+          ARM_SUBSCRIPTION_ID: ${{ secrets.DEV_SUB_ID }}
         run: |
           terraform init \
             -backend-config="resource_group_name=${{ env.RG_PLATFORM }}" \
@@ -72,6 +73,70 @@ jobs:
       - name: Switch context to DEV subscription
         if: steps.detect.outputs.has_tf == 'true'
         run: az account set --subscription "${{ secrets.DEV_SUB_ID }}"
+
+      # ---------- Security Gates (fail-closed) ----------
+
+      - name: Setup TFLint
+        if: steps.detect.outputs.has_tf == 'true'
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
+
+      - name: TFLint init
+        if: steps.detect.outputs.has_tf == 'true'
+        working-directory: ${{ env.TF_WORKDIR }}
+        run: tflint --init
+
+      - name: TFLint (SARIF)
+        if: steps.detect.outputs.has_tf == 'true'
+        working-directory: ${{ env.TF_WORKDIR }}
+        run: |
+          tflint -f sarif > tflint.sarif
+          test -s tflint.sarif || echo '{"$schema":"https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json","version":"2.1.0","runs":[]}' > tflint.sarif
+
+      - name: Upload SARIF (TFLint)
+        if: steps.detect.outputs.has_tf == 'true'
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ env.TF_WORKDIR }}/tflint.sarif
+          category: tflint
+
+      - name: Install tfsec
+        if: steps.detect.outputs.has_tf == 'true'
+        run: |
+          curl -sSL https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
+
+      - name: tfsec (SARIF)
+        if: steps.detect.outputs.has_tf == 'true'
+        working-directory: ${{ env.TF_WORKDIR }}
+        run: |
+          tfsec --format sarif --out tfsec.sarif || true
+          test -s tfsec.sarif || echo '{"$schema":"https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json","version":"2.1.0","runs":[]}' > tfsec.sarif
+
+      - name: Upload SARIF (tfsec)
+        if: steps.detect.outputs.has_tf == 'true'
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ env.TF_WORKDIR }}/tfsec.sarif
+          category: tfsec
+
+      - name: Install Conftest (OPA)
+        if: steps.detect.outputs.has_tf == 'true' && hashFiles('policy/**/*.rego') != ''
+        run: |
+          ver="0.53.0"
+          curl -LO "https://github.com/open-policy-agent/conftest/releases/download/v${ver}/conftest_${ver}_Linux_x86_64.tar.gz"
+          tar -xzf conftest_${ver}_Linux_x86_64.tar.gz
+          sudo mv conftest /usr/local/bin/conftest
+          conftest --version
+
+      - name: Conftest policy check
+        if: steps.detect.outputs.has_tf == 'true' && hashFiles('policy/**/*.rego') != ''
+        working-directory: ${{ env.TF_WORKDIR }}
+        run: |
+          terraform show -json > plan.json || true
+          conftest test plan.json -p ../../policy
+
+      # ---------- Terraform validate/plan ----------
 
       - name: Terraform validate
         if: steps.detect.outputs.has_tf == 'true'

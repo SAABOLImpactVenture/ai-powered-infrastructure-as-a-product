@@ -74,21 +74,74 @@ jobs:
         if: steps.detect.outputs.has_tf == 'true'
         run: az account set --subscription "${{ secrets.DEV_SUB_ID }}"
 
+      # (Optional) quick re-run of tflint/tfsec before apply; comment out if not needed
+      - name: Setup TFLint
+        if: steps.detect.outputs.has_tf == 'true'
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
+
+      - name: TFLint check
+        if: steps.detect.outputs.has_tf == 'true'
+        working-directory: ${{ env.TF_WORKDIR }}
+        run: |
+          tflint --init
+          tflint
+
+      - name: Install tfsec
+        if: steps.detect.outputs.has_tf == 'true'
+        run: |
+          curl -sSL https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
+          tfsec --version
+
+      - name: tfsec check
+        if: steps.detect.outputs.has_tf == 'true'
+        working-directory: ${{ env.TF_WORKDIR }}
+        run: tfsec || true
+
       - name: Terraform apply (auto-approve)
         if: steps.detect.outputs.has_tf == 'true'
         working-directory: ${{ env.TF_WORKDIR }}
         run: terraform apply -auto-approve
 
-      - name: Emit evidence stub
+      # ---------- Evidence (immutability-friendly append) ----------
+      - name: Emit evidence
         if: steps.detect.outputs.has_tf == 'true'
         working-directory: ${{ env.TF_WORKDIR }}
         run: |
           ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          printf '{"run_id":"%s","commit":"%s","timestamp":"%s"}\n' \
-                 "${{ github.run_id }}" "${{ github.sha }}" "$ts" > evidence.json
+          cat > evidence.json <<JSON
+          {
+            "run_id": "${{ github.run_id }}",
+            "workflow": "apply-azure",
+            "repo": "${{ github.repository }}",
+            "commit": "${{ github.sha }}",
+            "branch": "${{ github.ref_name }}",
+            "timestamp": "${ts}",
+            "subscription_dev": "${{ secrets.DEV_SUB_ID }}",
+            "state_storage_account": "${{ env.STATE_STORAGE_ACCOUNT }}",
+            "state_container": "${{ env.STATE_CONTAINER }}"
+          }
+          JSON
           cat evidence.json
 
-      - name: Upload evidence artifact
+      - name: Upload evidence to evidence container (AAD/OIDC)
+        if: steps.detect.outputs.has_tf == 'true'
+        env:
+          SA: ${{ env.STATE_STORAGE_ACCOUNT }}
+          CT: ${{ env.EVIDENCE_CONTAINER }}
+        working-directory: ${{ env.TF_WORKDIR }}
+        run: |
+          # store under /runs/<run-id>/evidence.json
+          az storage blob upload \
+            --auth-mode login \
+            --account-name "$SA" \
+            --container-name "$CT" \
+            --name "runs/${{ github.run_id }}/evidence.json" \
+            --file "./evidence.json" \
+            --overwrite true
+
+      - name: Upload evidence as artifact (convenience)
         if: steps.detect.outputs.has_tf == 'true'
         uses: actions/upload-artifact@v4
         with:
