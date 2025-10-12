@@ -9,14 +9,16 @@ terraform {
   backend "azurerm" {}
 }
 
-provider "azurerm" {
-  features {}
-}
+provider "azurerm" { features {} }
 
 resource "azurerm_resource_group" "demo" {
   name     = "rg-aiap-demo"
   location = "eastus"
-  tags = {
-    provisioned_by = "github-actions"
-  }
+  tags = { provisioned_by = "github-actions" }
+}
+
+resource "azurerm_resource_group" "example" {
+  name     = "rg-aiap-example"
+  location = "eastus"
+  tags = { provisioned_by = "github-actions" }
 }

@@ -30,7 +30,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      # Installs from requirements-dev.txt if present; else requirements.txt; else skips.
       - name: Install dependencies (dev → default; else skip)
         run: |
           set -e
@@ -44,7 +43,6 @@ jobs:
             echo "No requirements file found; skipping dependency installation."
           fi
 
-      # Run tests only if pytest is installed by the previous step.
       - name: Run tests (if pytest available)
         run: |
           python - <<'PY'
@@ -55,13 +53,22 @@ jobs:
           sys.exit(subprocess.call(["pytest", "-q"]))
           PY
 
-      # Optional: lint only if flake8 is installed.
-      - name: Lint (if flake8 available)
+      - name: Lint (flake8 runs only if config and *.py exist)
         run: |
-          python - <<'PY'
-          import importlib, subprocess, sys
-          if importlib.util.find_spec("flake8") is None:
-              print("flake8 not installed; skipping lint.")
-              sys.exit(0)
-          sys.exit(subprocess.call(["flake8", "."]))
-          PY
+          set -e
+          has_py="$(git ls-files '*.py' | wc -l)"
+          if [ "$has_py" -eq 0 ]; then
+            echo "No Python files; skipping flake8."
+            exit 0
+          fi
+          if [ -f .flake8 ] || [ -f setup.cfg ] || [ -f pyproject.toml ]; then
+            python - <<'PY'
+            import importlib, subprocess, sys
+            if importlib.util.find_spec("flake8") is None:
+                print("flake8 not installed; skipping lint.")
+                sys.exit(0)
+            sys.exit(subprocess.call(["flake8", "."]))
+            PY
+          else
+            echo "No flake8 config; skipping lint."
+          fi
