@@ -1,0 +1,113 @@
+name: ci-matrix / iac-gates
+
+on:
+  pull_request:
+    branches: [ "**" ]
+    paths:
+      - "products/**"
+      - "modules/**"
+      - "policy/**"
+      - ".github/workflows/ci-matrix-iac-gates.yml"
+
+permissions:
+  contents: read
+  security-events: write
+
+env:
+  TF_IN_AUTOMATION: "true"
+  TF_INPUT: "false"
+  TF_CLI_ARGS: "-no-color"
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      any_tf:   ${{ steps.scan.outputs.any_tf }}
+      paths:    ${{ steps.changed.outputs.all_changed_files }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: List changed files
+        id: changed
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            products/**/*
+            modules/**/*
+
+      - name: Find folders containing Terraform
+        id: scan
+        run: |
+          set -e
+          shopt -s globstar nullglob
+          ANY="false"
+          OUT=""
+          for f in ${{ steps.changed.outputs.all_changed_files }}; do
+            d="${f%/*}"
+            if [ -f "$d/main.tf" ] || ls "$d"/*.tf >/dev/null 2>&1; then
+              OUT+="${d}"$'\n'
+              ANY="true"
+            fi
+          done
+          echo "any_tf=${ANY}" >> $GITHUB_OUTPUT
+          printf "%s" "$OUT" > dirs.txt
+          echo "DIRS<<EOF" >> $GITHUB_ENV
+          sort -u dirs.txt >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+  tflint:
+    runs-on: ubuntu-latest
+    needs: detect
+    if: needs.detect.outputs.any_tf == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
+      - name: TFLint each changed dir
+        run: |
+          set -e
+          while IFS= read -r dir; do
+            [ -z "$dir" ] && continue
+            echo "== TFLint: $dir =="
+            (cd "$dir" && tflint --init && tflint)
+          done <<< "$DIRS"
+
+  tfsec:
+    runs-on: ubuntu-latest
+    needs: detect
+    if: needs.detect.outputs.any_tf == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tfsec
+        run: curl -sSL https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
+      - name: tfsec each changed dir (no-fail on absence)
+        run: |
+          set -e
+          while IFS= read -r dir; do
+            [ -z "$dir" ] && continue
+            echo "== tfsec: $dir =="
+            (cd "$dir" && tfsec || true)
+          done <<< "$DIRS"
+
+  conftest:
+    runs-on: ubuntu-latest
+    needs: detect
+    if: needs.detect.outputs.any_tf == 'true' && hashFiles('policy/**/*.rego') != ''
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install conftest
+        run: |
+          ver="0.53.0"
+          curl -LO "https://github.com/open-policy-agent/conftest/releases/download/v${ver}/conftest_${ver}_Linux_x86_64.tar.gz"
+          tar -xzf conftest_${ver}_Linux_x86_64.tar.gz
+          sudo mv conftest /usr/local/bin/
+      - name: Conftest against plan (changed dirs)
+        run: |
+          set -e
+          while IFS= read -r dir; do
+            [ -z "$dir" ] && continue
+            echo "== conftest: $dir =="
+            (cd "$dir" && terraform init -backend=false && terraform plan -out=tfplan.bin && terraform show -json tfplan.bin > plan.json)
+            conftest test "$dir/plan.json" -p policy
+          done <<< "$DIRS"
