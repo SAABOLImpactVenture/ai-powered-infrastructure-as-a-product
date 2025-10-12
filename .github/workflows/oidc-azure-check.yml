@@ -1,0 +1,24 @@
+name: oidc-azure-check
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  whoami:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Az CLI login via OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.PLATFORM_SUB_ID }}
+
+      - name: Show subscriptions (Mgmt/Dev/App)
+        run: |
+          az account show --subscription ${{ secrets.PLATFORM_SUB_ID }} -o table
+          az account show --subscription ${{ secrets.DEV_SUB_ID }} -o table
+          az account show --subscription ${{ secrets.APP_SUB_ID }} -o table
