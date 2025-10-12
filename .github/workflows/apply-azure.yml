@@ -1,12 +1,8 @@
 name: apply-azure
-
 on:
   push:
-    branches: [ "main" ]
-    paths:
-      - "products/azure/**"
-      - ".github/workflows/apply-azure.yml"
-
+    branches: [ main ]
+    paths: ['products/azure/**']
 permissions:
   id-token: write
   contents: read
@@ -27,7 +23,7 @@ env:
 jobs:
   apply:
     runs-on: ubuntu-latest
-
+    environment: lz-prod
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,20 +44,15 @@ jobs:
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.PLATFORM_SUB_ID }}
-
-      - name: Setup Terraform
-        if: steps.detect.outputs.has_tf == 'true'
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform init (remote state in Mgmt via AAD/OIDC)
-        if: steps.detect.outputs.has_tf == 'true'
-        working-directory: ${{ env.TF_WORKDIR }}
+          subscription-id: ${{ secrets.APP_SUB_ID }}
+      - uses: hashicorp/setup-terraform@v3
+      - name: Apply & Evidence
         env:
-          ARM_USE_OIDC: "true"
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_AZUREAD: true
+          ARM_USE_OIDC: true
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.DEV_SUB_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.PLATFORM_SUB_ID }}
         run: |
           terraform init \
             -backend-config="resource_group_name=${{ env.RG_PLATFORM }}" \
