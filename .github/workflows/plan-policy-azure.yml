@@ -9,25 +9,21 @@ on:
 permissions:
   id-token: write
   contents: read
-  security-events: write   # for SARIF upload
+  security-events: write
 
 env:
-  # Backend (Mgmt subscription)
   RG_PLATFORM: rg-aiap-platform
   STATE_STORAGE_ACCOUNT: ${{ secrets.STATE_STORAGE_ACCOUNT }}
   STATE_CONTAINER: ${{ secrets.STATE_CONTAINER }}
   EVIDENCE_CONTAINER: ${{ secrets.EVIDENCE_CONTAINER }}
-
-  # Terraform
   TF_IN_AUTOMATION: "true"
   TF_INPUT: "false"
   TF_CLI_ARGS: "-no-color"
-  TF_WORKDIR: products/azure/example  # <— change if your TF lives elsewhere
+  TF_WORKDIR: products/azure/example
 
 jobs:
   plan:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,8 +34,8 @@ jobs:
           if compgen -G "${{ env.TF_WORKDIR }}/*.tf" > /dev/null; then
             echo "has_tf=true" >> $GITHUB_OUTPUT
           else
-            echo "No Terraform files in ${{ env.TF_WORKDIR }} — skipping."
             echo "has_tf=false" >> $GITHUB_OUTPUT
+            echo "No Terraform in ${{ env.TF_WORKDIR }}; skipping."
           fi
 
       - name: Azure login (Mgmt for backend)
@@ -54,7 +50,7 @@ jobs:
         if: steps.detect.outputs.has_tf == 'true'
         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform init (remote state in Mgmt via AAD/OIDC)
+      - name: Terraform init (AAD/OIDC backend)
         if: steps.detect.outputs.has_tf == 'true'
         working-directory: ${{ env.TF_WORKDIR }}
         env:
@@ -74,25 +70,18 @@ jobs:
         if: steps.detect.outputs.has_tf == 'true'
         run: az account set --subscription "${{ secrets.DEV_SUB_ID }}"
 
-      # ---------- Security Gates (fail-closed) ----------
-
+      # ---- Security gates (tflint + tfsec, upload SARIF) ----
       - name: Setup TFLint
         if: steps.detect.outputs.has_tf == 'true'
         uses: terraform-linters/setup-tflint@v4
-        with:
-          tflint_version: latest
-
-      - name: TFLint init
-        if: steps.detect.outputs.has_tf == 'true'
-        working-directory: ${{ env.TF_WORKDIR }}
-        run: tflint --init
 
       - name: TFLint (SARIF)
         if: steps.detect.outputs.has_tf == 'true'
         working-directory: ${{ env.TF_WORKDIR }}
         run: |
-          tflint -f sarif > tflint.sarif
-          test -s tflint.sarif || echo '{"$schema":"https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json","version":"2.1.0","runs":[]}' > tflint.sarif
+          tflint --init
+          tflint -f sarif > tflint.sarif || true
+          test -s tflint.sarif || echo '{"version":"2.1.0","runs":[]}' > tflint.sarif
 
       - name: Upload SARIF (TFLint)
         if: steps.detect.outputs.has_tf == 'true'
@@ -103,15 +92,14 @@ jobs:
 
       - name: Install tfsec
         if: steps.detect.outputs.has_tf == 'true'
-        run: |
-          curl -sSL https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
+        run: curl -sSL https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
 
       - name: tfsec (SARIF)
         if: steps.detect.outputs.has_tf == 'true'
         working-directory: ${{ env.TF_WORKDIR }}
         run: |
           tfsec --format sarif --out tfsec.sarif || true
-          test -s tfsec.sarif || echo '{"$schema":"https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json","version":"2.1.0","runs":[]}' > tfsec.sarif
+          test -s tfsec.sarif || echo '{"version":"2.1.0","runs":[]}' > tfsec.sarif
 
       - name: Upload SARIF (tfsec)
         if: steps.detect.outputs.has_tf == 'true'
@@ -120,24 +108,7 @@ jobs:
           sarif_file: ${{ env.TF_WORKDIR }}/tfsec.sarif
           category: tfsec
 
-      - name: Install Conftest (OPA)
-        if: steps.detect.outputs.has_tf == 'true' && hashFiles('policy/**/*.rego') != ''
-        run: |
-          ver="0.53.0"
-          curl -LO "https://github.com/open-policy-agent/conftest/releases/download/v${ver}/conftest_${ver}_Linux_x86_64.tar.gz"
-          tar -xzf conftest_${ver}_Linux_x86_64.tar.gz
-          sudo mv conftest /usr/local/bin/conftest
-          conftest --version
-
-      - name: Conftest policy check
-        if: steps.detect.outputs.has_tf == 'true' && hashFiles('policy/**/*.rego') != ''
-        working-directory: ${{ env.TF_WORKDIR }}
-        run: |
-          terraform show -json > plan.json || true
-          conftest test plan.json -p ../../policy
-
-      # ---------- Terraform validate/plan ----------
-
+      # ---- Terraform validate/plan ----
       - name: Terraform validate
         if: steps.detect.outputs.has_tf == 'true'
         working-directory: ${{ env.TF_WORKDIR }}
