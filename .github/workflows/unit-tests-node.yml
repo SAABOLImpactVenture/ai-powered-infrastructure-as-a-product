@@ -1,0 +1,42 @@
+name: unit-tests
+
+on:
+  pull_request:
+    branches: [ "**" ]
+    paths:
+      - "**/package.json"
+      - "**/package-lock.json"
+      - "**/pnpm-lock.yaml"
+      - "**/yarn.lock"
+      - ".github/workflows/unit-tests-node.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  node-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detect JS workspace
+        id: js
+        run: |
+          ROOTS="$(git diff --name-only origin/${{ github.base_ref }}... | grep -E '(^|/)package.json$' | xargs -I{} dirname {} | sort -u || true)"
+          if [ -z "$ROOTS" ]; then echo "has_js=false" >> $GITHUB_OUTPUT; else echo "$ROOTS" > roots.txt; echo "has_js=true" >> $GITHUB_OUTPUT; fi
+      - name: Setup Node
+        if: steps.js.outputs.has_js == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install & test
+        if: steps.js.outputs.has_js == 'true'
+        run: |
+          set -e
+          while IFS= read -r dir; do
+            [ -z "$dir" ] && continue
+            echo "== test: $dir =="
+            (cd "$dir" && npm ci --prefer-offline || npm install && npm test --if-present)
+          done < roots.txt
+      - name: Skip (no JS changes)
+        if: steps.js.outputs.has_js != 'true'
+        run: echo "No package.json changes; skipping node tests."

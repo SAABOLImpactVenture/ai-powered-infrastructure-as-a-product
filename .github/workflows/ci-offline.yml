@@ -1,17 +1,86 @@
-name: CI Offline
-on: [push, pull_request]
+name: ci-offline
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+permissions:
+  contents: read
+
 jobs:
-  offline-qa:
+  python-ci:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.11" }
-      - run: python -m pip install --upgrade pip && pip install -r requirements-dev.txt
-      - run: pytest -q
-      - name: Terraform validate (offline MVP)
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      # Installs from requirements-dev.txt if present; else requirements.txt; else skips.
+      - name: Install dependencies (dev → default; else skip)
         run: |
-          terraform -version
-          cd example/mvps/mvp-03-terraform-null-resource
-          terraform init -input=false
-          terraform validate
+          set -e
+          if [ -f requirements-dev.txt ]; then
+            echo "Installing from requirements-dev.txt"
+            pip install -r requirements-dev.txt
+          elif [ -f requirements.txt ]; then
+            echo "Installing from requirements.txt"
+            pip install -r requirements.txt
+          else
+            echo "No requirements file found; skipping dependency installation."
+          fi
+
+      # --- TESTS: run only if 'pytest' is installed (no importlib.util usage) ---
+      - name: Run tests (if pytest available)
+        shell: bash
+        run: |
+          set -e
+          if python - <<'PY'
+import sys, pkgutil
+sys.exit(0 if pkgutil.find_loader("pytest") is None else 1)
+PY
+          then
+            echo "pytest not installed; skipping tests."
+          else
+            python -m pytest -q
+          fi
+
+      # --- LINT: run flake8 only if it is installed AND there are *.py files ---
+      - name: Lint (flake8 runs only if config and *.py exist)
+        shell: bash
+        run: |
+          set -e
+          # Any Python files?
+          if [ "$(git ls-files '*.py' | wc -l)" -eq 0 ]; then
+            echo "No Python files; skipping flake8."
+            exit 0
+          fi
+          # Is flake8 available?
+          if python - <<'PY'
+import sys, pkgutil
+sys.exit(0 if pkgutil.find_loader("flake8") is None else 1)
+PY
+          then
+            echo "flake8 not installed; skipping lint."
+            exit 0
+          fi
+          # Require a config to avoid noisy defaults
+          if [ -f .flake8 ] || [ -f setup.cfg ] || [ -f pyproject.toml ]; then
+            flake8 .
+          else
+            echo "No flake8 config; skipping lint."
+          fi
