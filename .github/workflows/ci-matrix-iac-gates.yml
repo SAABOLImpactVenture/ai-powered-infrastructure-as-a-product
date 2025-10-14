@@ -78,10 +78,12 @@ jobs:
         shell: bash
         run: |
           set -e
+          tflint --version
           for dir in $(jq -r '.[]' <<< '${{ needs.detect.outputs.dirs }}'); do
             echo "== TFLint: $dir =="
             (cd "$dir" && tflint --init && tflint)
           done
+
 
   tfsec:
     name: tfsec
