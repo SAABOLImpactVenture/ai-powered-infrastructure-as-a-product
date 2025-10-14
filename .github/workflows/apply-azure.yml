@@ -1,12 +1,8 @@
 name: apply-azure
-
 on:
   push:
-    branches: [ "main" ]
-    paths:
-      - "products/azure/**"
-      - ".github/workflows/apply-azure.yml"
-
+    branches: [ main ]
+    paths: ['products/azure/**']
 permissions:
   id-token: write
   contents: read
@@ -53,10 +49,11 @@ jobs:
         if: steps.detect.outputs.has_tf == 'true'
         working-directory: ${{ env.TF_WORKDIR }}
         env:
-          ARM_USE_OIDC: "true"
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_AZUREAD: true
+          ARM_USE_OIDC: true
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.DEV_SUB_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.PLATFORM_SUB_ID }}
         run: |
           terraform init \
             -backend-config="resource_group_name=${{ env.RG_PLATFORM }}" \
