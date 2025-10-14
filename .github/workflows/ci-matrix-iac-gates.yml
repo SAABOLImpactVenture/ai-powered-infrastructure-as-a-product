@@ -22,31 +22,49 @@ jobs:
   detect:
     runs-on: ubuntu-latest
     outputs:
-      any_tf: ${{ steps.scan.outputs.any_tf }}
-      dirs:   ${{ steps.scan.outputs.dirs }}
+      any_tf:     ${{ steps.scan.outputs.any_tf }}
+      dirs:       ${{ steps.scan.outputs.dirs }}
+      has_policy: ${{ steps.scan.outputs.has_policy }}
     steps:
       - uses: actions/checkout@v4
-      - name: Determine changed TF directories
+
+      - name: Determine changed TF directories & presence of policy
         id: scan
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
           BASE="${{ github.base_ref || 'main' }}"
           git fetch --depth=50 origin || true
+
           CHANGED="$(git diff --name-only origin/${BASE}... | tr -d '\r')"
+
           declare -A SEEN
           DIRS=()
           while IFS= read -r f; do
+            [ -z "$f" ] && continue
             d="${f%/*}"
             [ -d "$d" ] || continue
             if ls "$d"/*.tf >/dev/null 2>&1; then
               if [ -z "${SEEN[$d]+x}" ]; then SEEN[$d]=1; DIRS+=("$d"); fi
             fi
           done <<< "$CHANGED"
-          if [ "${#DIRS[@]}" -gt 0 ]; then echo "any_tf=true"  >> $GITHUB_OUTPUT; else echo "any_tf=false" >> $GITHUBOUTPUT; fi 2>/dev/null || true
+
+          if [ "${#DIRS[@]}" -gt 0 ]; then
+            echo "any_tf=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "any_tf=false" >> "$GITHUB_OUTPUT"
+          fi
+
           printf '%s\n' "${DIRS[@]}" | jq -R -s -c 'split("\n")[:-1]' > dirs.json
-          echo "dirs=$(cat dirs.json)" >> $GITHUB_OUTPUT
+          echo "dirs=$(cat dirs.json)" >> "$GITHUB_OUTPUT"
           echo "Detected TF dirs:"; cat dirs.json
+
+          # Detect any rego policies in repo (not using hashFiles at job level)
+          if compgen -G 'policy/**/*.rego' >/dev/null 2>&1; then
+            echo "has_policy=true"  >> "$GITHUB_OUTPUT"
+          else
+            echo "has_policy=false" >> "$GITHUB_OUTPUT"
+          fi
 
   tflint:
     name: tflint
@@ -87,16 +105,19 @@ jobs:
     name: conftest
     runs-on: ubuntu-latest
     needs: detect
-    if: needs.detect.outputs.any_tf == 'true' && hashFiles('policy/**/*.rego') != ''
+    if: needs.detect.outputs.any_tf == 'true' && needs.detect.outputs.has_policy == 'true'
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
+
       - name: Install Conftest
         run: |
           ver="0.53.0"
           curl -LO "https://github.com/open-policy-agent/conftest/releases/download/v${ver}/conftest_${ver}_Linux_x86_64.tar.gz"
-          tar -xzf conftest_${ver}_Linux_x86_64.tar.gz
+          tar -xzf "conftest_${ver}_Linux_x86_64.tar.gz"
           sudo mv conftest /usr/local/bin/conftest
+          conftest --version
+
       - name: Plan each changed dir and test with Conftest
         shell: bash
         env:
