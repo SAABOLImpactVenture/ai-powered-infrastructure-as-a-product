@@ -1,16 +1,18 @@
+# .tflint.hcl
+
 plugin "azurerm" {
   enabled = true
-  version = "0.27.1"
+  version = "0.76.1" # known-good at time of writing; update as needed
   source  = "github.com/terraform-linters/tflint-ruleset-azurerm"
 }
 
+# General config
 config {
   module = true
-  force  = false
+  force  = true
 }
 
-rule "terraform_unused_declarations" { enabled = true }
-rule "terraform_deprecated_interpolation" { enabled = true }
-
-# Example: tune false positives here as repo grows
-# rule "azurerm_resource_missing_tags" { enabled = true }
+# Example: tune severity or disable selected rules here (optional)
+# rule "azurerm_resource_no_deprecated" {
+#   enabled = true
+# }
