@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "products/azure/**"
+      - "policy/**"
       - ".github/workflows/plan-policy-azure.yml"
 
 permissions:
@@ -24,6 +25,7 @@ env:
 jobs:
   plan:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -70,11 +72,9 @@ jobs:
         if: steps.detect.outputs.has_tf == 'true'
         run: az account set --subscription "${{ secrets.DEV_SUB_ID }}"
 
-      # ---- Security gates (tflint + tfsec, upload SARIF) ----
-      - name: Setup TFLint
+      # ---- Security gates ----
+      - uses: terraform-linters/setup-tflint@v4
         if: steps.detect.outputs.has_tf == 'true'
-        uses: terraform-linters/setup-tflint@v4
-
       - name: TFLint (SARIF)
         if: steps.detect.outputs.has_tf == 'true'
         working-directory: ${{ env.TF_WORKDIR }}
@@ -82,10 +82,8 @@ jobs:
           tflint --init
           tflint -f sarif > tflint.sarif || true
           test -s tflint.sarif || echo '{"version":"2.1.0","runs":[]}' > tflint.sarif
-
-      - name: Upload SARIF (TFLint)
+      - uses: github/codeql-action/upload-sarif@v3
         if: steps.detect.outputs.has_tf == 'true'
-        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: ${{ env.TF_WORKDIR }}/tflint.sarif
           category: tflint
@@ -93,37 +91,45 @@ jobs:
       - name: Install tfsec
         if: steps.detect.outputs.has_tf == 'true'
         run: curl -sSL https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
-
       - name: tfsec (SARIF)
         if: steps.detect.outputs.has_tf == 'true'
         working-directory: ${{ env.TF_WORKDIR }}
         run: |
           tfsec --format sarif --out tfsec.sarif || true
           test -s tfsec.sarif || echo '{"version":"2.1.0","runs":[]}' > tfsec.sarif
-
-      - name: Upload SARIF (tfsec)
+      - uses: github/codeql-action/upload-sarif@v3
         if: steps.detect.outputs.has_tf == 'true'
-        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: ${{ env.TF_WORKDIR }}/tfsec.sarif
           category: tfsec
 
-      # ---- Terraform validate/plan ----
+      # ---- Validate/Plan + Conftest (AFTER plan.json exists) ----
       - name: Terraform validate
         if: steps.detect.outputs.has_tf == 'true'
         working-directory: ${{ env.TF_WORKDIR }}
         run: terraform validate
 
-      - name: Terraform plan
+      - name: Terraform plan → plan.json
         if: steps.detect.outputs.has_tf == 'true'
         id: plan
         working-directory: ${{ env.TF_WORKDIR }}
-        run: terraform plan -out=tfplan.bin
+        run: |
+          terraform plan -out=tfplan.bin
+          terraform show -json tfplan.bin > plan.json
 
-      - name: Show plan (first 200 lines)
-        if: steps.detect.outputs.has_tf == 'true'
+      - name: Install Conftest (OPA)
+        if: steps.detect.outputs.has_tf == 'true' && hashFiles('policy/**/*.rego') != ''
+        run: |
+          ver="0.53.0"
+          curl -LO "https://github.com/open-policy-agent/conftest/releases/download/v${ver}/conftest_${ver}_Linux_x86_64.tar.gz"
+          tar -xzf conftest_${ver}_Linux_x86_64.tar.gz
+          sudo mv conftest /usr/local/bin/conftest
+          conftest --version
+
+      - name: Conftest policy check
+        if: steps.detect.outputs.has_tf == 'true' && hashFiles('policy/**/*.rego') != ''
         working-directory: ${{ env.TF_WORKDIR }}
-        run: terraform show -no-color tfplan.bin | head -n 200
+        run: conftest test plan.json -p ../../policy
 
       - name: Upload plan artifact
         if: steps.detect.outputs.has_tf == 'true'

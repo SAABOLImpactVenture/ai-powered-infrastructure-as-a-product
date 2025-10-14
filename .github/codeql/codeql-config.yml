@@ -1,0 +1,7 @@
+name: "AIaP CodeQL"
+queries:
+  - uses: security-extended
+paths-ignore:
+  - "**/.terraform/**"
+  - "**/node_modules/**"
+  - "**/dist/**"

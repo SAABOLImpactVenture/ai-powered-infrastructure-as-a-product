@@ -1,0 +1,109 @@
+name: validate
+
+on:
+  pull_request:
+    branches: [ "**" ]
+    paths:
+      - "modules/**"
+      - "products/**"
+      - ".github/workflows/ci-terraform-validate-platforms.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      aws:   ${{ steps.changes.outputs.aws }}
+      azure: ${{ steps.changes.outputs.azure }}
+      gcp:   ${{ steps.changes.outputs.gcp }}
+      oci:   ${{ steps.changes.outputs.oci }}
+      wk:    ${{ steps.changes.outputs.wk }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            aws:
+              - 'modules/aws/**'
+              - 'products/aws/**'
+            azure:
+              - 'modules/azure/**'
+              - 'products/azure/**'
+            gcp:
+              - 'modules/gcp/**'
+              - 'products/gcp/**'
+            oci:
+              - 'modules/oci/**'
+              - 'products/oci/**'
+            wk:
+              - 'products/**/workloads/**'
+
+  aws:
+    name: terraform-validate (platform/aws)
+    runs-on: ubuntu-latest
+    needs: detect
+    if: needs.detect.outputs.aws == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: |
+          cd modules/aws || cd products/aws || exit 0
+          if compgen -G "*.tf" >/dev/null; then terraform init -backend=false && terraform validate; fi
+
+  azure:
+    name: terraform-validate (platform/azure)
+    runs-on: ubuntu-latest
+    needs: detect
+    if: needs.detect.outputs.azure == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: |
+          cd modules/azure || cd products/azure || exit 0
+          if compgen -G "*.tf" >/dev/null; then terraform init -backend=false && terraform validate; fi
+
+  gcp:
+    name: terraform-validate (platform/gcp)
+    runs-on: ubuntu-latest
+    needs: detect
+    if: needs.detect.outputs.gcp == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: |
+          cd modules/gcp || cd products/gcp || exit 0
+          if compgen -G "*.tf" >/dev/null; then terraform init -backend=false && terraform validate; fi
+
+  oci:
+    name: terraform-validate (platform/oci)
+    runs-on: ubuntu-latest
+    needs: detect
+    if: needs.detect.outputs.oci == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: |
+          cd modules/oci || cd products/oci || exit 0
+          if compgen -G "*.tf" >/dev/null; then terraform init -backend=false && terraform validate; fi
+
+  wk:
+    name: terraform-validate (workloads)
+    runs-on: ubuntu-latest
+    needs: detect
+    if: needs.detect.outputs.wk == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: |
+          FOUND=0
+          while IFS= read -r d; do
+            [ -z "$d" ] && continue
+            if ls "$d"/*.tf >/dev/null 2>&1; then
+              FOUND=1
+              (cd "$d" && terraform init -backend=false && terraform validate)
+            fi
+          done < <(git ls-files 'products/**/workloads/**' | xargs -I{} dirname {} | sort -u)
+          [ "$FOUND" -eq 0 ] && echo "No workloads TF; skipping."

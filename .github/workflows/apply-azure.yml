@@ -25,8 +25,7 @@ jobs:
   apply:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Detect Terraform
         id: detect
@@ -70,11 +69,27 @@ jobs:
         if: steps.detect.outputs.has_tf == 'true'
         run: az account set --subscription "${{ secrets.DEV_SUB_ID }}"
 
-      # Optional: quick safety checks (non-blocking)
-      - name: Setup TFLint
+      # --- Evidence immutability verification (fail closed) ---
+      - name: Verify evidence immutability policy
         if: steps.detect.outputs.has_tf == 'true'
-        uses: terraform-linters/setup-tflint@v4
-      - name: TFLint check
+        env:
+          SA: ${{ env.STATE_STORAGE_ACCOUNT }}
+          CT: ${{ env.EVIDENCE_CONTAINER }}
+        run: |
+          set -e
+          echo "Checking immutability policy on container $CT in SA $SA"
+          POL="$(az storage container immutability-policy show --auth-mode login --account-name "$SA" --container-name "$CT" 2>/dev/null || true)"
+          if [ -z "$POL" ] || [ "$(echo "$POL" | jq -r '.immutabilityPeriodSinceCreationInDays // empty')" = "" ]; then
+            echo "::error::Evidence container immutability policy is missing."
+            exit 1
+          fi
+          echo "$POL" | jq .
+          echo "Immutability policy present ✅"
+
+      # --- Safety (non-blocking) ---
+      - uses: terraform-linters/setup-tflint@v4
+        if: steps.detect.outputs.has_tf == 'true'
+      - name: TFLint (non-blocking)
         if: steps.detect.outputs.has_tf == 'true'
         working-directory: ${{ env.TF_WORKDIR }}
         run: |
@@ -83,7 +98,7 @@ jobs:
       - name: Install tfsec
         if: steps.detect.outputs.has_tf == 'true'
         run: curl -sSL https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
-      - name: tfsec check
+      - name: tfsec (non-blocking)
         if: steps.detect.outputs.has_tf == 'true'
         working-directory: ${{ env.TF_WORKDIR }}
         run: tfsec || true
@@ -93,7 +108,6 @@ jobs:
         working-directory: ${{ env.TF_WORKDIR }}
         run: terraform apply -auto-approve
 
-      # Evidence
       - name: Emit evidence
         if: steps.detect.outputs.has_tf == 'true'
         working-directory: ${{ env.TF_WORKDIR }}
@@ -112,9 +126,8 @@ jobs:
             "state_container": "${{ env.STATE_CONTAINER }}"
           }
           JSON
-          cat evidence.json
 
-      - name: Upload evidence to evidence container (AAD/OIDC)
+      - name: Upload evidence blob (AAD/OIDC)
         if: steps.detect.outputs.has_tf == 'true'
         env:
           SA: ${{ env.STATE_STORAGE_ACCOUNT }}
@@ -129,7 +142,7 @@ jobs:
             --file "./evidence.json" \
             --overwrite true
 
-      - name: Upload evidence as artifact
+      - name: Upload evidence artifact
         if: steps.detect.outputs.has_tf == 'true'
         uses: actions/upload-artifact@v4
         with:
