@@ -1,0 +1,150 @@
+name: terraform-reusable
+
+on:
+  workflow_call:
+    inputs:
+      tf_path:
+        description: "Path to Terraform configuration (directory)"
+        required: true
+        type: string
+      azure_subscription:
+        description: "Azure Subscription ID to target"
+        required: true
+        type: string
+      state_rg:
+        description: "Resource Group for Terraform state storage"
+        required: true
+        type: string
+      state_sa:
+        description: "Storage Account name for Terraform state"
+        required: true
+        type: string
+      state_container:
+        description: "Blob container for Terraform state"
+        required: true
+        type: string
+      state_key:
+        description: "Blob key (file) name for the state"
+        required: true
+        type: string
+      do_apply:
+        description: "Whether to run apply after plan (true/false)"
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      AZURE_TENANT_ID:
+        required: true
+      AZURE_OIDC_CLIENT_ID:
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  plan:
+    name: terraform plan
+    runs-on: ubuntu-latest
+    env:
+      ARM_USE_OIDC: "true"
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ inputs.azure_subscription }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify Terraform path exists
+        id: tfcheck
+        run: |
+          if [ ! -d "${{ inputs.tf_path }}" ]; then
+            echo "Terraform path ${{ inputs.tf_path }} not found; skipping."
+            echo "found=false" >> $GITHUB_OUTPUT
+          else
+            echo "found=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Terraform
+        if: steps.tfcheck.outputs.found == 'true'
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+
+      - name: Azure login (OIDC)
+        if: steps.tfcheck.outputs.found == 'true'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_OIDC_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ inputs.azure_subscription }}
+
+      - name: Terraform init (remote backend on Azure Blob)
+        if: steps.tfcheck.outputs.found == 'true'
+        working-directory: ${{ inputs.tf_path }}
+        run: |
+          terraform init -input=false \
+            -backend-config="resource_group_name=${{ inputs.state_rg }}" \
+            -backend-config="storage_account_name=${{ inputs.state_sa }}" \
+            -backend-config="container_name=${{ inputs.state_container }}" \
+            -backend-config="key=${{ inputs.state_key }}"
+
+      - name: Terraform validate
+        if: steps.tfcheck.outputs.found == 'true'
+        working-directory: ${{ inputs.tf_path }}
+        run: terraform validate
+
+      - name: Terraform plan
+        if: steps.tfcheck.outputs.found == 'true'
+        working-directory: ${{ inputs.tf_path }}
+        run: terraform plan -input=false -out=tfplan
+
+      - name: Upload plan
+        if: steps.tfcheck.outputs.found == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: ${{ inputs.tf_path }}/tfplan
+
+  apply:
+    name: terraform apply
+    needs: plan
+    if: inputs.do_apply == true && always()
+    runs-on: ubuntu-latest
+    env:
+      ARM_USE_OIDC: "true"
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ inputs.azure_subscription }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_OIDC_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ inputs.azure_subscription }}
+
+      - name: Terraform init (remote backend on Azure Blob)
+        working-directory: ${{ inputs.tf_path }}
+        run: |
+          terraform init -input=false \
+            -backend-config="resource_group_name=${{ inputs.state_rg }}" \
+            -backend-config="storage_account_name=${{ inputs.state_sa }}" \
+            -backend-config="container_name=${{ inputs.state_container }}" \
+            -backend-config="key=${{ inputs.state_key }}"
+
+      - name: Download plan
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: ${{ inputs.tf_path }}
+
+      - name: Terraform apply
+        working-directory: ${{ inputs.tf_path }}
+        run: terraform apply -input=false -auto-approve tfplan

@@ -3,18 +3,18 @@ name: ci-offline
 on:
   push:
     branches: [ main ]
-    paths-ignore:
-      - "docs/**"
-      - "mkdocs.yml"
-      - "requirements-docs.txt"
-      - ".github/workflows/docs-pages.yml"
+    paths:
+      - ".github/workflows/ci-offline.yml"
+      - "requirements*.txt"
+      - "tools/**"
+      - "tests/**"
   pull_request:
     branches: [ main ]
-    paths-ignore:
-      - "docs/**"
-      - "mkdocs.yml"
-      - "requirements-docs.txt"
-      - ".github/workflows/docs-pages.yml"
+    paths:
+      - ".github/workflows/ci-offline.yml"
+      - "requirements*.txt"
+      - "tools/**"
+      - "tests/**"
   workflow_dispatch:
 
 permissions:
@@ -30,7 +30,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dev deps (if present)
+      - name: Install dependencies (dev if present)
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements-dev.txt ]; then
@@ -38,13 +38,13 @@ jobs:
           elif [ -f requirements.txt ]; then
             pip install -r requirements.txt
           else
-            echo "No Python requirements to install."
+            echo "No requirements file found; skipping pip install"
           fi
 
-      - name: Run unit tests (if present)
+      - name: Run pytest if tests/ exists
         run: |
-          if [ -d tests ] || ls -1 *.py 2>/dev/null | grep -q .; then
-            python -m pytest -q || true
+          if [ -d tests ]; then
+            pytest -q
           else
-            echo "No tests found; skipping."
+            echo "No tests/ dir; skipping pytest"
           fi
