@@ -4,8 +4,9 @@ import base64
 import datetime as dt
 import hashlib
 import hmac
-import requests  # type: ignore
 from typing import Optional
+
+import requests  # type: ignore
 
 
 def _build_signature(
