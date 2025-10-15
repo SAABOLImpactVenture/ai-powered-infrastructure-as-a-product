@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import json, os, shutil, sys, subprocess, time
-from dataclasses import dataclass, asdict
-from typing import Optional, List
+
+import json
+import os
+import shutil
+import subprocess
+import sys
+import time
+from dataclasses import asdict, dataclass
+from typing import List, Optional
 
 REQUIRED_CMDS = ["python", "pip", "terraform"]
 OPTIONAL_CMDS = ["docker", "git", "curl"]

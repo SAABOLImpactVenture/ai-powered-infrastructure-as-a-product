@@ -1,4 +1,11 @@
-import json, os, shutil, subprocess, sys, pathlib, pytest
+import json
+import os
+import pathlib
+import shutil
+import subprocess
+import sys
+
+import pytest
 
 MVP_DIR = pathlib.Path("examples/mvps/mvp-03-terraform-null-resource")
 

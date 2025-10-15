@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-import json, argparse, datetime, uuid
+import argparse
+import datetime
+import json
+import uuid
+
 
 def load_sarif(path):
     with open(path, 'r', encoding='utf-8') as f:

@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse, json, os, pathlib, time, uuid, datetime as dt
+
+import argparse
+import datetime as dt
+import json
+import os
+import pathlib
+import time
+import uuid
+
 try:
     import requests  # type: ignore
 except Exception:
@@ -8,6 +16,7 @@ except Exception:
 
 from importlib import import_module
 from pathlib import Path
+
 
 def local_write(prefix: str, payload: dict) -> str:
     out = Path(".local-outbox"); out.mkdir(exist_ok=True)

@@ -1,6 +1,10 @@
+import json
+import os
+
+import boto3
+import requests
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import os, json, requests, boto3
 
 app = FastAPI(title="Policy Evidence Adapter")
 

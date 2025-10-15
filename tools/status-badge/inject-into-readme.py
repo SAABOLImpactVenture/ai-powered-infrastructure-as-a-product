@@ -20,7 +20,6 @@ import argparse
 from pathlib import Path
 from typing import Tuple
 
-
 DEFAULT_START = "<!-- BADGES:START -->"
 DEFAULT_END = "<!-- BADGES:END -->"
 
