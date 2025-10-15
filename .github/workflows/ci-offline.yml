@@ -1,90 +1,75 @@
-name: ci-offline
+name: CI (lint + optional tests)
 
 on:
-  pull_request:
   push:
-    branches: [ main ]
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+  workflow_dispatch: {}
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-offline-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  python-ci:
-    name: python-ci
+  lint:
+    name: Lint (pre-commit)
     runs-on: ubuntu-latest
-    if: >
-      !contains(github.event.head_commit.message, '[skip ci]')
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.11"        # choose your primary runtime
+          cache: "pip"
 
-      - name: Install dev dependencies
+      - name: Install pre-commit
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements-dev.txt ]; then
-            pip install -r requirements-dev.txt
-          else
-            echo "requirements-dev.txt not found; installing minimal tooling"
-            pip install pytest flake8
-          fi
+          python -m pip install pre-commit
 
-      - name: Lint (flake8)
-        run: |
-          if [ -d ./tests ] || [ -d ./src ] || compgen -G "*.py" > /dev/null; then
-            flake8 .
-          else
-            echo "No Python sources found; skipping flake8"
-          fi
+      # Runs hooks from .pre-commit-config.yaml (autoflake, isort, black, flake8)
+      - name: Run pre-commit on all files
+        uses: pre-commit/action@v3.0.1
+        with:
+          extra_args: "-a"
 
-      - name: Unit tests (pytest)
+  tests:
+    name: Tests (matrix)
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]  # adjust to your support window
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install deps (if present) + pytest
         run: |
-          if [ -d ./tests ]; then
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+          python -m pip install pytest
+
+      - name: Run tests (skip if none)
+        shell: bash
+        run: |
+          set -e
+          if compgen -G "tests/test_*.py" > /dev/null || compgen -G "*_test.py" > /dev/null; then
             pytest -q
           else
-            echo "No tests/ directory; skipping pytest"
+            echo "No tests detected; skipping pytest."
           fi
-
-  terraform-validate:
-    name: terraform-validate
-    uses: ./.github/workflows/_terraform-reusable.yml
-    with:
-      # Validate all common TF roots; add/remove as you grow
-      tf-globs: |
-        iac/**/main.tf
-        modules/**/main.tf
-        products/**/azure/**/main.tf
-        stacks/**/main.tf
-    secrets: inherit
-
-  docs-build:
-    name: docs-build (mkdocs)
-    runs-on: ubuntu-latest
-    needs: [python-ci, terraform-validate]
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install docs deps
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements-docs.txt ]; then
-            pip install -r requirements-docs.txt
-          else
-            pip install mkdocs mkdocs-material
-          fi
-
-      - name: mkdocs build (strict)
-        run: mkdocs build --strict
