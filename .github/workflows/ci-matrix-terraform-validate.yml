@@ -1,0 +1,78 @@
+name: validate / terraform (matrix)
+
+on:
+  pull_request:
+    branches: [ "**" ]
+    paths:
+      - "modules/**"
+      - "products/**"
+      - ".github/workflows/ci-matrix-terraform-validate.yml"
+
+permissions:
+  contents: read
+
+env:
+  TF_IN_AUTOMATION: "true"
+  TF_INPUT: "false"
+  TF_CLI_ARGS: "-no-color"
+  TF_VERSION: "1.9.5"        # <-- set terraform version here
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      tf_dirs: ${{ steps.scan.outputs.tf_dirs }}
+      has_tf:  ${{ steps.scan.outputs.has_tf }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: scan
+        name: Find terraform directories
+        shell: bash
+        run: |
+          set -euo pipefail
+          # roots to scan
+          roots=("modules" "products")
+
+          mapfile -t DIRS < <( \
+            for r in "${roots[@]}"; do
+              [ -d "$r" ] || continue
+              # any directory with at least one .tf file
+              find "$r" -type f -name '*.tf' -printf '%h\n' | sort -u
+            done | sort -u )
+
+          if [ "${#DIRS[@]}" -gt 0 ]; then
+            echo "has_tf=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_tf=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          printf '%s\n' "${DIRS[@]}" | jq -R -s -c 'split("\n")[:-1]' > tf_dirs.json
+          echo "tf_dirs=$(cat tf_dirs.json)" >> "$GITHUB_OUTPUT"
+          echo "Detected TF dirs:"
+          cat tf_dirs.json
+
+  validate:
+    needs: detect
+    if: needs.detect.outputs.has_tf == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        dir: ${{ fromJson(needs.detect.outputs.tf_dirs) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform ${{ env.TF_VERSION }}
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+          terraform_wrapper: false
+
+      - name: Init & Validate (no backend)
+        working-directory: ${{ matrix.dir }}
+        shell: bash
+        run: |
+          set -e
+          terraform init -backend=false
+          terraform validate

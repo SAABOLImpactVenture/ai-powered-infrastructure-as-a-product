@@ -1,0 +1,6 @@
+﻿site_name: AI Powered Infrastructure as a Product
+site_url: https://saabolimpactventure.github.io/ai-powered-infrastructure-as-a-product/
+theme:
+  name: material
+nav:
+  - Home: index.md

@@ -1,0 +1,91 @@
+name: ci-cloud / validate-modules
+
+on:
+  pull_request:
+    branches: [ "**" ]
+    paths:
+      - "modules/**"
+      - "products/**"
+      - ".github/workflows/ci-cloud-validate-modules.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      aws:   ${{ steps.changes.outputs.aws }}
+      azure: ${{ steps.changes.outputs.azure }}
+      gcp:   ${{ steps.changes.outputs.gcp }}
+      oci:   ${{ steps.changes.outputs.oci }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            aws:
+              - 'modules/aws/**'
+              - 'products/aws/**'
+            azure:
+              - 'modules/azure/**'
+              - 'products/azure/**'
+            gcp:
+              - 'modules/gcp/**'
+              - 'products/gcp/**'
+            oci:
+              - 'modules/oci/**'
+              - 'products/oci/**'
+
+  validate-aws:
+    name: validate-modules (platform/aws)
+    runs-on: ubuntu-latest
+    needs: detect
+    if: needs.detect.outputs.aws == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: terraform validate aws
+        working-directory: modules/aws
+        run: |
+          if compgen -G "*.tf" >/dev/null; then terraform init -backend=false && terraform validate; else echo "no tf"; fi
+
+  validate-azure:
+    name: validate-modules (platform/azure)
+    runs-on: ubuntu-latest
+    needs: detect
+    if: needs.detect.outputs.azure == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: terraform validate azure
+        working-directory: modules/azure
+        run: |
+          if compgen -G "*.tf" >/dev/null; then terraform init -backend=false && terraform validate; else echo "no tf"; fi
+
+  validate-gcp:
+    name: validate-modules (platform/gcp)
+    runs-on: ubuntu-latest
+    needs: detect
+    if: needs.detect.outputs.gcp == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: terraform validate gcp
+        working-directory: modules/gcp
+        run: |
+          if compgen -G "*.tf" >/dev/null; then terraform init -backend=false && terraform validate; else echo "no tf"; fi
+
+  validate-oci:
+    name: validate-modules (platform/oci)
+    runs-on: ubuntu-latest
+    needs: detect
+    if: needs.detect.outputs.oci == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: terraform validate oci
+        working-directory: modules/oci
+        run: |
+          if compgen -G "*.tf" >/dev/null; then terraform init -backend=false && terraform validate; else echo "no tf"; fi
