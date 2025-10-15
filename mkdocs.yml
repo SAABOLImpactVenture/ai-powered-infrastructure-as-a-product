@@ -2,5 +2,7 @@
 site_url: https://saabolimpactventure.github.io/ai-powered-infrastructure-as-a-product/
 theme:
   name: material
+repo_url: https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product
+repo_name: SAABOLImpactVenture/ai-powered-infrastructure-as-a-product
 nav:
   - Home: index.md
