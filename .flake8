@@ -3,4 +3,8 @@ max-line-length = 100
 extend-ignore =
     E203
 per-file-ignores =
+    tools/status-badge/inject-into-readme.py:E501per-file-ignores =
     tools/status-badge/inject-into-readme.py:E501
+    examples/golden-demo/mock-server/app.py:E501,E302
+    scripts/emitters/infra-evidence/emit_evidence_to_log_analytics.py:E501
+    scripts/emitters/aoai/emit_aoai_request_to_log_analytics.py:E501
