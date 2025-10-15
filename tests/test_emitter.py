@@ -1,4 +1,8 @@
-import json, subprocess, sys, pathlib
+import json
+import pathlib
+import subprocess
+import sys
+
 
 def test_emitter_local(tmp_path):
   p = pathlib.Path("scripts/emitters/infra-evidence/emit_evidence_to_log_analytics.py")

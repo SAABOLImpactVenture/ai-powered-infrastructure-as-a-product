@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
-import sys, os, time, hmac, hashlib, base64, requests, json
+import base64
+import hashlib
+import hmac
+import json
+import os
+import sys
+import time
+
+import requests
+
 # Inputs: LOG_ID, LOG_KEY, LOG_TYPE, EVIDENCE_DIR
 ws = os.environ["LOG_ID"]; key = os.environ["LOG_KEY"]; logtype = os.environ.get("LOG_TYPE","Evidence")
 evidence_dir = sys.argv[1] if len(sys.argv)>1 else "evidence"

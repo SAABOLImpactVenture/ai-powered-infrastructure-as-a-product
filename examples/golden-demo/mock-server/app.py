@@ -1,5 +1,8 @@
+import glob
+import json
+import os
+
 from fastapi import FastAPI
-import glob, json, os
 
 app = FastAPI()
 

@@ -1,7 +1,18 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse, base64, hashlib, hmac, json, os, sys, time, uuid, pathlib
+
+import argparse
+import base64
 import datetime as dt
+import hashlib
+import hmac
+import json
+import os
+import pathlib
+import sys
+import time
+import uuid
+
 try:
     import requests  # type: ignore
 except Exception:
