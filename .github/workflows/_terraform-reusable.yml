@@ -1,66 +1,102 @@
 name: _terraform-reusable
+
 on:
   workflow_call:
     inputs:
       tf-globs:
-        description: "Glob patterns of Terraform roots to validate (newline-separated)"
-        required: true
+        description: "Space-separated list of glob patterns to validate"
+        required: false
         type: string
-
-permissions:
-  contents: read
+        default: >
+          iac/**/main.tf
+          modules/**/main.tf
+          products/**/azure/**/main.tf
+          stacks/**/main.tf
 
 jobs:
   validate:
+    name: validate
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Install Terraform
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.7.5
+          terraform_wrapper: true
 
-      - name: Install linters
+      - name: Install TFLint
+        shell: bash
         run: |
+          set -euo pipefail
           curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
           echo "installed tflint: $(tflint --version)"
           echo "installed terraform: $(terraform version)"
 
-      - name: Discover TF directories
-        id: discover
+      - name: Terraform validate + TFLint
         shell: bash
-        run: |
-          echo "patterns<<EOF" >> $GITHUB_OUTPUT
-          echo "${{ inputs.tf-globs }}" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Validate each root
-        shell: bash
+        env:
+          PATTERNS: ${{ inputs.tf-globs }}
         run: |
           set -euo pipefail
-          IFS=$'\n'
           failures=0
-          for pattern in ${{ steps.discover.outputs.patterns }}; do
+          echo "Patterns: ${PATTERNS}"
+          IFS=' ' read -r -a PAT_ARR <<< "${PATTERNS}"
+
+          for pattern in "${PAT_ARR[@]}"; do
             echo "::group::Pattern: ${pattern}"
-            # find directories that actually contain .tf files
-            for dir in $(git ls-files "${pattern}" 2>/dev/null | xargs -r -n1 dirname | sort -u); do
+            # find unique directories containing matched files
+            mapfile -t DIRS < <(git ls-files "${pattern}" 2>/dev/null | xargs -r -n1 dirname | sort -u)
+            if [ "${#DIRS[@]}" -eq 0 ]; then
+              echo "no matches for ${pattern}"
+              echo "::endgroup::"
+              continue
+            fi
+
+            for dir in "${DIRS[@]}"; do
               echo "==> Validating ${dir}"
-              if [ ! -d "$dir" ]; then
-                echo "skip: $dir is not a directory"
+              if [ ! -d "${dir}" ]; then
+                echo "skip: ${dir} is not a directory"
                 continue
               fi
-              pushd "$dir" >/dev/null
+
+              pushd "${dir}" >/dev/null
               if ! ls *.tf >/dev/null 2>&1; then
-                echo "skip: no .tf in $dir"
+                echo "skip: no .tf in ${dir}"
                 popd >/dev/null
                 continue
               fi
-              terraform init -backend=false -input=false -no-color
-              terraform validate -no-color
-              tflint --init
-              tflint --no-color
+
+              # Init/validate
+              if ! terraform init -backend=false -input=false -no-color; then
+                echo "::error ::terraform init failed in ${dir}"
+                failures=$((failures+1))
+              fi
+              if ! terraform validate -no-color; then
+                echo "::error ::terraform validate failed in ${dir}"
+                failures=$((failures+1))
+              fi
+
+              # TFLint
+              if ! tflint --init; then
+                echo "::warning ::tflint --init failed in ${dir} (continuing)"
+              fi
+              if ! tflint --no-color; then
+                echo "::error ::tflint issues in ${dir}"
+                failures=$((failures+1))
+              fi
               popd >/dev/null
             done
             echo "::endgroup::"
           done
+
+          if [ "${failures}" -ne 0 ]; then
+            echo "::error ::Terraform/TFLint found ${failures} failure(s)"
+            exit 1
+          fi
