@@ -6,8 +6,7 @@ terraform {
       version = "~> 3.114"
     }
   }
-  # Backend is configured at runtime by the workflow via -backend-config flags.
-  backend "azurerm" {}
+  # Backend can be supplied by env vars in CI; local for dev
 }
 
 provider "azurerm" {
@@ -19,6 +18,5 @@ resource "azurerm_resource_group" "demo" {
   location = "eastus"
   tags = {
     provisioned_by = "github-actions"
-    workload       = "aiap-example"
   }
 }

@@ -1,29 +1,47 @@
-name: terraform apply (azure)
+name: apply-azure
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - ".github/workflows/apply-azure.yml"
-      - ".github/workflows/terraform-reusable.yml"
-      - "products/azure/example/**"
   workflow_dispatch:
+    inputs:
+      tf-root:
+        description: "Path to Terraform root to apply (e.g. products/azure/example)"
+        required: true
+      approve:
+        description: "Type 'apply' to confirm"
+        required: true
 
 permissions:
-  contents: read
   id-token: write
+  contents: read
+
+env:
+  ARM_USE_OIDC: "true"
+  TF_IN_AUTOMATION: "1"
 
 jobs:
-  plan_and_apply:
-    uses: ./.github/workflows/terraform-reusable.yml
-    with:
-      tf_path: "products/azure/example"
-      azure_subscription: ${{ secrets.PLATFORM_SUB_ID }}
-      state_rg: ${{ vars.STATE_RG }}
-      state_sa: ${{ vars.STATE_SA }}
-      state_container: ${{ vars.STATE_CT }}
-      state_key: "products-azure-example.tfstate"
-      do_apply: true
-    secrets:
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      AZURE_OIDC_CLIENT_ID: ${{ secrets.AZURE_OIDC_CLIENT_ID }}
+  apply:
+    if: inputs.approve == 'apply'
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.DEV_SUB_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+
+      - name: Terraform Apply
+        working-directory: ${{ inputs.tf-root }}
+        env:
+          ARM_USE_OIDC: "true"
+        run: |
+          terraform init -input=false -no-color
+          terraform apply -auto-approve -input=false -no-color

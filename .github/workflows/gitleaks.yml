@@ -1,15 +1,33 @@
 name: gitleaks
+
 on:
   pull_request:
-  workflow_dispatch:
+  push:
+    branches: [ main ]
+
 permissions:
   contents: read
+
 jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-      - uses: gitleaks/gitleaks-action@v2
         with:
-          args: "--no-banner --redact --verbose"
+          fetch-depth: 0  # needed for full history scan
+
+      - name: Gitleaks scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITLEAKS_CONFIG: .gitleaks.toml
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }} # optional if you have enterprise rules
+        with:
+          args: detect --no-banner --redact --config-path $GITLEAKS_CONFIG --report-path gitleaks.json
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gitleaks-report
+          path: gitleaks.json
+          retention-days: 7
