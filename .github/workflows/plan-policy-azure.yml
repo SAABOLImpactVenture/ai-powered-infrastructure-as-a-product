@@ -1,5 +1,4 @@
 name: plan-policy-azure
-
 on:
   pull_request:
     paths:
