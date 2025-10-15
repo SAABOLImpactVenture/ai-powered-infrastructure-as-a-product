@@ -23,7 +23,6 @@ env:
 jobs:
   apply:
     runs-on: ubuntu-latest
-    environment: lz-prod
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -44,9 +43,15 @@ jobs:
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.APP_SUB_ID }}
-      - uses: hashicorp/setup-terraform@v3
-      - name: Apply & Evidence
+          subscription-id: ${{ secrets.PLATFORM_SUB_ID }}
+
+      - name: Setup Terraform
+        if: steps.detect.outputs.has_tf == 'true'
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform init (AAD/OIDC backend)
+        if: steps.detect.outputs.has_tf == 'true'
+        working-directory: ${{ env.TF_WORKDIR }}
         env:
           ARM_USE_AZUREAD: true
           ARM_USE_OIDC: true

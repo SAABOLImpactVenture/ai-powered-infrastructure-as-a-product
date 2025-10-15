@@ -1,24 +1,66 @@
 name: apply
+
 on:
   workflow_dispatch:
     inputs:
-      path: { description: Terraform dir, required: true, default: platform }
-permissions: { contents: read, id-token: write }
-concurrency: deploy-${{ github.ref }}
+      path:
+        description: "Terraform working directory (relative to repo root)"
+        required: true
+        default: "products/azure/example"
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  # Backend (Mgmt subscription)
+  RG_PLATFORM: rg-aiap-platform
+  STATE_STORAGE_ACCOUNT: ${{ secrets.STATE_STORAGE_ACCOUNT }}
+  STATE_CONTAINER: ${{ secrets.STATE_CONTAINER }}
 
 jobs:
   apply:
     runs-on: ubuntu-latest
     environment: prod
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
-        with: { terraform_version: 1.8.6 }
-      - uses: actions/download-artifact@v4
-        with: { name: tfplan, path: ${{ inputs.path }} }
-      - name: Init (with backend)
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure login (Mgmt for backend)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.PLATFORM_SUB_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+
+      - name: Init (azurerm backend via AAD/OIDC)
         working-directory: ${{ inputs.path }}
-        run: terraform init -input=false
-      - name: Apply from artifacted plan
+        env:
+          ARM_USE_OIDC: "true"
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.DEV_SUB_ID }}
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=${{ env.RG_PLATFORM }}" \
+            -backend-config="storage_account_name=${{ env.STATE_STORAGE_ACCOUNT }}" \
+            -backend-config="container_name=${{ env.STATE_CONTAINER }}" \
+            -backend-config="key=${{ github.repository }}-manual.tfstate" \
+            -backend-config="use_azuread_auth=true"
+
+      - name: Switch to DEV subscription context
+        run: az account set --subscription "${{ secrets.DEV_SUB_ID }}"
+
+      - name: Validate
         working-directory: ${{ inputs.path }}
-        run: terraform apply -input=false -lock-timeout=10m tfplan.bin
+        run: terraform validate
+
+      - name: Apply (auto-approve)
+        working-directory: ${{ inputs.path }}
+        run: terraform apply -auto-approve
