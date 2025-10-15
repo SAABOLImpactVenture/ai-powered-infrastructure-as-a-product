@@ -1,7 +1,6 @@
 title: Documentation
 arrange:
   - index.md
-  - quickstart.md
   - site/
   - golden-demo/
   - foundation/

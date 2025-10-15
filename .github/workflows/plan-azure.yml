@@ -1,10 +1,10 @@
-name: terraform apply (azure)
+name: terraform plan (azure)
 
 on:
-  push:
+  pull_request:
     branches: [ main ]
     paths:
-      - ".github/workflows/apply-azure.yml"
+      - ".github/workflows/plan-azure.yml"
       - ".github/workflows/terraform-reusable.yml"
       - "products/azure/example/**"
   workflow_dispatch:
@@ -14,7 +14,7 @@ permissions:
   id-token: write
 
 jobs:
-  plan_and_apply:
+  plan:
     uses: ./.github/workflows/terraform-reusable.yml
     with:
       tf_path: "products/azure/example"
@@ -23,7 +23,7 @@ jobs:
       state_sa: ${{ vars.STATE_SA }}
       state_container: ${{ vars.STATE_CT }}
       state_key: "products-azure-example.tfstate"
-      do_apply: true
+      do_apply: false
     secrets:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       AZURE_OIDC_CLIENT_ID: ${{ secrets.AZURE_OIDC_CLIENT_ID }}
