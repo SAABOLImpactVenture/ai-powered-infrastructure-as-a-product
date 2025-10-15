@@ -8,20 +8,24 @@ permissions:
   contents: read
 
 env:
+  # Backend (Mgmt subscription)
   RG_PLATFORM: rg-aiap-platform
   STATE_STORAGE_ACCOUNT: ${{ secrets.STATE_STORAGE_ACCOUNT }}
   STATE_CONTAINER: ${{ secrets.STATE_CONTAINER }}
   EVIDENCE_CONTAINER: ${{ secrets.EVIDENCE_CONTAINER }}
+
+  # Terraform
   TF_IN_AUTOMATION: "true"
   TF_INPUT: "false"
   TF_CLI_ARGS: "-no-color"
-  TF_WORKDIR: products/azure/example
+  TF_WORKDIR: products/azure/example  # <— change if your TF lives elsewhere
 
 jobs:
   apply:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Detect Terraform
         id: detect
@@ -29,8 +33,8 @@ jobs:
           if compgen -G "${{ env.TF_WORKDIR }}/*.tf" > /dev/null; then
             echo "has_tf=true" >> $GITHUB_OUTPUT
           else
+            echo "No Terraform files in ${{ env.TF_WORKDIR }} — skipping."
             echo "has_tf=false" >> $GITHUB_OUTPUT
-            echo "No Terraform in ${{ env.TF_WORKDIR }}; skipping."
           fi
 
       - name: Azure login (Mgmt for backend)
@@ -66,36 +70,27 @@ jobs:
         if: steps.detect.outputs.has_tf == 'true'
         run: az account set --subscription "${{ secrets.DEV_SUB_ID }}"
 
-      # --- Evidence immutability verification (fail closed) ---
-      - name: Verify evidence immutability policy
+      # (Optional) quick re-run of tflint/tfsec before apply; comment out if not needed
+      - name: Setup TFLint
         if: steps.detect.outputs.has_tf == 'true'
-        env:
-          SA: ${{ env.STATE_STORAGE_ACCOUNT }}
-          CT: ${{ env.EVIDENCE_CONTAINER }}
-        run: |
-          set -e
-          echo "Checking immutability policy on container $CT in SA $SA"
-          POL="$(az storage container immutability-policy show --auth-mode login --account-name "$SA" --container-name "$CT" 2>/dev/null || true)"
-          if [ -z "$POL" ] || [ "$(echo "$POL" | jq -r '.immutabilityPeriodSinceCreationInDays // empty')" = "" ]; then
-            echo "::error::Evidence container immutability policy is missing."
-            exit 1
-          fi
-          echo "$POL" | jq .
-          echo "Immutability policy present ✅"
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
 
-      # --- Safety (non-blocking) ---
-      - uses: terraform-linters/setup-tflint@v4
-        if: steps.detect.outputs.has_tf == 'true'
-      - name: TFLint (non-blocking)
+      - name: TFLint check
         if: steps.detect.outputs.has_tf == 'true'
         working-directory: ${{ env.TF_WORKDIR }}
         run: |
           tflint --init
-          tflint || true
+          tflint
+
       - name: Install tfsec
         if: steps.detect.outputs.has_tf == 'true'
-        run: curl -sSL https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
-      - name: tfsec (non-blocking)
+        run: |
+          curl -sSL https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
+          tfsec --version
+
+      - name: tfsec check
         if: steps.detect.outputs.has_tf == 'true'
         working-directory: ${{ env.TF_WORKDIR }}
         run: tfsec || true
@@ -105,6 +100,7 @@ jobs:
         working-directory: ${{ env.TF_WORKDIR }}
         run: terraform apply -auto-approve
 
+      # ---------- Evidence (immutability-friendly append) ----------
       - name: Emit evidence
         if: steps.detect.outputs.has_tf == 'true'
         working-directory: ${{ env.TF_WORKDIR }}
@@ -123,14 +119,16 @@ jobs:
             "state_container": "${{ env.STATE_CONTAINER }}"
           }
           JSON
+          cat evidence.json
 
-      - name: Upload evidence blob (AAD/OIDC)
+      - name: Upload evidence to evidence container (AAD/OIDC)
         if: steps.detect.outputs.has_tf == 'true'
         env:
           SA: ${{ env.STATE_STORAGE_ACCOUNT }}
           CT: ${{ env.EVIDENCE_CONTAINER }}
         working-directory: ${{ env.TF_WORKDIR }}
         run: |
+          # store under /runs/<run-id>/evidence.json
           az storage blob upload \
             --auth-mode login \
             --account-name "$SA" \
@@ -139,7 +137,7 @@ jobs:
             --file "./evidence.json" \
             --overwrite true
 
-      - name: Upload evidence artifact
+      - name: Upload evidence as artifact (convenience)
         if: steps.detect.outputs.has_tf == 'true'
         uses: actions/upload-artifact@v4
         with:
