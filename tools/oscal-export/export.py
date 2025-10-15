@@ -1,74 +1,93 @@
+﻿#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Simple OSCAL-ish exporter.
 
-#!/usr/bin/env python3
-import argparse, json, glob, os, hashlib, datetime, uuid
+This script demonstrates a minimal, well-formed CLI that can be linted and extended later.
+It writes a small JSON document to stdout or to a file. Replace the `build_payload`
+implementation with your real export logic when ready.
+"""
 
-def load_evidence(paths):
-  ev = []
-  for p in paths:
-    for fp in glob.glob(os.path.join(p, '**', '*.json'), recursive=True):
-      try:
-        with open(fp,'r') as f:
-          ev.append(json.load(f))
-      except Exception:
-        pass
-  return ev
+from __future__ import annotations
 
-def to_assessment_results(evidence, system_uuid=None):
-  now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()+'Z'
-  sys_id = system_uuid or str(uuid.uuid4())
-  results = []
-  for i, e in enumerate(evidence):
-    control_ids = e.get('controls') or []
-    res = {
-      "uuid": str(uuid.uuid4()),
-      "title": f"Evidence {i+1}: {e.get('kind','unknown')}",
-      "description": e.get('summary') or e.get('detail','')[:200],
-      "start": now,
-      "end": now,
-      "reviewed-controls": [ { "control-id": c } for c in control_ids ],
-      "collected-evidence": [{
-        "description": e.get('detail','')[:500],
-        "prop": [
-          { "name":"status", "value": e.get('status','UNKNOWN') },
-          { "name":"source", "value": e.get('source','') },
-          { "name":"path", "value": e.get('path','') }
-        ]
-      }]
+import argparse
+import json
+import sys
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+
+def build_payload(system_id: str, title: Optional[str]) -> Dict[str, Any]:
+    """Return a tiny OSCAL-like JSON structure."""
+    now = datetime.utcnow().isoformat(timespec="seconds") + "Z"
+    payload: Dict[str, Any] = {
+        "metadata": {
+            "title": title or f"System {system_id}",
+            "last-modified": now,
+            "version": "0.1.0",
+        },
+        "system-characteristics": {
+            "system-ids": [{"identifier-type": "custom", "id": system_id}],
+            "props": [
+                {"name": "exporter", "value": "tools/oscal-export/export.py"},
+                {"name": "generated-at", "value": now},
+            ],
+        },
     }
-    results.append(res)
-  doc = {
-    "component-definition": {
-      "uuid": str(uuid.uuid4()),
-      "metadata": {
-        "title": "IaaP Accelerator Assessment Results",
-        "last-modified": now,
-        "version": "1.0.0"
-      }
-    },
-    "assessment-results": [{
-      "uuid": str(uuid.uuid4()),
-      "metadata": {
-        "title": "Continuous Assessment Results",
-        "last-modified": now,
-        "version": "1.0.0"
-      },
-      "results": results
-    }]
-  }
-  return doc
+    return payload
 
-def main():
-  ap = argparse.ArgumentParser()
-  ap.add_argument('--paths', nargs='+', default=['evidence'])
-  ap.add_argument('--out', default='artifacts/oscal/assessment-results.json')
-  args = ap.parse_args()
 
-  ev = load_evidence(args.paths)
-  os.makedirs(os.path.dirname(args.out), exist_ok=True)
-  doc = to_assessment_results(ev)
-  with open(args.out,'w') as f:
-    json.dump(doc, f, indent=2)
-  print(f"Wrote {args.out} with {len(ev)} evidence records.")
+def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Export a minimal OSCAL-like JSON document."
+    )
+    parser.add_argument(
+        "--system-id",
+        required=True,
+        help="Identifier for the system being exported.",
+    )
+    parser.add_argument(
+        "--title",
+        default=None,
+        help="Optional document title (defaults to 'System <system-id>').",
+    )
+    parser.add_argument(
+        "-o",
+        "--out",
+        default="-",
+        help="Output file path or '-' for stdout (default: '-').",
+    )
+    parser.add_argument(
+        "--indent",
+        type=int,
+        default=2,
+        help="Indent level for JSON output (default: 2).",
+    )
+    return parser.parse_args(argv)
 
-if __name__ == '__main__':
-  main()
+
+def write_output(payload: Dict[str, Any], out_path: str, indent: int) -> None:
+    data = json.dumps(payload, indent=indent, sort_keys=False)
+    if out_path == "-" or out_path.strip() == "":
+        print(data)
+        return
+
+    path = Path(out_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(data + "\n", encoding="utf-8")
+
+
+def main(argv: Optional[list[str]] = None) -> int:
+    args = parse_args(argv)
+    payload = build_payload(system_id=args.system_id, title=args.title)
+    try:
+        write_output(payload, args.out, args.indent)
+    except OSError as exc:
+        sys.stderr.write(f"error: failed to write output: {exc}\n")
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
