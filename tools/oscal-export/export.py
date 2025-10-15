@@ -39,9 +39,7 @@ def build_payload(system_id: str, title: Optional[str]) -> Dict[str, Any]:
 
 
 def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Export a minimal OSCAL-like JSON document."
-    )
+    parser = argparse.ArgumentParser(description="Export a minimal OSCAL-like JSON document.")
     parser.add_argument(
         "--system-id",
         required=True,

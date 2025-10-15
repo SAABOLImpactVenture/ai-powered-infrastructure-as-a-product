@@ -29,6 +29,7 @@ AWS_REGION  = os.getenv("AWS_REGION", "us-east-1")
 def aggregate(q: Query):
     if LAKE == "adx":
         
+    pass
 
     if LAKE == "adx":
         return agg_adx(q)
@@ -39,14 +40,17 @@ def aggregate(q: Query):
 def agg_adx(q: Query):
     if not (ADX_URI and ADX_DB and ADX_TOKEN):
         
+    pass
 
     if not (ADX_URI and ADX_DB and ADX_TOKEN):
         raise HTTPException(500, "ADX configuration missing")
     kql = f"Evidence | where timestamp > ago({q.days}d)"
     if q.kind:   
+    pass
 
     if q.kind:   kql += f" | where kind == '{q.kind}'"
     if q.status: 
+    pass
 
     if q.status: kql += f" | where status == '{q.status}'"
     kql += " | summarize count() by status, kind"
@@ -54,6 +58,7 @@ def agg_adx(q: Query):
     r = requests.post(f"{ADX_URI}/v1/rest/query", json=payload, headers={"Authorization": f"Bearer {ADX_TOKEN}"})
     if r.status_code != 200:
         
+    pass
 
     if r.status_code != 200:
         raise HTTPException(r.status_code, r.text)
@@ -66,15 +71,18 @@ def agg_adx(q: Query):
 def agg_athena(q: Query):
     if not (ATHENA_DB and ATHENA_TBL):
         
+    pass
 
     if not (ATHENA_DB and ATHENA_TBL):
         raise HTTPException(500, "Athena configuration missing")
     client = boto3.client("athena", region_name=AWS_REGION)
     where = []
     if q.kind: 
+    pass
 
     if q.kind: where.append(f"kind = '{q.kind}'")
     if q.status: 
+    pass
 
     if q.status: where.append(f"status = '{q.status}'")
     where.append("from_iso8601_timestamp(timestamp) > current_timestamp - interval '%d' day" % q.days)
@@ -86,4 +94,6 @@ def agg_athena(q: Query):
     qid = res["QueryExecutionId"]
     # NOTE: In production poll for completion; simplified here to return the query id.
     return {"athena_query_id": qid}
+
+
 
