@@ -1,8 +1,36 @@
 ﻿site_name: AI Powered Infrastructure as a Product
 site_url: https://saabolimpactventure.github.io/ai-powered-infrastructure-as-a-product/
-theme:
-  name: material
 repo_url: https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product
 repo_name: SAABOLImpactVenture/ai-powered-infrastructure-as-a-product
-nav:
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.tracking
+    - navigation.indexes
+    - content.code.copy
+    - content.action.edit
+  palette:
+    - scheme: default
+plugins:
+  - search
+  - awesome-pages
+  - minify:
+      minify_html: true
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.emoji
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+nav:  # NOTE: with awesome-pages, you can omit nav and control via `.pages` files
   - Home: index.md
