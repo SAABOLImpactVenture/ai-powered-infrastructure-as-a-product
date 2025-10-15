@@ -1,1 +1,8 @@
-* @your-org/platform-team
+# Require at least one domain owner on PRs touching critical areas
+# Adjust handles/teams to your org
+*                             @SAABOLImpactVenture/maintainers
+.github/**                    @SAABOLImpactVenture/maintainers
+products/**                   @SAABOLImpactVenture/platform
+modules/**                    @SAABOLImpactVenture/platform
+policies/**                   @SAABOLImpactVenture/security
+security/**                   @SAABOLImpactVenture/security

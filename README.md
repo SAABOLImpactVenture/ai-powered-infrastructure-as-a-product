@@ -6,6 +6,7 @@
 <p align="center">
   Azure orchestrates • AWS/GCP/OCI execute • Autonomous agents productize services • Backstage delivers the DX
 </p>
+[![docs](https://img.shields.io/badge/docs-live-blue)](https://saabolimpactventure.github.io/ai-powered-infrastructure-as-a-product/)
 
 <p align="center">
   <a href="#10-minute-hands-on">⏱ 10‑Minute Hands‑On</a> •

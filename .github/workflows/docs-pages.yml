@@ -1,21 +1,13 @@
 ﻿name: docs (GitHub Pages)
 
 on:
-  workflow_dispatch:
   push:
     branches: [ main ]
     paths:
       - "mkdocs.yml"
-      - "requirements-docs.txt"
       - "docs/**"
       - ".github/workflows/docs-pages.yml"
-  pull_request:
-    branches: [ main ]
-    paths:
-      - "mkdocs.yml"
-      - "requirements-docs.txt"
-      - "docs/**"
-      - ".github/workflows/docs-pages.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -30,21 +22,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install docs dependencies
+      - name: Install MkDocs (material)
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements-docs.txt ]; then
             pip install -r requirements-docs.txt
           else
-            pip install mkdocs mkdocs-material mkdocs-awesome-pages-plugin mkdocs-minify-plugin
+            pip install mkdocs mkdocs-material
           fi
 
       - name: Build MkDocs

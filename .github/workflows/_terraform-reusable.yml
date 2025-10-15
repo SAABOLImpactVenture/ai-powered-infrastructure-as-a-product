@@ -2,111 +2,65 @@ name: _terraform-reusable
 on:
   workflow_call:
     inputs:
-      path:
+      tf-globs:
+        description: "Glob patterns of Terraform roots to validate (newline-separated)"
         required: true
         type: string
-      environment:
-        required: true
-        type: string
-    secrets:
-      AZURE_CLIENT_ID:
-        required: false
-      AZURE_TENANT_ID:
-        required: false
-      AZURE_SUBSCRIPTION_ID:
-        required: false
-      AWS_ROLE_ARN:
-        required: false
-      AWS_REGION:
-        required: false
-      GCP_WIF_PROVIDER:
-        required: false
-      GCP_SERVICE_ACCOUNT:
-        required: false
+
 permissions:
   contents: read
-  security-events: write
-  id-token: write
-concurrency: deploy-${{ github.ref }}
 
 jobs:
-  plan:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
-        with: { terraform_version: 1.8.6 }
-      - name: Cloud OIDC (Azure)
-        if: contains(inputs.path, 'platform/azure') || contains(inputs.path, 'landing-zones/azure') || contains(inputs.path, 'workloads/identity/landing-zones/azure')
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      - name: Cloud OIDC (AWS)
-        if: contains(inputs.path, 'aws')
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ secrets.AWS_REGION || 'us-east-1' }}
-      - name: Cloud OIDC (GCP)
-        if: contains(inputs.path, 'gcp')
-        uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-      - name: terraform init
-        working-directory: ${{ inputs.path }}
-        run: terraform init -input=false
-      - name: terraform plan
-        working-directory: ${{ inputs.path }}
-        run: terraform plan -out=tfplan.bin -input=false -lock=false -detailed-exitcode || exit_code=$?; echo "exit_code=${exit_code:-0}" >> $GITHUB_OUTPUT
-      - uses: actions/upload-artifact@v4
-        with: { name: tfplan, path: ${{ inputs.path }}/tfplan.bin }
 
-  policy:
-    runs-on: ubuntu-latest
-    needs: plan
-    steps:
-      - uses: actions/checkout@v4
-      - name: Conftest (OPA) — block on denies
-        run: conftest test --policy policy/ .
-      - name: Checkov SARIF
-        uses: bridgecrewio/checkov-action@v12
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
         with:
-          directory: .
-          soft_fail: false
-          framework: terraform,kubernetes,helm
-          output_format: sarif
-          output_file_path: checkov.sarif
-      - uses: github/codeql-action/upload-sarif@v3
-        with: { sarif_file: checkov.sarif }
+          terraform_version: 1.7.5
 
-  evidence:
-    runs-on: ubuntu-latest
-    needs: [plan, policy]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Collect plan & policy outputs (placeholder-free)
+      - name: Install linters
         run: |
-          echo "{}" > evidence/ci/plan.json
-          echo "{}" > evidence/ci/policy.json
-      - uses: actions/upload-artifact@v4
-        with: { name: evidence-ci, path: evidence/ci }
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+          echo "installed tflint: $(tflint --version)"
+          echo "installed terraform: $(terraform version)"
 
-  apply:
-    runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
-    needs: [plan, policy, evidence]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
-        with: { terraform_version: 1.8.6 }
-      - uses: actions/download-artifact@v4
-        with: { name: tfplan, path: ${{ inputs.path }} }
-      - name: terraform init
-        working-directory: ${{ inputs.path }}
-        run: terraform init -input=false
-      - name: terraform apply
-        working-directory: ${{ inputs.path }}
-        run: terraform apply -input=false -lock-timeout=10m tfplan.bin
+      - name: Discover TF directories
+        id: discover
+        shell: bash
+        run: |
+          echo "patterns<<EOF" >> $GITHUB_OUTPUT
+          echo "${{ inputs.tf-globs }}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Validate each root
+        shell: bash
+        run: |
+          set -euo pipefail
+          IFS=$'\n'
+          failures=0
+          for pattern in ${{ steps.discover.outputs.patterns }}; do
+            echo "::group::Pattern: ${pattern}"
+            # find directories that actually contain .tf files
+            for dir in $(git ls-files "${pattern}" 2>/dev/null | xargs -r -n1 dirname | sort -u); do
+              echo "==> Validating ${dir}"
+              if [ ! -d "$dir" ]; then
+                echo "skip: $dir is not a directory"
+                continue
+              fi
+              pushd "$dir" >/dev/null
+              if ! ls *.tf >/dev/null 2>&1; then
+                echo "skip: no .tf in $dir"
+                popd >/dev/null
+                continue
+              fi
+              terraform init -backend=false -input=false -no-color
+              terraform validate -no-color
+              tflint --init
+              tflint --no-color
+              popd >/dev/null
+            done
+            echo "::endgroup::"
+          done

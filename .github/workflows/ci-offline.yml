@@ -1,28 +1,75 @@
 name: ci-offline
 
 on:
+  pull_request:
   push:
     branches: [ main ]
-    paths:
-      - ".github/workflows/ci-offline.yml"
-      - "requirements*.txt"
-      - "tools/**"
-      - "tests/**"
-  pull_request:
-    branches: [ main ]
-    paths:
-      - ".github/workflows/ci-offline.yml"
-      - "requirements*.txt"
-      - "tools/**"
-      - "tests/**"
-  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: ci-offline-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   python-ci:
+    name: python-ci
     runs-on: ubuntu-latest
+    if: >
+      !contains(github.event.head_commit.message, '[skip ci]')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dev dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements-dev.txt ]; then
+            pip install -r requirements-dev.txt
+          else
+            echo "requirements-dev.txt not found; installing minimal tooling"
+            pip install pytest flake8
+          fi
+
+      - name: Lint (flake8)
+        run: |
+          if [ -d ./tests ] || [ -d ./src ] || compgen -G "*.py" > /dev/null; then
+            flake8 .
+          else
+            echo "No Python sources found; skipping flake8"
+          fi
+
+      - name: Unit tests (pytest)
+        run: |
+          if [ -d ./tests ]; then
+            pytest -q
+          else
+            echo "No tests/ directory; skipping pytest"
+          fi
+
+  terraform-validate:
+    name: terraform-validate
+    uses: ./.github/workflows/_terraform-reusable.yml
+    with:
+      # Validate all common TF roots; add/remove as you grow
+      tf-globs: |
+        iac/**/main.tf
+        modules/**/main.tf
+        products/**/azure/**/main.tf
+        stacks/**/main.tf
+    secrets: inherit
+
+  docs-build:
+    name: docs-build (mkdocs)
+    runs-on: ubuntu-latest
+    needs: [python-ci, terraform-validate]
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -30,21 +77,14 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies (dev if present)
+      - name: Install docs deps
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements-dev.txt ]; then
-            pip install -r requirements-dev.txt
-          elif [ -f requirements.txt ]; then
-            pip install -r requirements.txt
+          if [ -f requirements-docs.txt ]; then
+            pip install -r requirements-docs.txt
           else
-            echo "No requirements file found; skipping pip install"
+            pip install mkdocs mkdocs-material
           fi
 
-      - name: Run pytest if tests/ exists
-        run: |
-          if [ -d tests ]; then
-            pytest -q
-          else
-            echo "No tests/ dir; skipping pytest"
-          fi
+      - name: mkdocs build (strict)
+        run: mkdocs build --strict
