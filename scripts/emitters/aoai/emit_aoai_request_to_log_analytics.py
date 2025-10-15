@@ -5,7 +5,6 @@ import argparse
 import datetime as dt
 import json
 import os
-import pathlib
 import time
 import uuid
 
@@ -15,11 +14,11 @@ except Exception:
     requests = None  # type: ignore
 
 from importlib import import_module
-from pathlib import Path
 
 
 def local_write(prefix: str, payload: dict) -> str:
-    out = Path(".local-outbox"); out.mkdir(exist_ok=True)
+    out = Path(".local-outbox")
+out.mkdir(exist_ok=True)
     fp = out / f"{prefix}-{int(time.time())}.json"
     fp.write_text(json.dumps(payload, indent=2))
     return str(fp)
@@ -65,3 +64,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
