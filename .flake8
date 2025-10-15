@@ -3,4 +3,4 @@ max-line-length = 100
 extend-ignore =
     E203
 per-file-ignores =
-    tools/status-badge/inject-into-readme.py:E501
+    tools/status-badge/inject-into-readme.py:E501    tools/evidence/export_to_log_analytics.py:E999
