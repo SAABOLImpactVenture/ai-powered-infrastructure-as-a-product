@@ -1,0 +1,7 @@
+title: Identity (Multi-Cloud)
+arrange:
+  - index.md
+  - azure-oidc.md
+  - aws-oidc.md
+  - gcp-wif.md
+  - oci-federation.md

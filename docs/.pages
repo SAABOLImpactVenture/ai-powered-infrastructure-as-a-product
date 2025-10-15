@@ -1,0 +1,19 @@
+title: Documentation
+arrange:
+  - index.md
+  - quickstart.md
+  - site/
+  - golden-demo/
+  - foundation/
+  - identity/
+  - workloads/
+  - observability/
+  - supply-chain/
+  - evidence/
+  - compliance/
+  - runtime-hardening/
+  - government/
+  - onboarding/
+  - dev/
+  - backstage/
+  - README-hardening-fixes.md
