@@ -63,32 +63,37 @@ flowchart LR
 
 ## How it hangs together
 
-- **Agents:** Product Manager, Delivery Architect, Responsible Engineer, Security & Identity Expert.
-- **Control Plane (Azure):** orchestrates identity, policy, and evidence sinks.
-- **Execution Planes (AWS/GCP/OCI):** run productized modules with remote state & locking.
-- **Policy Packs:** FedRAMP overlays for cloud + Kubernetes (Gatekeeper/Kyverno).
-- **Evidence Lake:** ADX or S3+Athena; exported to **OSCAL assessment‑results** for auditors.
+**Agents**: Product Manager, Delivery Architect, Responsible Engineer, Security & Identity Expert.  
+**Control Plane (Azure)**: orchestrates identity, policy, and evidence sinks.  
+**Execution Planes (AWS/GCP/OCI)**: run productized modules with remote state & locking.  
+**Policy Packs**: FedRAMP overlays for cloud + Kubernetes (Gatekeeper/Kyverno).  
+**Evidence Lake**: ADX or S3+Athena; exported to OSCAL assessment-results for auditors.
+
+<!-- IMPORTANT:
+  1) Keep a blank line before and after the code fence.
+  2) Ensure the fence is exactly ```mermaid (lowercase), left-aligned (no indentation).
+  3) Do not include any non-Mermaid text inside the fence.
+-->
 
 ```mermaid
 flowchart TB
-  subgraph Control Plane (Azure)
-    P[Backstage] --> A[Agent Orchestrator]
-    A --> I[Identity Federation]
-    A --> Pol[Policy Server]
-    A --> Evi[Evidence Adapter]
-  end
-  subgraph Execution Planes
-    AWS[AWS]:::cloud
-    GCP[GCP]:::cloud
-    OCI[OCI]:::cloud
-  end
-  Pol -->|Deny/Allow| AWS
-  Pol -->|Deny/Allow| GCP
-  Pol -->|Deny/Allow| OCI
-  AWS --> Evi
-  GCP --> Evi
-  OCI --> Evi
+  P[Backstage] --> A[Agent Orchestrator]
+  A --> I[Identity Federation]
+  A --> POL[Policy Server]
+  A --> EVI[Evidence Adapter]
+  AWS[AWS]
+  GCP[GCP]
+  OCI[OCI]
+  POL -->|Deny/Allow| AWS
+  POL -->|Deny/Allow| GCP
+  POL -->|Deny/Allow| OCI
+  AWS --> EVI
+  GCP --> EVI
+  OCI --> EVI
+
+  %% Optional styling (safe on GitHub); remove these three lines if it still won't render.
   classDef cloud fill:#0f172a,stroke:#334155,color:#fff;
+
 ```
 
 ---
