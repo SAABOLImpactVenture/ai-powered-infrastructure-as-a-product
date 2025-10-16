@@ -120,4 +120,4 @@ We welcome PRs that improve **security defaults**, **docs**, and **developer erg
 
 ## License
 
-MIT (or Apache‑2.0) — choose one; keep a single `LICENSE` file.
+MIT 
