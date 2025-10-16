@@ -120,4 +120,32 @@ We welcome PRs that improve **security defaults**, **docs**, and **developer erg
 
 ## License
 
-MIT License
+MIT 
+
+## Architecture (Mermaid)
+
+```mermaid
+flowchart TB
+  %% Subgraph version with explicit IDs and labels
+  subgraph AZ[Control Plane (Azure)]
+    P[Backstage] --> A[Agent Orchestrator]
+    A --> I[Identity Federation]
+    A --> POL[Policy Server]
+    A --> EVI[Evidence Adapter]
+  end
+
+  subgraph EP[Execution Planes]
+    AWS[AWS]:::cloud
+    GCP[GCP]:::cloud
+    OCI[OCI]:::cloud
+  end
+
+  POL -->|Deny/Allow| AWS
+  POL -->|Deny/Allow| GCP
+  POL -->|Deny/Allow| OCI
+  AWS --> EVI
+  GCP --> EVI
+  OCI --> EVI
+
+  classDef cloud fill:#0f172a,stroke:#334155,color:#fff;
+```
