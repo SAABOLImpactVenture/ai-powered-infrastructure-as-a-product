@@ -120,4 +120,4 @@ We welcome PRs that improve **security defaults**, **docs**, and **developer erg
 
 ## License
 
-MIT 
+MIT License
