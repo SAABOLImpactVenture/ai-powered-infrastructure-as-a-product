@@ -1,129 +1,146 @@
 <p align="center">
-  <img src="architecture-flow.png" alt="AI-Powered IaaP Architecture Flow" width="880">
+  <img src="docs/assets/multicloud-hero.png" alt="Agent-Driven IaaP across Azure • AWS • GCP • OCI" width="900"/>
 </p>
 
-<h1 align="center">AI-Powered Infrastructure-as-a-Product (IaaP) — Multi-Cloud Accelerator</h1>
+<h1 align="center">Agent‑Driven IaaP — from Idea to Governed Multi‑Cloud in Minutes</h1>
+<p align="center">
+  Azure orchestrates • AWS/GCP/OCI execute • Autonomous agents productize services • Backstage delivers the DX
+<p align="center">
+  <img src="architecture-flow.png" alt="AI-Powered IaaP Architecture Flow" width="820">
 
 <p align="center">
-  Azure as control plane • AWS/GCP/OCI as execution planes • Autonomous Agents as productizers • Backstage delivers the DX
-</p>
-
-<p align="center">
-  <a href="#features">Features</a> ·
-  <a href="#quickstart">Quickstart</a> ·
-  <a href="#architecture">Architecture</a> ·
-  <a href="#ci--security">CI & Security</a> ·
-  <a href="#compliance--evidence">Compliance & Evidence</a> ·
-  <a href="#marketplace--premium-offer">Marketplace & Premium Offer</a> ·
-  <a href="#roadmap">Roadmap</a> ·
-  <a href="#contributing">Contributing</a>
+  <a href="#10-minute-hands-on">⏱ 10‑Minute Hands‑On</a> •
+  <a href="#why-this-exists">Why this exists</a> •
+  <a href="#how-it-hangs-together">How it hangs together</a> •
+  <a href="#security--gov-ready">Security & Gov‑Ready</a> •
+  <a href="#whats-in-the-box">What’s in the box</a>
 </p>
 
 ---
 
-## Vision
+## One‑liner
 
-This accelerator turns **governed cloud services** into **secure, productized modules** that developers can consume “off‑the‑shelf” via **Backstage**. Azure is the **control plane** (identity, policy, evidence). AWS/GCP/OCI are **execution planes** running productized modules. Autonomous **agents** wire policy, documentation, and guardrails and emit **OSCAL** evidence for audits.
+**Give developers an off‑the‑shelf multi‑cloud experience** (pick a product → plan → policy → apply) while platform teams keep **governance, evidence, and velocity**.
 
-## Features
+## Show me the flow
 
-- **Backstage Product Templates** (golden paths): Azure Landing Zones, K8s clusters (AKS/EKS/GKE), Data platforms
-- **Multi‑Cloud CI/CD** with **GitHub Actions** and **OIDC** (no publish profiles)
-- **Security & Policy‑as‑Code**: tfsec, checkov, OPA/Conftest, Kyverno/Gatekeeper bundles
-- **Evidence Automation**: transforms scanner outputs → **NIST OSCAL assessment-results**
-- **Immutable Evidence Lake**: WORM (legal hold) + CMK; queryable (ADX or S3+Athena)
-- **Attestations**: provenance (SLSA‑style), artifact signing (supply‑chain hardening)
-
-## Repository Layout
-
-```
-.
-├── .github/
-│   └── workflows/
-│       ├── ci.yml                  # Lint, scan, test; uploads SARIF to GH Security
-│       ├── deploy-azure.yml        # Control-plane deploy via OIDC
-│       ├── deploy-multicloud.yml   # Fan-out deploy to AWS/GCP/OCI (if secrets present)
-│       └── evidence.yml            # Build OSCAL assessment-results + push to immutable storage
-├── backstage/
-│   └── templates/
-│       └── azure-landing-zone/
-│           ├── template.yaml       # Backstage scaffolder template
-│           └── skeleton/           # Minimal working skeleton
-├── policies/
-│   ├── opa/                        # OPA rego policies
-│   └── kyverno/                    # Kyverno policies
-├── tools/
-│   ├── oscal/
-│   │   └── convert_sarif_to_oscal.py
-│   └── scripts/
-│       └── validate_policies.sh
-├── src/
-│   ├── modules/                    # Terraform/Bicep product modules
-│   └── apps/                       # Example app infra
-├── architecture-flow.png           # Embedded in README
-└── README.md
+```mermaid
+flowchart LR
+  A["Backstage Template\n + Inputs"] --> B["MCP Server\n(cloud specific)"]
+  B --> C["Terraform Plan"]
+  C --> D{"Policy Check\nK8s/AWS/GCP/OCI"}
+  D -->|OK| E[Apply]
+  D -->|VIOLATIONS/DRIFT| F["Stop + Explain"]
+  E --> G["Emit Evidence JSON"]
+  C --> G
+  G --> H["Azure Monitor / LA\n+ Dashboard"]
 ```
 
-> **Note:** Workflows are resilient: if a directory is missing, steps are skipped instead of failing the entire job.
+```mermaid
+sequenceDiagram
+  actor Dev as Developer
+  participant BS as Backstage
+  participant MCP as MCP (Azure/AWS/GCP/OCI)
+  participant POL as Policy Server
+  participant AOAI as AOAI (optional)
+  participant LA as Log Analytics
 
-## Quickstart
+  Dev->>BS: choose product & params
+  BS->>MCP: POST /plan (tfPath)
+  MCP-->>BS: plan result
+  BS->>POL: POST /policy/check
+  POL-->>BS: status (OK/VIOLATIONS/DRIFT)
+  alt AOAI configured
+    BS->>AOAI: summarize plan & risks
+    AOAI-->>BS: executive summary
+  end
+  BS->>MCP: POST /apply (if OK)
+  MCP-->>BS: apply result
+  BS->>LA: ship evidence
+```
 
-1. **Clone**:
-   ```bash
-   gh repo clone SAABOLImpactVenture/ai-powered-infrastructure-as-a-product
-   cd ai-powered-infrastructure-as-a-product
-   ```
+## Why this exists
 
-2. **Required repo secrets** (set in GitHub → Settings → Secrets and variables → Actions):
-   - `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`
-   - Optional evidence: `AZURE_RESOURCE_GROUP`, `AZURE_STORAGE_ACCOUNT`, `EVIDENCE_CONTAINER` (e.g., `evidence`)
-   - Optional AWS: `AWS_ROLE_TO_ASSUME`, `AWS_REGION`
-   - Optional GCP: `GCP_WORKLOAD_IDP`, `GCP_SERVICE_ACCOUNT`
-   - Optional OCI: `OCI_TENANCY_OCID`, `OCI_USER_OCID`, `OCI_FINGERPRINT`, `OCI_PRIVATE_KEY_BASE64`, `OCI_REGION`
+- **Reduce time‑to‑first‑commit**: golden paths + productized modules.  
+- **Keep guardrails on**: preventive policy across clouds and clusters.  
+- **Own your evidence**: signed, structured, queryable.  
+- **Meet gov standards**: FedRAMP overlays, NSA/CISA K8s, SBOM/signing, OSCAL.
 
-3. **Kick CI**:
-   ```bash
-   git checkout -b feature/hello
-   echo "# hello" > examples/hello.md
-   git add . && git commit -m "smoke: trigger CI" && git push --set-upstream origin feature/hello
-   ```
+## How it hangs together
 
-## Architecture
+```mermaid
+graph TB
+  subgraph Dev Portal
+    BSC["Backstage\nTemplates & Actions"]
+  end
+  subgraph Agents
+    MCP1["MCP Azure"]:::agent
+    MCP2["MCP AWS"]:::agent
+    MCP3["MCP GCP"]:::agent
+    MCP4["MCP OCI"]:::agent
+    POL1["Policy K8s"]:::policy
+    POL2["Policy AWS"]:::policy
+    POL3["Policy GCP"]:::policy
+    POL4["Policy OCI"]:::policy
+  end
+  subgraph Platform
+    MODS["Product Modules\nplatform/<cloud>"]
+    POLP["Policy Packs"]
+    OBS["Evidence + Workbooks"]
+  end
+  BSC-->MCP1 & BSC-->MCP2 & BSC-->MCP3 & BSC-->MCP4
+  MCP1-->MODS; MCP2-->MODS; MCP3-->MODS; MCP4-->MODS
+  MCP1-->POL1; MCP2-->POL2; MCP3-->POL3; MCP4-->POL4
+  MCP1-->OBS; MCP2-->OBS; MCP3-->OBS; MCP4-->OBS
+  classDef agent fill:#eef,stroke:#77f;
+  classDef policy fill:#efe,stroke:#7c7;
+```
 
-- **Azure Control Plane**: Entra ID (federated OIDC), policy services, evidence adapters (to Blob/ADX).
-- **Execution Planes**: AWS/GCP/OCI run modules using least‑privilege identities, remote state, and guardrails.
-- **Backstage**: one‑click product scaffolding and docs.
-- **Agents**: codify productization, link policy & evidence, and emit OSCAL.
+## 10‑Minute Hands‑On
 
-The README uses a **PNG** diagram (see header) to ensure consistent rendering in GitHub.
+```bash
+# 1) Bring up agents + policy dashboard
+docker compose -f docker/docker-compose.yml up --build
 
-## CI & Security
+# 2) Plan a module (Azure sample)
+curl -sS -X POST http://localhost:8080/plan -H 'content-type: application/json'   -d '{"path":"platform/azure/observability/log_analytics"}' | jq
 
-- `ci.yml`: format, lint, unit tests; run **tfsec**, **checkov**; upload SARIF; run **OPA** tests if `policies/opa` exists.
-- `deploy-azure.yml`: OIDC login to Azure; deploy control‑plane infra (Bicep/Terraform) if `src/modules` exists.
-- `deploy-multicloud.yml`: a matrix deploy that runs only if corresponding secrets are present.
-- `evidence.yml`: gather scanner outputs + OPA results; run `tools/oscal/convert_sarif_to_oscal.py`; push to immutable Blob (WORM).
+# 3) Check policy (K8s/AWS/GCP/OCI)
+open http://localhost:8090   # live status
 
-## Compliance & Evidence
+# 4) Optionally run the agentic orchestrator
+node --experimental-modules workloads/agents-mcp-aoai/service/agent-orchestrator.ts azure platform/azure/observability/log_analytics
+```
 
-Implements parts of: **CA‑7**, **RA‑5**, **AU‑12**, **CM‑3**. Evidence pipeline produces **OSCAL assessment-results** for auditors and persists artifacts to **immutable storage** with **CMK** and **legal hold**.
+## Security & Gov‑Ready
 
-## Marketplace & Premium Offer
+- **FedRAMP packs**: `policies/*/fedramp/` (Azure Policy, AWS Config/SecHub, GCP Org Policy/SCC, OCI Cloud Guard)  
+- **NSA/CISA K8s overlay**: deny hostPID/hostNetwork, require seccomp RuntimeDefault, read‑only root FS, runAsNonRoot, allowed registries  
+- **Supply chain**: SBOM (SPDX via syft) + cosign attestations; tfsec & checkov with SARIF in CI  
+- **OSCAL export**: `tools/oscal-export/export.py` builds `assessment-results` from evidence
 
-- Clear **workflows**, **backstage templates**, and **policy packs** allow packaging as a **GitHub Premium Offer**.
-- Licensing: prefer a single permissive license (e.g., Apache‑2.0) plus a **premium terms** doc for paid add‑ons.
-- Remove duplicate or conflicting licenses; keep third‑party attributions within respective folders.
+> Short‑lived identity only (OIDC/WIF). No `null_resource` / `local-exec` in product modules.
 
-## Roadmap
+## What’s in the box
 
-- **P1** Harden CI + OSCAL evidence + minimal product templates shipped
-- **P2** Add full product catalog; policy bundles (Kyverno/Gatekeeper); scorecards in Backstage
-- **P3** Attestations (SLSA), SBOM capture, provenance signing; marketplace packaging
+- **Workloads**: `workloads/agents-mcp-aoai`, `workloads/iaap`, `workloads/identity`, `workloads/multi-cloud`
+- **Agents**: `servers/mcp/*` and `servers/mcp-policy/*`
+- **Policies**: `policies/kubernetes/**`, `policies/*/fedramp/**`
+- **Evidence**: schema + ingestion & workbook under `observability/**`
+- **Dev Portal**: Backstage templates/actions + Policy Status card and backend proxy
+- **Docs**: Government deployment notes, readme quickstarts, diagrams
 
-## Contributing
+## Who gets what
 
-Issues and PRs are welcome. Please run `./tools/scripts/validate_policies.sh` and CI locally where possible.
+| Persona | Value |
+|---|---|
+| Developer | One‑click product provisioning, explainable plans, fast feedback |
+| Platform | Guardrails + evidence + golden paths, multi‑cloud at scale |
+| Security/AO | FedRAMP overlays, continuous policy checks, OSCAL export |
 
-## License
+---
 
-See `LICENSE` in the repository root.
+### Next
+- Add your first product module or consume ours in `workloads/iaap/modules/*`  
+- Point the **Policy Status Card** to `/api/policy/aggregate`  
+- Roll out the **NSA/CISA overlay** to clusters and turn on the **FedRAMP packs** in CI
