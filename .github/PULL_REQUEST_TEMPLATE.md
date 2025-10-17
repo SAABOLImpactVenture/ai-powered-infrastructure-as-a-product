@@ -1,11 +1,16 @@
-## Summary
-What does this PR change?
+﻿## Summary
+<!-- What changed and why? -->
+
+## Type of change
+- [ ] Feature
+- [ ] Fix
+- [ ] Docs
+- [ ] Chore
+
+## Testing
+<!-- How did you test? Include commands / screenshots. -->
 
 ## Checks
-- [ ] `pytest -q` passes
-- [ ] `terraform validate` passes on changed modules/MVPs
-- [ ] No secrets introduced
-- [ ] Docs updated (README/module docs)
-
-## Evidence
-Link to `.local-outbox` file(s) or CI artifacts that prove behavior.
+- [ ] Lint (`pre-commit`) passes
+- [ ] Tests pass on all matrix versions (3.113.13)
+- [ ] Updated docs (if needed)
