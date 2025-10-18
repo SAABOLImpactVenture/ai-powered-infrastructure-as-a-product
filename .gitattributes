@@ -1,19 +1,10 @@
-# Normalize text automatically
-* text=auto
+﻿* text=auto eol=lf
 
-# Always use LF in CI- and infra-related files
-*.yml   text eol=lf
-*.yaml  text eol=lf
-*.json  text eol=lf
-*.tf    text eol=lf
-*.sh    text eol=lf
-*.md    text eol=lf
-
-# Keep binaries as-is
-*.png binary
-*.jpg binary
-*.jpeg binary
-*.gif binary
-*.ico binary
-*.zip binary
-*.gz  binary
+# Common binaries
+*.png  binary
+*.jpg  binary
+*.gif  binary
+*.pdf  binary
+*.ico  binary
+*.zip  binary
+*.exe  binary
