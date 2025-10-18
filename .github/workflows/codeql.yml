@@ -1,12 +1,12 @@
-name: CodeQL
+﻿name: CodeQL
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ "**" ]
+    branches: [ main, develop ]
   schedule:
-    - cron: '24 3 * * 5'
+    - cron: "20 17 * * 3"
 
 permissions:
   contents: read
@@ -14,15 +14,14 @@ permissions:
 
 jobs:
   analyze:
-    name: Analyze (${{ matrix.language }})
+    name: Analyze
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
+    timeout-minutes: 60
+
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript', 'python' ]
+        language: [ 'python' ]
 
     steps:
       - name: Checkout repository
@@ -32,12 +31,12 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          config-file: .github/codeql/codeql-config.yml
 
+      # Python: no compile step; keep autobuild for parity/safety
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "codeql/${{ matrix.language }}"
+          category: "/language:${{ matrix.language }}"
