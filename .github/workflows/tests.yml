@@ -1,0 +1,21 @@
+﻿name: tests
+on:
+  pull_request:
+  push:
+    branches: [ main, develop ]
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      matrix: { python-version: [ "3.11", "3.12", "3.13" ] }
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: ${{ matrix.python-version }} }
+      - run: pip install -U pip
+      - run: pip install -r requirements.txt
+        if: hashFiles('requirements.txt') != ''
+      - run: pip install pytest pytest-cov
+      - run: pytest -q --maxfail=1 --disable-warnings --cov --cov-report=xml
