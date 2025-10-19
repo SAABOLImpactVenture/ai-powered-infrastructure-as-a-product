@@ -1,0 +1,17 @@
+﻿name: scorecard
+on:
+  schedule: [{ cron: "0 6 * * 1" }]
+  push: { branches: [ main ] }
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ossf/scorecard-action@v2.4.0
+        with:
+          results_file: results.sarif
+          sarif: true
+      - uses: github/codeql-action/upload-sarif@v3
+        with: { sarif_file: results.sarif }
