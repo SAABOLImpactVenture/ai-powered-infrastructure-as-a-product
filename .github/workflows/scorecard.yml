@@ -9,7 +9,7 @@ jobs:
   analysis:
     runs-on: ubuntu-latest
     steps:
-      - uses: ossf/scorecard-action@v2.4.0
+      - uses: ossf/scorecard-action@b8e6e1e2e7c318e44b81e5a2122b1657bf784b4a
         with:
           results_file: results.sarif
           sarif: true
