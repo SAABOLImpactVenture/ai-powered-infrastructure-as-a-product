@@ -1,0 +1,148 @@
+﻿{
+    "develop":  {
+                    "url":  "https://api.github.com/repos/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/branches/develop/protection",
+                    "required_status_checks":  {
+                                                   "url":  "https://api.github.com/repos/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/branches/develop/protection/required_status_checks",
+                                                   "strict":  true,
+                                                   "contexts":  [
+                                                                    "lint",
+                                                                    "tests (3.11)",
+                                                                    "tests (3.12)",
+                                                                    "tests (3.13)",
+                                                                    "CodeQL / Analyze (python)"
+                                                                ],
+                                                   "contexts_url":  "https://api.github.com/repos/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/branches/develop/protection/required_status_checks/contexts",
+                                                   "checks":  [
+                                                                  {
+                                                                      "context":  "lint",
+                                                                      "app_id":  15368
+                                                                  },
+                                                                  {
+                                                                      "context":  "tests (3.11)",
+                                                                      "app_id":  15368
+                                                                  },
+                                                                  {
+                                                                      "context":  "tests (3.12)",
+                                                                      "app_id":  15368
+                                                                  },
+                                                                  {
+                                                                      "context":  "tests (3.13)",
+                                                                      "app_id":  15368
+                                                                  },
+                                                                  {
+                                                                      "context":  "CodeQL / Analyze (python)",
+                                                                      "app_id":  null
+                                                                  }
+                                                              ]
+                                               },
+                    "required_pull_request_reviews":  {
+                                                          "url":  "https://api.github.com/repos/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/branches/develop/protection/required_pull_request_reviews",
+                                                          "dismiss_stale_reviews":  true,
+                                                          "require_code_owner_reviews":  false,
+                                                          "require_last_push_approval":  false,
+                                                          "required_approving_review_count":  1
+                                                      },
+                    "required_signatures":  {
+                                                "url":  "https://api.github.com/repos/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/branches/develop/protection/required_signatures",
+                                                "enabled":  false
+                                            },
+                    "enforce_admins":  {
+                                           "url":  "https://api.github.com/repos/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/branches/develop/protection/enforce_admins",
+                                           "enabled":  true
+                                       },
+                    "required_linear_history":  {
+                                                    "enabled":  true
+                                                },
+                    "allow_force_pushes":  {
+                                               "enabled":  false
+                                           },
+                    "allow_deletions":  {
+                                            "enabled":  false
+                                        },
+                    "block_creations":  {
+                                            "enabled":  false
+                                        },
+                    "required_conversation_resolution":  {
+                                                             "enabled":  false
+                                                         },
+                    "lock_branch":  {
+                                        "enabled":  false
+                                    },
+                    "allow_fork_syncing":  {
+                                               "enabled":  false
+                                           }
+                },
+    "main":  {
+                 "url":  "https://api.github.com/repos/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/branches/main/protection",
+                 "required_status_checks":  {
+                                                "url":  "https://api.github.com/repos/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/branches/main/protection/required_status_checks",
+                                                "strict":  true,
+                                                "contexts":  [
+                                                                 "lint",
+                                                                 "tests (3.11)",
+                                                                 "tests (3.12)",
+                                                                 "tests (3.13)",
+                                                                 "CodeQL / Analyze (python)"
+                                                             ],
+                                                "contexts_url":  "https://api.github.com/repos/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/branches/main/protection/required_status_checks/contexts",
+                                                "checks":  [
+                                                               {
+                                                                   "context":  "lint",
+                                                                   "app_id":  15368
+                                                               },
+                                                               {
+                                                                   "context":  "tests (3.11)",
+                                                                   "app_id":  15368
+                                                               },
+                                                               {
+                                                                   "context":  "tests (3.12)",
+                                                                   "app_id":  15368
+                                                               },
+                                                               {
+                                                                   "context":  "tests (3.13)",
+                                                                   "app_id":  15368
+                                                               },
+                                                               {
+                                                                   "context":  "CodeQL / Analyze (python)",
+                                                                   "app_id":  null
+                                                               }
+                                                           ]
+                                            },
+                 "required_pull_request_reviews":  {
+                                                       "url":  "https://api.github.com/repos/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/branches/main/protection/required_pull_request_reviews",
+                                                       "dismiss_stale_reviews":  true,
+                                                       "require_code_owner_reviews":  false,
+                                                       "require_last_push_approval":  false,
+                                                       "required_approving_review_count":  1
+                                                   },
+                 "required_signatures":  {
+                                             "url":  "https://api.github.com/repos/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/branches/main/protection/required_signatures",
+                                             "enabled":  false
+                                         },
+                 "enforce_admins":  {
+                                        "url":  "https://api.github.com/repos/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/branches/main/protection/enforce_admins",
+                                        "enabled":  true
+                                    },
+                 "required_linear_history":  {
+                                                 "enabled":  true
+                                             },
+                 "allow_force_pushes":  {
+                                            "enabled":  false
+                                        },
+                 "allow_deletions":  {
+                                         "enabled":  false
+                                     },
+                 "block_creations":  {
+                                         "enabled":  false
+                                     },
+                 "required_conversation_resolution":  {
+                                                          "enabled":  false
+                                                      },
+                 "lock_branch":  {
+                                     "enabled":  false
+                                 },
+                 "allow_fork_syncing":  {
+                                            "enabled":  false
+                                        }
+             }
+}
