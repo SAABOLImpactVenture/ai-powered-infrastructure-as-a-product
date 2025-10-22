@@ -6,10 +6,9 @@ on:
 permissions:
   contents: read
   security-events: write
-
 jobs:
   analyze:
-    name: Analyze (python)   # must match required context EXACTLY
+    name: Analyze (python)
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
