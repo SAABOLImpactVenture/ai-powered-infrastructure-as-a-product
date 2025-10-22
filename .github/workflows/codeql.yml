@@ -6,9 +6,10 @@ on:
 permissions:
   contents: read
   security-events: write
+
 jobs:
   analyze:
-    name: Analyze (python)   # <-- this must match branch protection exactly
+    name: Analyze (python)   # must match required context EXACTLY
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
