@@ -1,0 +1,16 @@
+{
+  "properties": {
+    "displayName": "Require tags on resources",
+    "policyDefinitionId": "/subscriptions/<SUB_ID>/providers/Microsoft.Authorization/policyDefinitions/require-tags",
+    "parameters": {
+      "tagName": {
+        "value": [
+          "owner",
+          "env",
+          "cost-center"
+        ]
+      }
+    },
+    "scope": "/subscriptions/<SUB_ID>"
+  }
+}

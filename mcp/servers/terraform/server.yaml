@@ -1,0 +1,10 @@
+name: mcp-terraform
+capabilities: [tools, prompts, resources]
+tools:
+  - name: tf_validate
+    input: { type: object, properties: { path: { type: string } }, required: [path] }
+  - name: tf_plan
+    input: { type: object, properties: { path: { type: string } }, required: [path] }
+resources:
+  - name: module_registry
+    uri: file://products/

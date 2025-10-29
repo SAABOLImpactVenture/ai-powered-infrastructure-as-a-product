@@ -1,0 +1,38 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: product-network-azure
+  title: Product: AZURE Network
+  description: Scaffold a AZURE network product with guardrails and tests
+  tags: [azure, network, iaap]
+spec:
+  owner: platform-team
+  type: service
+  parameters:
+    - title: Product Inputs
+      required: [name, environment]
+      properties:
+        name: { type: string }
+        owner: { type: string, default: "platform-team" }
+        environment: { type: string, enum: [dev, test, prod] }
+        subscriptionId: { type: string }
+        location: { type: string, default: eastus }
+
+  steps:
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./skeleton
+    - id: render
+      name: Render
+      action: templating:render
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        repoUrl: github.com?owner=${{ parameters.owner }}&repo=${{ parameters.name }}
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps.publish.output.remoteUrl }}

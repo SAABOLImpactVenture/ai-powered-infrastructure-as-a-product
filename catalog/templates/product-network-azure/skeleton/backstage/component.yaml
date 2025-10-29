@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.name }}
+  description: Network product instance
+  tags: [network, iaap]
+spec:
+  type: service
+  lifecycle: experimental
+  owner: ${{ values.owner | default("platform-team") }}
+  system: ai-iaap-accelerator

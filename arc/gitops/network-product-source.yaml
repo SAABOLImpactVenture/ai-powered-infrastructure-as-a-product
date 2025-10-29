@@ -1,0 +1,12 @@
+apiVersion: clusterconfig.azure.com/v1beta1
+kind: GitOpsConfig
+metadata:
+  name: product-network-azure
+spec:
+  repositoryRef:
+    url: https://github.com/ORG/REPO
+    branch: main
+    path: clusters/prod/network
+  operatorInstanceName: flux
+  operatorNamespace: flux-system
+  syncIntervalInSeconds: 120

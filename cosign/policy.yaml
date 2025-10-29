@@ -1,0 +1,10 @@
+apiVersion: policy.sigstore.dev/v1alpha1
+kind: ClusterImagePolicy
+metadata:
+  name: signed-images-only
+spec:
+  images:
+    - glob: "ghcr.io/org/*"
+  authorities:
+    - key:
+        kms: azurekms://subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-kms/providers/Microsoft.KeyVault/vaults/kv-cosign/keys/cosign-key

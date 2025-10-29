@@ -1,0 +1,38 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: product-network-gcp
+  title: Product: GCP Network
+  description: Scaffold a GCP network product with guardrails and tests
+  tags: [gcp, network, iaap]
+spec:
+  owner: platform-team
+  type: service
+  parameters:
+    - title: Product Inputs
+      required: [name, environment]
+      properties:
+        name: { type: string }
+        owner: { type: string, default: "platform-team" }
+        environment: { type: string, enum: [dev, test, prod] }
+        projectId: { type: string }
+        region: { type: string, default: us-central1 }
+
+  steps:
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./skeleton
+    - id: render
+      name: Render
+      action: templating:render
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        repoUrl: github.com?owner=${{ parameters.owner }}&repo=${{ parameters.name }}
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps.publish.output.remoteUrl }}

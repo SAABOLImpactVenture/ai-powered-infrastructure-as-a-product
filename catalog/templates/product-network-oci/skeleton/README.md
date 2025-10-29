@@ -1,0 +1,1 @@
+# OCI network instance skeleton
