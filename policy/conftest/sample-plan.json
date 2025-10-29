@@ -1,0 +1,13 @@
+{
+  "resource_changes": [
+    {
+      "type": "azurerm_storage_account",
+      "name": "bad",
+      "change": {
+        "after_properties": {
+          "allowBlobPublicAccess": true
+        }
+      }
+    }
+  ]
+}
