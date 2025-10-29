@@ -1,0 +1,36 @@
+name: Validate & Policy
+on:
+  pull_request:
+    paths:
+      - 'products/**'
+      - 'policy/**'
+      - '.github/workflows/validate-and-policy.yml'
+jobs:
+  terraform-validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        product:
+          - path: products/network-azure/infra
+          - path: products/network-aws/infra
+          - path: products/network-gcp/infra
+          - path: products/network-oci/infra
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: Terraform Validate
+        working-directory: ${{ matrix.product.path }}
+        run: |
+          terraform init -input=false -upgrade
+          terraform validate
+  conftest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install conftest
+        run: |
+          curl -L https://github.com/open-policy-agent/conftest/releases/latest/download/conftest_Linux_x86_64.tar.gz -o conftest.tgz
+          tar xzf conftest.tgz
+          sudo mv conftest /usr/local/bin/
+      - name: Run policies against sample plan (replace with real plan.json)
+        run: conftest test -p policy/conftest policy/conftest/sample-plan.json
