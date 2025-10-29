@@ -78,7 +78,7 @@ make pr-help        # Show PR management help
 
 ### 4. GitHub Actions Workflows
 
-#### PR Status Check (`..github/workflows/pr-status-check.yml`)
+#### PR Status Check (`.github/workflows/pr-status-check.yml`)
 Automated workflow that:
 - Runs daily at 9 AM UTC
 - Can be manually triggered

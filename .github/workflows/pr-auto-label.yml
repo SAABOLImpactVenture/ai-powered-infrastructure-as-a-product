@@ -73,5 +73,5 @@ jobs:
               - Run tests: \`make test\`
               - Run linters: \`pre-commit run --all-files\`
 
-              For more information, see [PR Management Guide](../docs/PR_MANAGEMENT.md)`
+              For more information, see the [PR Management Guide](https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/docs/PR_MANAGEMENT.md)`
             })
