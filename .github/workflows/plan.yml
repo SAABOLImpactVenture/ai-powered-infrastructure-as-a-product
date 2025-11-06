@@ -5,9 +5,6 @@ on:
     paths:
       - "**/*.tf"
       - "**/*.tfvars"
-      - "terraform/**"
-      - "platform/**"
-      - "workloads/**"
   workflow_dispatch:
 
 jobs:
