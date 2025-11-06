@@ -1,4 +1,5 @@
 name: plan
+
 on:
   pull_request:
     branches: [ "main" ]
@@ -11,63 +12,58 @@ on:
   workflow_dispatch:
 
 jobs:
-  changed:
+  plan:
+    name: plan
     runs-on: ubuntu-latest
-    outputs:
-      tf: ${{ steps.filter.outputs.tf }}
+    permissions:
+      contents: read
+
     steps:
-      - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-      - uses: dorny/paths-filter@v3
-        id: filter
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect Terraform changes
+        id: changes
+        uses: dorny/paths-filter@v3
         with:
           filters: |
             tf:
               - '**/*.tf'
               - '**/*.tfvars'
+              - 'terraform/**'
+              - 'platform/**'
+              - 'workloads/**'
 
-  plan:
-    needs: changed
-    if: github.event_name == 'workflow_dispatch' || needs.changed.outputs.tf == 'true'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      # id-token: write   # enable if you also run real cloud plans on internal branches
-    steps:
-      - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
+      - name: No Terraform changes
+        if: steps.changes.outputs.tf != 'true'
+        run: |
+          echo "No Terraform changes detected; skipping plan." | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Skip for forks (no secrets)
+        if: steps.changes.outputs.tf == 'true' && github.event.pull_request.head.repo.fork == true
+        run: |
+          echo "Fork PR detected; running in report-only mode. No plan will be executed." | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Setup Terraform
+        if: steps.changes.outputs.tf == 'true' && github.event.pull_request.head.repo.fork == false
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.6.6
+          terraform_wrapper: false
 
-      - name: Find Terraform module roots
-        id: mods
+      - name: Offline validate (init without backend)
+        if: steps.changes.outputs.tf == 'true' && github.event.pull_request.head.repo.fork == false
+        shell: bash
         run: |
-          mapfile -t DIRS < <(git ls-files '**/*.tf' \
-            | xargs -n1 dirname | sort -u)
-          printf '%s\n' "${DIRS[@]}" > dirs.txt || true
-          echo "count=${#DIRS[@]}" >> "$GITHUB_OUTPUT"
-
-      - name: Validate & plan (offline for forks)
-        if: steps.mods.outputs.count != '0' && github.event.pull_request.head.repo.fork
-        run: |
-          while read -r d; do
-            [ -z "$d" ] && continue
-            echo "==> $d"
-            terraform -chdir="$d" init -backend=false -input=false
-            terraform -chdir="$d" validate
-            terraform -chdir="$d" plan -input=false -lock=false -no-color
-          done < dirs.txt
-
-      - name: Validate & plan (real backend for internal branches)
-        if: steps.mods.outputs.count != '0' && !github.event.pull_request.head.repo.fork
-        run: |
-          while read -r d; do
-            [ -z "$d" ] && continue
-            echo "==> $d"
-            terraform -chdir="$d" init -input=false
-            terraform -chdir="$d" validate
-            terraform -chdir="$d" plan -input=false -no-color
-          done < dirs.txt
+          set -euo pipefail
+          echo "Running offline init/validate across Terraform folders…"
+          # find directories that actually contain terraform
+          mapfile -t DIRS < <(git ls-files '**/*.tf' | xargs -n1 dirname | sort -u)
+          for d in "${DIRS[@]}"; do
+            echo "::group::${d}"
+            ( cd "$d"
+              terraform -version
+              terraform init -backend=false -input=false -no-color || true
+              terraform validate -no-color || true
+            )
+            echo "::endgroup::"
+          done

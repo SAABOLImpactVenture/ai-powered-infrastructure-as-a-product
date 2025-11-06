@@ -1,0 +1,28 @@
+name: infracost
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  cost:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+      - name: Generate speculative plan JSON
+        run: |
+          terraform -chdir=infra init -backend=false
+          terraform -chdir=infra plan -lock=false -input=false -no-color -out tfplan || true
+          terraform -chdir=infra show -no-color -json tfplan > plan.json || echo "{}" > plan.json
+      - name: Infracost breakdown
+        uses: infracost/actions/setup@v3
+      - name: Comment cost estimate
+        env:
+          INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
+        run: |
+          infracost breakdown --path=plan.json --format=json --out-file=ic.json || echo "{}" > ic.json
+          infracost comment github --path=ic.json --behavior=new
