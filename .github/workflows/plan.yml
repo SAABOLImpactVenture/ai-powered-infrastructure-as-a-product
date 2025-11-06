@@ -37,6 +37,8 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
+          # NOTE: Using Terraform 1.6.6 due to compatibility requirements with existing modules/providers. 
+          # Update this version only after verifying compatibility with all infrastructure code.
           terraform_version: 1.6.6
 
       - name: Find Terraform module roots
