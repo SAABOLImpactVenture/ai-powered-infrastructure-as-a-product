@@ -8,3 +8,8 @@
 *.ico  binary
 *.zip  binary
 *.exe  binary
+# Keep YAML/JSON/Shell files with LF on Windows
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.sh   text eol=lf

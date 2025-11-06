@@ -1,3 +1,4 @@
+cat > .github/workflows/policy-test.yml <<'YAML'
 name: policy-test
 
 on:
@@ -12,20 +13,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Skip if no policy/ directory
+      - name: Check for policy directory
         id: pol
         run: |
-          if [ ! -d policy ]; then
-            echo "found=false" >> "$GITHUB_OUTPUT"
-          else
+          if [ -d policy ]; then
             echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: No policies; skipping
         if: steps.pol.outputs.found == 'false'
         run: echo "No policy/ directory found; skipping." | tee -a "$GITHUB_STEP_SUMMARY"
 
-      # Place actual conftest run here if/when you add policies
+      # Uncomment when you add policies:
       # - name: Run conftest
       #   if: steps.pol.outputs.found == 'true'
       #   run: conftest test policy
+YAML

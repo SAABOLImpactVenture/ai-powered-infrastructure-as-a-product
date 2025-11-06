@@ -1,3 +1,5 @@
+mkdir -p .github/workflows
+cat > .github/workflows/plan.yml <<'YAML'
 name: plan
 
 on:
@@ -36,13 +38,11 @@ jobs:
 
       - name: No Terraform changes
         if: steps.changes.outputs.tf != 'true'
-        run: |
-          echo "No Terraform changes detected; skipping plan." | tee -a "$GITHUB_STEP_SUMMARY"
+        run: echo "No Terraform changes; skipping." | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Skip for forks (no secrets)
         if: steps.changes.outputs.tf == 'true' && github.event.pull_request.head.repo.fork == true
-        run: |
-          echo "Fork PR detected; running in report-only mode. No plan will be executed." | tee -a "$GITHUB_STEP_SUMMARY"
+        run: echo "Fork PR; offline plan disabled. Marking success." | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Setup Terraform
         if: steps.changes.outputs.tf == 'true' && github.event.pull_request.head.repo.fork == false
@@ -55,15 +55,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo "Running offline init/validate across Terraform folders…"
-          # find directories that actually contain terraform
           mapfile -t DIRS < <(git ls-files '**/*.tf' | xargs -n1 dirname | sort -u)
           for d in "${DIRS[@]}"; do
             echo "::group::${d}"
             ( cd "$d"
-              terraform -version
               terraform init -backend=false -input=false -no-color || true
               terraform validate -no-color || true
             )
             echo "::endgroup::"
           done
+YAML
