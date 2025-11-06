@@ -62,7 +62,7 @@ jobs:
           done < dirs.txt
 
       - name: Validate & plan (real backend for internal branches)
-        if: steps.mods.outputs.count != '0' && !github.event.pull_request.head.repo.fork
+        if: steps.mods.outputs.count != '0' && (github.event_name != 'pull_request' || !github.event.pull_request.head.repo.fork)
         run: |
           while read -r d; do
             [ -z "$d" ] && continue
