@@ -9,26 +9,36 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+    # TEMP: never block merges; report only
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.7.5
-      - name: Generate speculative plan JSON
+
+      - name: Generate speculative plan JSON (infra/ only)
         run: |
-          TF_DIR="${TF_DIR:-infra}"
-          if [ -d "$TF_DIR" ]; then
-            terraform -chdir="$TF_DIR" init -backend=false
-            terraform -chdir="$TF_DIR" plan -lock=false -input=false -no-color -out tfplan || true
-            terraform -chdir="$TF_DIR" show -no-color -json tfplan > plan.json || echo "{}" > plan.json
+          if [ -d "infra" ]; then
+            terraform -chdir=infra init -backend=false
+            terraform -chdir=infra plan -lock=false -input=false -no-color -out tfplan || true
+            terraform -chdir=infra show -no-color -json tfplan > plan.json || echo "{}" > plan.json
           else
             echo "{}" > plan.json
           fi
+
       - name: Setup Infracost
         uses: infracost/actions/setup@v3
-      - name: Comment cost estimate
+
+      - name: Skip gracefully if no API key
+        if: ${{ secrets.INFRACOST_API_KEY == '' }}
+        run: |
+          echo "No INFRACOST_API_KEY present; skipping cost comment." | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Comment cost estimate (non-blocking)
+        if: ${{ secrets.INFRACOST_API_KEY != '' }}
         env:
           INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
         run: |
           infracost breakdown --path=plan.json --format=json --out-file=ic.json || echo "{}" > ic.json
-          infracost comment github --path=ic.json --behavior=new
+          infracost comment github --path=ic.json --behavior=new || true
