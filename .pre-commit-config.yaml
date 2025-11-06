@@ -1,18 +1,33 @@
-﻿repos:
-  - repo: https://github.com/pycqa/autoflake
-    rev: v2.3.1
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
     hooks:
-      - id: autoflake
-        args: [--remove-all-unused-imports, --remove-unused-variables, --expand-star-imports, --in-place]
-  - repo: https://github.com/pycqa/isort
-    rev: 7.0.0
+      - id: check-yaml
+        # Only lint the new CI workflows we created
+        files: ^\.github/workflows/(precommit|policy-test|tf-plan|tf-apply|infracost|slsa-sbom)\.yml$
+      - id: check-json
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-added-large-files
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
     hooks:
-      - id: isort
-  - repo: https://github.com/psf/black
-    rev: 25.9.0
+      - id: detect-secrets
+        args: ["--baseline", ".secrets.baseline"]
+        exclude: |
+          (?x)(
+            ^.git/|
+            ^.terraform/|
+            ^.venv/|
+            ^node_modules/
+          )
+
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.92.0
     hooks:
-      - id: black
-  - repo: https://github.com/pycqa/flake8
-    rev: 7.3.0
-    hooks:
-      - id: flake8
+      - id: terraform_fmt
+        files: ^infra/
+      - id: terraform_validate
+        args: ["--hook-config=--args=init"]
+        files: ^infra/

@@ -12,19 +12,19 @@ jobs:
   auto-label:
     name: Auto-label Pull Requests
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Label based on files changed
         uses: actions/labeler@v5
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           configuration-path: .github/labeler.yml
-      
+
       - name: Label based on size
         uses: codelytv/pr-size-labeler@v1
         with:
@@ -39,17 +39,17 @@ jobs:
           l_max_size: 1000
           xl_label: 'size/xl'
           fail_if_xl: false
-      
+
       - name: Check if PR is ready
         id: pr-check
         run: |
           # Get PR details
           PR_NUMBER=${{ github.event.pull_request.number }}
           IS_DRAFT=${{ github.event.pull_request.draft }}
-          
+
           echo "pr_number=${PR_NUMBER}" >> $GITHUB_OUTPUT
           echo "is_draft=${IS_DRAFT}" >> $GITHUB_OUTPUT
-      
+
       - name: Comment on PR
         if: github.event.action == 'opened'
         uses: actions/github-script@v7

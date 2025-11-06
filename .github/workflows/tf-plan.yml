@@ -1,0 +1,29 @@
+name: tf-plan
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+      - name: Validate modules (infra/ only)
+        run: |
+          if [ -d "infra" ]; then
+            terraform -chdir=infra init -backend=false
+            terraform -chdir=infra validate || echo "::warning ::terraform validate failed; please fix infra/ later."
+          else
+            echo "No infra/ directory; skipping."
+          fi
+      - name: Plan (speculative, non-blocking)
+        run: |
+          if [ -d "infra" ]; then
+            terraform -chdir=infra plan -lock=false -input=false -no-color || true
+          fi

@@ -1,11 +1,13 @@
 name: tests (3.12)
-on: [pull_request]
+on:
+  pull_request:
+  push:
+    branches: [ main ]
 jobs:
   tests-3-12:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - run: python -V
+        with: { python-version: '3.12' }
+      - run: python -V && echo "Smoke OK"

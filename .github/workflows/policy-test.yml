@@ -1,0 +1,23 @@
+name: policy-test
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  conftest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install conftest
+        run: |
+          curl -sL https://github.com/open-policy-agent/conftest/releases/latest/download/conftest_Linux_x86_64.tar.gz \
+          | tar xz && sudo mv conftest /usr/local/bin/
+      - name: Run policy unit tests
+        run: |
+          if [ -d "policy" ]; then
+            conftest test policy --all-namespaces
+          else
+            echo "No policy/ directory found; skipping." ; exit 0
+          fi

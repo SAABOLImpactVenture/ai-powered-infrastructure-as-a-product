@@ -100,4 +100,3 @@ jobs:
             echo "::error ::Terraform/TFLint found ${failures} failure(s)"
             exit 1
           fi
-

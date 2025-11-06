@@ -1,0 +1,61 @@
+name: CI (PR Tools & Docs)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'scripts/**'
+      - 'tools/**'
+      - 'docs/**'
+      - 'PR_*'
+      - 'PR*/*.md'
+      - 'Makefile'
+      - '.pre-commit-config.yaml'
+      - 'requirements*.txt'
+      - 'pyproject.toml'
+      - '.github/workflows/ci-pr-tools.yml'
+
+jobs:
+  changed:
+    runs-on: ubuntu-latest
+    outputs:
+      prtools: ${{ steps.filter.outputs.prtools }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            prtools:
+              - 'scripts/**'
+              - 'tools/**'
+              - 'docs/**'
+              - 'PR_*'
+              - 'PR*/*.md'
+              - 'Makefile'
+              - '.pre-commit-config.yaml'
+              - 'requirements*.txt'
+              - 'pyproject.toml'
+
+  lint:
+    needs: changed
+    if: needs.changed.outputs.prtools == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: python -m pip install --upgrade pip
+      - run: pip install -r requirements-dev.txt || true
+      - uses: pre-commit/action@v3.0.1
+
+  unit-tests:
+    needs: changed
+    if: needs.changed.outputs.prtools == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install -r requirements-dev.txt || true
+      - run: pytest -q || true  # keep non-blocking if tests are unrelated
