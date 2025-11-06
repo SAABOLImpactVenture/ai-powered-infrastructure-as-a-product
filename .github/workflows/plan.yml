@@ -1,19 +1,73 @@
 name: plan
-on: [pull_request, workflow_dispatch]
-permissions: { contents: read, id-token: write, security-events: write }
-concurrency: ci-${{ github.workflow }}-${{ github.ref }}
+on:
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "**/*.tf"
+      - "**/*.tfvars"
+      - "terraform/**"
+      - "platform/**"
+      - "workloads/**"
+  workflow_dispatch:
 
 jobs:
-  plan:
+  changed:
     runs-on: ubuntu-latest
+    outputs:
+      tf: ${{ steps.filter.outputs.tf }}
     steps:
       - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
-        with: { terraform_version: 1.8.6 }
-      - run: terraform init -backend=false -input=false
-      - run: terraform plan -out=tfplan.bin -input=false -lock=false -detailed-exitcode || true
-      - run: terraform show -json tfplan.bin > tfplan.json
-      - uses: actions/upload-artifact@v4
-        with: { name: tfplan-json, path: tfplan.json }
-      - uses: actions/upload-artifact@v4
-        with: { name: tfplan, path: tfplan.bin }
+        with: { fetch-depth: 0 }
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            tf:
+              - '**/*.tf'
+              - '**/*.tfvars'
+
+  plan:
+    needs: changed
+    if: github.event_name == 'workflow_dispatch' || needs.changed.outputs.tf == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # id-token: write   # enable if you also run real cloud plans on internal branches
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+
+      - name: Find Terraform module roots
+        id: mods
+        run: |
+          mapfile -t DIRS < <(git ls-files '**/*.tf' \
+            | xargs -n1 dirname | sort -u)
+          printf '%s\n' "${DIRS[@]}" > dirs.txt || true
+          echo "count=${#DIRS[@]}" >> "$GITHUB_OUTPUT"
+
+      - name: Validate & plan (offline for forks)
+        if: steps.mods.outputs.count != '0' && github.event.pull_request.head.repo.fork
+        run: |
+          while read -r d; do
+            [ -z "$d" ] && continue
+            echo "==> $d"
+            terraform -chdir="$d" init -backend=false -input=false
+            terraform -chdir="$d" validate
+            terraform -chdir="$d" plan -input=false -lock=false -no-color
+          done < dirs.txt
+
+      - name: Validate & plan (real backend for internal branches)
+        if: steps.mods.outputs.count != '0' && !github.event.pull_request.head.repo.fork
+        run: |
+          while read -r d; do
+            [ -z "$d" ] && continue
+            echo "==> $d"
+            terraform -chdir="$d" init -input=false
+            terraform -chdir="$d" validate
+            terraform -chdir="$d" plan -input=false -no-color
+          done < dirs.txt
