@@ -1,0 +1,36 @@
+images:
+  backend:
+    tag: "dev"
+  app:
+    tag: "dev"
+
+ingress:
+  enabled: false
+
+appConfig:
+  productionYaml: |
+    app:
+      title: AI-PIaP Backstage (Dev)
+      baseUrl: http://localhost:3000
+    backend:
+      baseUrl: http://localhost:7007
+      listen:
+        port: 7007
+      database:
+        client: sqlite3
+        connection:
+          filename: var/db/dev.sqlite3
+        useNullAsDefault: true
+      csp:
+        connect-src: ["'self'", "http:", "https:"]
+      cors:
+        origin: http://localhost:3000
+        methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+        credentials: true
+      auth:
+        keys:
+          - secret: dev-secret-please-change
+    auth:
+      environment: development
+      providers:
+        guest: {}

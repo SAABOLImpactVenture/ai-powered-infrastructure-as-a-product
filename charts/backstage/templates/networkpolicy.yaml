@@ -1,0 +1,26 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "backstage.fullname" . }}-deny-all
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "backstage.labels" . | nindent 4 }}
+spec:
+  podSelector: {}
+  policyTypes: ["Ingress","Egress"]
+  ingress:
+    - from:
+        - podSelector: {} # allow same-namespace by default; tighten if needed
+  egress:
+    - to:
+        - podSelector: {} # same-namespace
+      ports:
+        - protocol: TCP
+          port: 53
+    {{- range .Values.networkPolicy.egressAllowCIDRs }}
+    - to:
+        - ipBlock:
+            cidr: {{ . | quote }}
+    {{- end }}
+{{- end }}

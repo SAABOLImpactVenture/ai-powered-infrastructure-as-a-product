@@ -1,0 +1,199 @@
+namespace: backstage
+nameOverride: ""
+fullnameOverride: ""
+
+images:
+  backend:
+    repository: aipiap/backstage-backend
+    tag: "dev"
+    pullPolicy: IfNotPresent
+  app:
+    repository: aipiap/backstage-app
+    tag: "dev"
+    pullPolicy: IfNotPresent
+
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+  # For Azure Workload Identity (set your client ID):
+  # annotations:
+  #   azure.workload.identity/client-id: "<CLIENT_ID>"
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+  readOnlyRootFilesystem: true
+
+backend:
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 1
+      memory: 1Gi
+  service:
+    type: ClusterIP
+    port: 7007
+  env:
+    APP_CONFIG_PATH: /app/config/app-config.production.yaml
+  extraEnv: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  livenessProbe:
+    httpGet:
+      path: /healthcheck
+      port: http
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 6
+  readinessProbe:
+    httpGet:
+      path: /healthcheck
+      port: http
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 6
+
+app:
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  service:
+    type: ClusterIP
+    port: 80
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 10
+    periodSeconds: 10
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 5
+    periodSeconds: 10
+
+# HPA for backend
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+pdb:
+  enabled: true
+  minAvailable: 1
+
+networkPolicy:
+  enabled: true
+  egressAllowCIDRs: []
+  # If using private ingress controller namespace, allow that namespace to talk to app service.
+
+ingress:
+  enabled: true
+  className: "private"
+  tls:
+    enabled: true
+    secretName: ""
+  backend:
+    enabled: true
+    host: backstage-api.example.internal
+    path: /
+    annotations: {}
+  app:
+    enabled: true
+    host: backstage.example.internal
+    path: /
+    annotations: {}
+
+# Config content rendered into a ConfigMap and mounted to both pods
+appConfig:
+  productionYaml: |
+    app:
+      title: AI-PIaP Backstage
+      baseUrl: https://backstage.example.internal
+    backend:
+      baseUrl: https://backstage-api.example.internal
+      listen:
+        port: 7007
+      database:
+        client: pg
+        connection:
+          host: ${POSTGRES_HOST}
+          port: ${POSTGRES_PORT}
+          user: ${POSTGRES_USER}
+          password: ${POSTGRES_PASSWORD}
+          database: ${POSTGRES_DB}
+          ssl:
+            rejectUnauthorized: true
+      csp:
+        connect-src: ["'self'", "https:", "http:"]
+      cors:
+        origin: https://backstage.example.internal
+        methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+        credentials: true
+      auth:
+        keys:
+          - secret: ${BACKEND_AUTH_SECRET}
+      reading:
+        allow:
+          - host: backstage.example.internal
+          - host: backstage-api.example.internal
+    auth:
+      environment: production
+      providers:
+        microsoft:
+          development: false
+          clientId: ${MSFT_CLIENT_ID}
+          clientSecret: ${MSFT_CLIENT_SECRET}
+          tenantId: ${MSFT_TENANT_ID}
+          # authority: https://login.microsoftonline.us  # for Entra ID Gov
+          signIn:
+            resolvers:
+              - resolver: emailMatchingUserEntityProfileEmail
+        github:
+          development: false
+          clientId: ${GITHUB_CLIENT_ID}
+          clientSecret: ${GITHUB_CLIENT_SECRET}
+          signIn:
+            resolvers:
+              - resolver: usernameMatchingUserEntityName
+    catalog:
+      rules:
+        - allow: [Component, API, Location, Resource, System, Domain, Group, User, Template]
+      locations:
+        - type: file
+          target: ./catalog
+    techdocs:
+      builder: 'external'
+      publisher:
+        type: 'azureBlob'
+        azureBlob:
+          containerName: ${TECHDOCS_CONTAINER}
+          credentials:
+            accountName: ${AZURE_STORAGE_ACCOUNT}
+            accountKey: ${AZURE_STORAGE_KEY}

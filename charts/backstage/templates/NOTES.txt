@@ -1,0 +1,8 @@
+Backstage has been deployed.
+
+Backend Service: {{ include "backstage.fullname" . }}-backend (ClusterIP)
+App (UI) Service: {{ include "backstage.fullname" . }}-app (ClusterIP)
+
+If ingress.enabled=true, check your DNS for:
+- Backend: {{ .Values.ingress.backend.host }}
+- App:     {{ .Values.ingress.app.host }}

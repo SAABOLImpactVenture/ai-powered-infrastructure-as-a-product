@@ -1,0 +1,61 @@
+{{- if .Values.ingress.enabled }}
+{{- if .Values.ingress.backend.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "backstage.fullname" . }}-backend
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "backstage.labels" . | nindent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingress.className | quote }}
+    {{- toYaml .Values.ingress.backend.annotations | nindent 4 }}
+spec:
+  {{- if .Values.ingress.tls.enabled }}
+  tls:
+    - hosts: [{{ .Values.ingress.backend.host | quote }}]
+      secretName: {{ .Values.ingress.tls.secretName | quote }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.ingress.backend.host | quote }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.backend.path | default "/" | quote }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "backstage.fullname" . }}-backend
+                port:
+                  number: {{ .Values.backend.service.port }}
+{{- end }}
+---
+{{- if .Values.ingress.app.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "backstage.fullname" . }}-app
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "backstage.labels" . | nindent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingress.className | quote }}
+    {{- toYaml .Values.ingress.app.annotations | nindent 4 }}
+spec:
+  {{- if .Values.ingress.tls.enabled }}
+  tls:
+    - hosts: [{{ .Values.ingress.app.host | quote }}]
+      secretName: {{ .Values.ingress.tls.secretName | quote }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.ingress.app.host | quote }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.app.path | default "/" | quote }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "backstage.fullname" . }}-app
+                port:
+                  number: {{ .Values.app.service.port }}
+{{- end }}
+{{- end }}

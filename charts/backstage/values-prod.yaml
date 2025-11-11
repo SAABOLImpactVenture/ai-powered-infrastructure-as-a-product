@@ -1,0 +1,33 @@
+namespace: backstage
+images:
+  backend:
+    tag: "1.0.0"
+  app:
+    tag: "1.0.0"
+
+serviceAccount:
+  annotations:
+    # azure.workload.identity/client-id: "<CLIENT_ID>"
+    {}
+
+ingress:
+  enabled: true
+  className: "private"
+  tls:
+    enabled: true
+    secretName: backstage-tls
+  backend:
+    enabled: true
+    host: backstage-api.example.internal
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+  app:
+    enabled: true
+    host: backstage.example.internal
+    annotations: {}
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 70
