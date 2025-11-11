@@ -1,2 +1,7 @@
-skip-check:
-  - CKV2_GHA_1
+skip-paths:
+  - evidence/**
+  - artifacts/**
+  - policy-exceptions/**
+soft-fail: false
+quiet: true
+framework: all
