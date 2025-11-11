@@ -12,7 +12,7 @@ spec:
     - title: Product Inputs
       required: [name, environment]
       properties:
-        name: { type: string }
+        name: { type: string, description: "Repo or folder name" }
         owner: { type: string, default: "platform-team" }
         environment: { type: string, enum: [dev, test, prod] }
         compartmentOcid: { type: string }

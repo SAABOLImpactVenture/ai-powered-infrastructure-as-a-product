@@ -1,9 +1,9 @@
 {
   "properties": {
-    "displayName": "Allowed locations (restricted)",
+    "displayName": "Allowed locations (deny)",
     "policyType": "Custom",
-    "mode": "All",
-    "description": "Restrict resource locations to approved regions.",
+    "mode": "Indexed",
+    "description": "Deny resources not in the approved locations.",
     "metadata": {
       "category": "General"
     },

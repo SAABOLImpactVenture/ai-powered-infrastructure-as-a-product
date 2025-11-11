@@ -15,13 +15,15 @@ metadata:
 spec:
   replicas: 1
   selector:
-    matchLabels: {app: iaap-controller}
+    matchLabels:
+      app: iaap-controller
   template:
     metadata:
-      labels: {app: iaap-controller}
+      labels:
+        app: iaap-controller
     spec:
       containers:
-      - name: controller
-        image: ghcr.io/org/iaap-controller:1.0.0
-        imagePullPolicy: IfNotPresent
-        args: ["--watch=network"]
+        - name: controller
+          image: ghcr.io/org/iaap-controller:1.0.0
+          imagePullPolicy: IfNotPresent
+          args: ["--watch=network"]

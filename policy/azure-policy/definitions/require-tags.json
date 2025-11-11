@@ -1,14 +1,14 @@
 {
   "properties": {
-    "displayName": "Require resource tags (owner, env, cost-center)",
+    "displayName": "Audit required tags (owner, env, cost-center)",
     "policyType": "Custom",
-    "mode": "All",
-    "description": "Ensures required tags exist on all resources.",
+    "mode": "Indexed",
+    "description": "Audits resources missing required tags.",
     "metadata": {
       "category": "Tags"
     },
     "parameters": {
-      "tagName": {
+      "requiredTags": {
         "type": "Array",
         "metadata": {
           "displayName": "Required tags"
@@ -22,27 +22,29 @@
     },
     "policyRule": {
       "if": {
-        "field": "type",
-        "notEquals": ""
+        "anyOf": [
+          {
+            "not": {
+              "field": "tags['owner']",
+              "exists": true
+            }
+          },
+          {
+            "not": {
+              "field": "tags['env']",
+              "exists": true
+            }
+          },
+          {
+            "not": {
+              "field": "tags['cost-center']",
+              "exists": true
+            }
+          }
+        ]
       },
       "then": {
-        "effect": "modify",
-        "details": {
-          "operations": [
-            {
-              "operation": "addOrReplace",
-              "field": "[concat('tags[', parameters('tagName')[copyIndex()], ']')]",
-              "value": "TBD"
-            }
-          ],
-          "roleDefinitionIds": [
-            "/providers/Microsoft.Authorization/roleDefinitions/fd1bd22b-8de9-4d87-a97f-3f7d4a3b8670"
-          ],
-          "copy": {
-            "name": "tagCopy",
-            "count": "[length(parameters('tagName'))]"
-          }
-        }
+        "effect": "Audit"
       }
     }
   }

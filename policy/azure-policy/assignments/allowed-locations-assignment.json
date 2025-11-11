@@ -1,6 +1,6 @@
 {
   "properties": {
-    "displayName": "Allowed locations enforcement",
+    "displayName": "Allowed locations (deny)",
     "policyDefinitionId": "/subscriptions/<SUB_ID>/providers/Microsoft.Authorization/policyDefinitions/allowed-locations",
     "parameters": {
       "listOfAllowedLocations": {
@@ -10,6 +10,7 @@
         ]
       }
     },
-    "scope": "/subscriptions/<SUB_ID>"
+    "scope": "/subscriptions/<SUB_ID>",
+    "enforcementMode": "Default"
   }
 }

@@ -8,6 +8,15 @@
           "allowBlobPublicAccess": true
         }
       }
+    },
+    {
+      "type": "aws_s3_bucket_public_access_block",
+      "name": "badbucket",
+      "change": {
+        "after_properties": {
+          "block_public_acls": false
+        }
+      }
     }
   ]
 }
