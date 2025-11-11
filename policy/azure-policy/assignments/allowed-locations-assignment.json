@@ -1,0 +1,15 @@
+{
+  "properties": {
+    "displayName": "Allowed locations enforcement",
+    "policyDefinitionId": "/subscriptions/<SUB_ID>/providers/Microsoft.Authorization/policyDefinitions/allowed-locations",
+    "parameters": {
+      "listOfAllowedLocations": {
+        "value": [
+          "eastus",
+          "eastus2"
+        ]
+      }
+    },
+    "scope": "/subscriptions/<SUB_ID>"
+  }
+}

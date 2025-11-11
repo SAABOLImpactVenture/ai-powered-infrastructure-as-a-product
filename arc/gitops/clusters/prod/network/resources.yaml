@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: iaap-platform
+  labels:
+    owner: platform-team
+    env: prod
+    cost-center: platform
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: placeholder-controller
+  namespace: iaap-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: iaap-controller}
+  template:
+    metadata:
+      labels: {app: iaap-controller}
+    spec:
+      containers:
+      - name: controller
+        image: ghcr.io/org/iaap-controller:1.0.0
+        imagePullPolicy: IfNotPresent
+        args: ["--watch=network"]

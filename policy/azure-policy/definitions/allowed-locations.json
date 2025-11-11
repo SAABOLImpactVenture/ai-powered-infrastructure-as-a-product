@@ -1,0 +1,34 @@
+{
+  "properties": {
+    "displayName": "Allowed locations (restricted)",
+    "policyType": "Custom",
+    "mode": "All",
+    "description": "Restrict resource locations to approved regions.",
+    "metadata": {
+      "category": "General"
+    },
+    "parameters": {
+      "listOfAllowedLocations": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Allowed locations"
+        },
+        "defaultValue": [
+          "eastus",
+          "eastus2"
+        ]
+      }
+    },
+    "policyRule": {
+      "if": {
+        "not": {
+          "field": "location",
+          "in": "[parameters('listOfAllowedLocations')]"
+        }
+      },
+      "then": {
+        "effect": "Deny"
+      }
+    }
+  }
+}

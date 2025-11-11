@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: product-network-oci
+  description: OCI network product module (VCN + Subnet)
+  tags: [oci, network, iaap]
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: ai-iaap-accelerator

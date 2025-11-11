@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: product-network-aws
+  description: AWS network product module (VPC + Subnets + IGW)
+  tags: [aws, network, iaap]
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: ai-iaap-accelerator
