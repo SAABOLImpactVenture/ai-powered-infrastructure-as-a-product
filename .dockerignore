@@ -1,0 +1,8 @@
+**/node_modules
+**/dist
+**/.cache
+**/*.log
+**/*.sqlite3
+.git
+.gitignore
+Dockerfile
