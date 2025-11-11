@@ -22,7 +22,7 @@
     "@backstage/plugin-proxy-backend": "^0.5.3",
     "@backstage/plugin-scaffolder-backend": "^1.21.2",
     "@backstage/plugin-techdocs-backend": "^1.8.8",
-    "@backstage/plugin-kubernetes-backend": "^0.12.7",
+    "@backstage/plugin-kubernetes-backend": "^0.20.3",
     "express": "^4.19.2",
     "winston": "^3.11.0",
     "better-sqlite3": "^9.4.3",
