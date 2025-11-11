@@ -19,24 +19,40 @@ backend:
     origin: http://localhost:3000
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
+  auth:
+    keys:
+      - secret: dev-secret-please-change
+  reading:
+    allow:
+      - host: localhost:7007
+      - host: localhost:3000
 
 auth:
   environment: development
   providers:
     guest: {}
+    github:
+      development: true
+      clientId: ${GITHUB_CLIENT_ID}
+      clientSecret: ${GITHUB_CLIENT_SECRET}
+      signIn:
+        resolvers:
+          - resolver: usernameMatchingUserEntityName
+    microsoft:
+      development: true
+      clientId: ${MSFT_CLIENT_ID}
+      clientSecret: ${MSFT_CLIENT_SECRET}
+      tenantId: ${MSFT_TENANT_ID}
+      signIn:
+        resolvers:
+          - resolver: emailMatchingUserEntityProfileEmail
 
 catalog:
   rules:
     - allow: [Component, API, Location, Resource, System, Domain, Group, User, Template]
   locations:
-    - type: url
-      target: ./catalog
-      rules:
-        - allow: [Location]
     - type: file
       target: ./catalog
-      rules:
-        - allow: [Component, API, Resource, System, Domain, Group, User, Template]
 
 techdocs:
   builder: 'local'
@@ -46,8 +62,3 @@ techdocs:
     type: 'local'
     local:
       publishDirectory: ./site
-
-scaffolder:
-  defaultAuthor:
-    name: AI-PIaP Scaffolder
-  defaultCommitMessage: "chore: scaffolded by Backstage"
