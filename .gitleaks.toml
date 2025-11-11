@@ -1,24 +1,12 @@
-title = "aiap gitleaks config"
+title = "Gitleaks Configuration"
 
 [extend]
-# You can extend from upstream rules if desired
-# path = "https://raw.githubusercontent.com/gitleaks/gitleaks/master/config/gitleaks.toml"
+  path = ""
 
 [allowlist]
-description = "Allowed (false positives and test fixtures)"
-paths = [
-  '''^docs/''',
-  '''^site/''',
-  '''^artifacts/''',
-  '''^examples/fixtures/''',
-]
-regexes = [
-  # Common placeholders
-  '''(?i)(xxx|dummy|example|changeme|notasecret)''',
-  # Terraform default placeholders
-  '''(?i)(00000000-0000-0000-0000-000000000000)''',
-]
-commits = []  # add noisy commits if ever needed
-
-[rules]
-# You can tweak thresholds; leaving default rules from gitleaks if not extending.
+  description = "Allow common test fixtures"
+  paths = [
+    '''^evidence/''',
+    '''^artifacts/''',
+    '''^docs/''',
+  ]
