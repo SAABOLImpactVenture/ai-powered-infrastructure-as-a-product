@@ -1,0 +1,15 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: iaap-prod-network
+  namespace: flux-system
+spec:
+  interval: 2m0s
+  sourceRef:
+    kind: GitRepository
+    name: iaap-prod-repo
+  path: ./arc/gitops/clusters/prod/network
+  prune: true
+  wait: true
+  timeout: 5m0s
+  targetNamespace: iaap-platform
