@@ -1,0 +1,40 @@
+name: python-secure
+on:
+  pull_request:
+  push:
+    branches: [ main, master ]
+permissions:
+  contents: read
+  security-events: write
+jobs:
+  bandit_audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit pip-audit
+      - name: Bandit SAST
+        run: |
+          if compgen -G "**/*.py" > /dev/null; then
+            bandit -r . -f sarif -o reports/bandit.sarif || true
+          else
+            echo "No Python files found."
+          fi
+      - name: Upload Bandit SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: reports/bandit.sarif
+      - name: pip-audit
+        run: |
+          pip-audit -r requirements.txt -f json -o reports/pip-audit.json || true
+      - name: Upload dependency report
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-deps
+          path: reports/pip-audit.json

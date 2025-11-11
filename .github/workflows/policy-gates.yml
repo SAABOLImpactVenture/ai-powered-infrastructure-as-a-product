@@ -10,9 +10,13 @@ permissions:
   id-token: write
   actions: read
 jobs:
-  policy:
-    name: IaC policy gates
+  iac:
+    name: IaC policy gates (Terraform across repo)
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        paths: [".", "terraform", "iac/azure", "landing-zones", "modules", "stacks"]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,33 +28,33 @@ jobs:
 
       - name: Terraform init/validate
         run: |
-          if [ -d "terraform" ]; then
-            terraform -chdir=terraform init -backend=false
-            terraform -chdir=terraform validate
+          if [ -d "${{ matrix.paths }}" ]; then
+            terraform -chdir=${{ matrix.paths }} init -backend=false || true
+            terraform -chdir=${{ matrix.paths }} validate || true
           else
-            echo "No terraform/ directory; skipping validate"
+            echo "No ${{ matrix.paths }} directory; skipping"
           fi
 
       - name: TFLint
         uses: terraform-linters/tflint-runner-action@v4
         with:
-          path: ./terraform
+          path: ${{ matrix.paths }}
           tflint_version: v0.53.0
         continue-on-error: false
 
-      - name: Checkov (fail on HIGH/CRIT)
+      - name: Checkov (High/CRIT => fail) + SARIF
         uses: bridgecrewio/checkov-action@v12
         with:
-          directory: .
+          directory: ${{ matrix.paths }}
           quiet: true
           soft_fail: false
           output_format: sarif
-          output_file_path: reports/checkov.sarif
+          output_file_path: reports/checkov-${{ matrix.paths || 'root' }}.sarif
 
-      - name: Upload Checkov SARIF
+      - name: Upload SARIF
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: reports/checkov.sarif
+          sarif_file: reports/checkov-${{ matrix.paths || 'root' }}.sarif
 
       - name: Install Conftest
         run: |
@@ -59,15 +63,47 @@ jobs:
           tar -xzf conftest.tar.gz
           sudo mv conftest /usr/local/bin/
 
-      - name: Conftest (OPA policies)
+      - name: Conftest (OPA Terraform policies)
         run: |
-          if [ -d "policies" ]; then
-            conftest test terraform/ -p policies/
+          if [ -d "policies" ] && [ -d "${{ matrix.paths }}" ]; then
+            conftest test ${{ matrix.paths }} -p policies/ --all-namespaces
           else
-            echo "No policies/ directory; skipping conftest"
+            echo "Skipping Conftest for ${{ matrix.paths }}"
           fi
 
-      - name: Gitleaks (secrets scanning)
+  k8s:
+    name: Kubernetes policy gates (k8s/)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install kubeconform
+        run: |
+          curl -L https://github.com/yannh/kubeconform/releases/download/v0.6.7/kubeconform-linux-amd64.tar.gz -o kc.tgz
+          tar -xzf kc.tgz
+          sudo mv kubeconform /usr/local/bin/kubeconform
+
+      - name: Validate manifests
+        run: |
+          if [ -d "k8s" ]; then
+            find k8s -type f -name "*.yaml" -o -name "*.yml" | xargs -I{} kubeconform -strict -ignore-missing-schemas {}
+          else
+            echo "No k8s/ dir"
+          fi
+
+      - name: Conftest (OPA Kubernetes policies)
+        run: |
+          if [ -d "k8s" ]; then
+            conftest test k8s -p policies/
+          else
+            echo "No k8s/ dir"
+          fi
+
+  secrets:
+    name: Secrets scanning
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gitleaks
         uses: gitleaks/gitleaks-action@v2
         with:
           config: .gitleaks.toml

@@ -1,7 +1,7 @@
 name: evidence
 on:
   workflow_run:
-    workflows: ["policy-gates"]
+    workflows: ["policy-gates", "python-secure", "container-security"]
     types: [completed]
 permissions:
   contents: write
@@ -10,32 +10,30 @@ permissions:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Download artifacts from triggering run
+      - name: Download artifacts from triggering runs
         uses: actions/download-artifact@v4
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          path: artifacts
+          path: reports
 
-      - name: Convert SARIF to OSCAL POA&M
+      - name: Consolidate SARIF to OSCAL
         run: |
-          python3 scripts/oscal/sarif_to_oscal.py artifacts/checkov.sarif/checkov.sarif artifacts/oscal/poam.json
-        shell: bash
+          python3 scripts/oscal/sarif_to_oscal.py reports artifacts/oscal/poam.json
 
-      - name: Commit evidence (poam + sbom if present)
+      - name: Commit evidence (OSCAL + reports summary)
         run: |
           git config user.name "evidence-bot"
           git config user.email "evidence-bot@users.noreply.github.com"
           mkdir -p evidence/latest
           cp -R artifacts/. evidence/latest/ || true
-          cp -R artifacts/oscal/. evidence/latest/oscal/ || true
+          cp -R reports/. evidence/latest/reports/ || true
           git add evidence/latest || true
           if ! git diff --cached --quiet; then
-            git commit -m "chore: update evidence from workflow_run ${{ github.event.workflow_run.id }}"
+            git commit -m "chore: update evidence bundle"
             git push
           else
-            echo "No evidence changes to commit."
+            echo "No evidence changes to commit"
           fi

@@ -3,17 +3,14 @@ on:
   push:
     tags: ["v*.*.*"]
   workflow_dispatch: {}
-
 permissions:
   contents: write
   id-token: write
-
 jobs:
   sbom_sign_release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Generate SBOM (repository)
         uses: anchore/sbom-action@v0
         with:
