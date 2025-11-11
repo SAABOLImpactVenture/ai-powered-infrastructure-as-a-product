@@ -1,0 +1,7 @@
+{
+  "version": "1.1.0",
+  "application": {
+    "title": "AI-PIaP Backstage",
+    "baseUrl": "http://localhost:3000"
+  }
+}

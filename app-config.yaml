@@ -1,0 +1,53 @@
+app:
+  title: AI-PIaP Backstage
+  baseUrl: http://localhost:3000
+
+backend:
+  baseUrl: http://localhost:7007
+  listen:
+    port: 7007
+  database:
+    client: sqlite3
+    connection:
+      filename: var/db/dev.sqlite3
+    useNullAsDefault: true
+  csp:
+    connect-src: ["'self'", "http:", "https:"]
+    script-src: ["'self'", "'unsafe-eval'"]
+    img-src: ["'self'", "data:", "https:"]
+  cors:
+    origin: http://localhost:3000
+    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    credentials: true
+
+auth:
+  environment: development
+  providers:
+    guest: {}
+
+catalog:
+  rules:
+    - allow: [Component, API, Location, Resource, System, Domain, Group, User, Template]
+  locations:
+    - type: url
+      target: ./catalog
+      rules:
+        - allow: [Location]
+    - type: file
+      target: ./catalog
+      rules:
+        - allow: [Component, API, Resource, System, Domain, Group, User, Template]
+
+techdocs:
+  builder: 'local'
+  generator:
+    runIn: 'local'
+  publisher:
+    type: 'local'
+    local:
+      publishDirectory: ./site
+
+scaffolder:
+  defaultAuthor:
+    name: AI-PIaP Scaffolder
+  defaultCommitMessage: "chore: scaffolded by Backstage"

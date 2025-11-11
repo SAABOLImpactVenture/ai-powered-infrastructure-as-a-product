@@ -1,0 +1,58 @@
+app:
+  title: AI-PIaP Backstage
+  baseUrl: ${APP_BASE_URL}
+
+backend:
+  baseUrl: ${BACKEND_BASE_URL}
+  listen:
+    port: ${PORT:7007}
+  database:
+    client: pg
+    connection:
+      host: ${POSTGRES_HOST}
+      port: ${POSTGRES_PORT:5432}
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+      database: ${POSTGRES_DB:backstage}
+    plugin:
+      catalog:
+        connection:
+          ssl: { rejectUnauthorized: true }
+      auth:
+        connection:
+          ssl: { rejectUnauthorized: true }
+  csp:
+    connect-src: ["'self'", "https:", "http:"]
+  cors:
+    origin: ${APP_BASE_URL}
+    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    credentials: true
+
+auth:
+  environment: production
+  providers:
+    microsoft:
+      development: false
+      clientId: ${MSFT_CLIENT_ID}
+      clientSecret: ${MSFT_CLIENT_SECRET}
+      tenantId: ${MSFT_TENANT_ID}
+      signIn:
+        resolvers:
+          - resolver: emailMatchingUserEntityProfileEmail
+
+catalog:
+  rules:
+    - allow: [Component, API, Location, Resource, System, Domain, Group, User, Template]
+  locations:
+    - type: file
+      target: ./catalog
+
+techdocs:
+  builder: 'external'
+  publisher:
+    type: 'azureBlob'
+    azureBlob:
+      containerName: ${TECHDOCS_CONTAINER:techdocs}
+      credentials:
+        accountName: ${AZURE_STORAGE_ACCOUNT}
+        accountKey: ${AZURE_STORAGE_KEY}
