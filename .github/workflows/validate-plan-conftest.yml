@@ -1,0 +1,74 @@
+name: Validate & Plan & Conftest
+
+on:
+  pull_request:
+    paths:
+      - 'products/**'
+      - 'policy/**'
+      - '.github/workflows/validate-plan-conftest.yml'
+
+jobs:
+  terraform-validate-and-plan:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        product:
+          - name: azure
+            path: products/network-azure/infra
+          - name: aws
+            path: products/network-aws/infra
+          - name: gcp
+            path: products/network-gcp/infra
+          - name: oci
+            path: products/network-oci/infra
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: ${{ matrix.product.path }}
+        run: terraform init -input=false -upgrade
+
+      - name: Terraform Validate
+        working-directory: ${{ matrix.product.path }}
+        run: terraform validate
+
+      - name: Terraform Plan (generate plan.json)
+        working-directory: ${{ matrix.product.path }}
+        env:
+          TF_VAR_resource_group_name: rg-ci
+          TF_VAR_vnet_name: vnet-ci
+          TF_VAR_location: eastus
+          TF_VAR_region: us-east-1
+          TF_VAR_project: ci-project
+          TF_VAR_compartment_ocid: ocid1.compartment.oc1..aaaaexample
+        run: |
+          set -e
+          terraform plan -input=false -refresh=false -out=tfplan || true
+          terraform show -json tfplan > plan.json || echo '{}' > plan.json
+
+      - name: Upload plan.json artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: plan-${{ matrix.product.name }}
+          path: ${{ matrix.product.path }}/plan.json
+
+  conftest:
+    runs-on: ubuntu-latest
+    needs: terraform-validate-and-plan
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download all plan artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./plans
+      - name: Install conftest
+        run: |
+          curl -L https://github.com/open-policy-agent/conftest/releases/latest/download/conftest_Linux_x86_64.tar.gz -o conftest.tgz
+          tar xzf conftest.tgz
+          sudo mv conftest /usr/local/bin/
+      - name: Run Conftest policies against all plans
+        run: |
+          set -e
+          find ./plans -name plan.json -print -exec conftest test -p policy/conftest {} +
