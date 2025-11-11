@@ -1,0 +1,33 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: policy-evidence
+  title: Policy Evidence Wiring
+  description: Adds CI evidence collection and OSCAL POA&M wiring to an existing repository.
+spec:
+  owner: group:default/security-reviewers
+  type: service
+  parameters:
+    - title: Target repository
+      required: [repoUrl]
+      properties:
+        repoUrl:
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options: { allowedHosts: ["github.com"] }
+  steps:
+    - id: fetch
+      action: fetch:template
+      input:
+        url: ./skeleton
+    - id: publish
+      action: publish:github:pull-request
+      input:
+        repoUrl: "{{ parameters.repoUrl }}"
+        title: "chore: add evidence workflows and policy gates"
+        branchName: "chore/evidence-wiring"
+        description: "Adds CI workflows for policy gates and evidence collection."
+  output:
+    links:
+      - title: Pull Request
+        url: "{{ steps.publish.output.remoteUrl }}"

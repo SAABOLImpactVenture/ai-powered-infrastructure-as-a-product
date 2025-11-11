@@ -1,0 +1,55 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: observability
+  title: Observability (OpenTelemetry)
+  description: Scaffolds OTel Collector config and dashboards hook for a service.
+spec:
+  owner: group:default/platform-admins
+  type: service
+  parameters:
+    - title: Observability parameters
+      required: [name, signals]
+      properties:
+        name:
+          type: string
+          pattern: "^[a-z0-9-]+$"
+        signals:
+          type: array
+          items:
+            type: string
+            enum: [logs, metrics, traces]
+          uniqueItems: true
+          default: ["logs","metrics","traces"]
+    - title: GitHub destination
+      required: [repoUrl]
+      properties:
+        repoUrl:
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options: { allowedHosts: ["github.com"] }
+  steps:
+    - id: validate
+      action: aipiap:validate:tags
+      input:
+        tags:
+          Program: "AI-PIaP"
+          System: "{{ parameters.name }}"
+          Environment: "Prod"
+          "Data-Class": "Internal"
+    - id: fetch
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: "{{ parameters.name }}"
+          signals: "{{ parameters.signals | dump }}"
+    - id: publish
+      action: publish:github
+      input:
+        repoUrl: "{{ parameters.repoUrl }}"
+        defaultBranch: main
+  output:
+    links:
+      - title: Repository
+        url: "{{ steps.publish.output.remoteUrl }}"

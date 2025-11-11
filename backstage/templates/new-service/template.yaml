@@ -1,0 +1,99 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: new-service
+  title: New Service (Multi-Cloud, IaC, CI)
+  description: Creates a new service repo with Terraform skeleton, CI policy gates, and TechDocs.
+spec:
+  owner: group:default/platform-admins
+  type: service
+  parameters:
+    - title: Service metadata
+      required: [name, owner, system, lifecycle, program, environment, dataClass]
+      properties:
+        name:
+          type: string
+          title: Service Name
+          pattern: "^[a-z0-9-]+$"
+        owner:
+          type: string
+          title: Owner (Group or User entityRef)
+          default: group:default/developers
+        system:
+          type: string
+          title: System entityRef (optional)
+          default: ""
+        lifecycle:
+          type: string
+          default: production
+          enum: [experimental, development, production]
+        program:
+          type: string
+          default: AI-PIaP
+        environment:
+          type: string
+          default: Prod
+        dataClass:
+          type: string
+          enum: [Public, Internal, Sensitive, Restricted]
+          default: Internal
+    - title: GitHub destination
+      required: [repoUrl]
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts: ["github.com"]
+  steps:
+    - id: validate
+      name: Validate Required Tags
+      action: aipiap:validate:tags
+      input:
+        tags:
+          Program: "{{ parameters.program }}"
+          System: "{{ parameters.name }}"
+          Environment: "{{ parameters.environment }}"
+          "Data-Class": "{{ parameters.dataClass }}"
+    - id: fetch
+      name: Fetch template skeleton
+      action: fetch:template
+      input:
+        url: ./skeleton
+        copyWithoutTemplating:
+          - ".github/workflows/*.yml"
+        values:
+          name: "{{ parameters.name }}"
+          owner: "{{ parameters.owner }}"
+          system: "{{ parameters.system }}"
+          lifecycle: "{{ parameters.lifecycle }}"
+          program: "{{ parameters.program }}"
+          environment: "{{ parameters.environment }}"
+          dataClass: "{{ parameters.dataClass }}"
+    - id: publish
+      name: Publish to GitHub
+      action: publish:github
+      input:
+        repoUrl: "{{ parameters.repoUrl }}"
+        defaultBranch: main
+        protectDefaultBranch: true
+    - id: register
+      name: Register in catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: "{{ steps.publish.output.repoContentsUrl }}"
+        catalogInfoPath: "/catalog-info.yaml"
+    - id: pr-evidence
+      name: Notify evidence adapter (optional)
+      if: "{{ steps.publish.output.remoteUrl }}"
+      action: aipiap:evidence:notify
+      input:
+        prUrl: "{{ steps.publish.output.remoteUrl }}/pull/1"
+        entityRef: "component:default/{{ parameters.name }}"
+  output:
+    links:
+      - title: Repository
+        url: "{{ steps.publish.output.remoteUrl }}"
+      - title: Open in catalog
+        url: "{{ steps.register.output.catalogEntityUrl }}"

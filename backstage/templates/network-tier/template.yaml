@@ -1,0 +1,56 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: network-tier
+  title: Network Tier (DR-ready)
+  description: Scaffolds a network tier with DR failover constructs.
+spec:
+  owner: group:default/platform-admins
+  type: service
+  parameters:
+    - title: Network parameters
+      required: [name, environment, drStrategy]
+      properties:
+        name:
+          type: string
+          pattern: "^[a-z0-9-]+$"
+        environment:
+          type: string
+          enum: [Dev, Test, Prod]
+        drStrategy:
+          type: string
+          enum: [active-active, active-passive]
+          default: active-passive
+    - title: GitHub destination
+      required: [repoUrl]
+      properties:
+        repoUrl:
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options: { allowedHosts: ["github.com"] }
+  steps:
+    - id: validate
+      action: aipiap:validate:tags
+      input:
+        tags:
+          Program: "AI-PIaP"
+          System: "{{ parameters.name }}"
+          Environment: "{{ parameters.environment }}"
+          "Data-Class": "Internal"
+    - id: fetch
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: "{{ parameters.name }}"
+          drStrategy: "{{ parameters.drStrategy }}"
+          environment: "{{ parameters.environment }}"
+    - id: publish
+      action: publish:github
+      input:
+        repoUrl: "{{ parameters.repoUrl }}"
+        defaultBranch: main
+  output:
+    links:
+      - title: Repository
+        url: "{{ steps.publish.output.remoteUrl }}"
