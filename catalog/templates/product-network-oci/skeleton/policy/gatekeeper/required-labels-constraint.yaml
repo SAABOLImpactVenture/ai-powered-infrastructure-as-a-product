@@ -4,4 +4,6 @@ metadata:
   name: ns-must-have-labels
 spec:
   match:
-    kinds: [{ apiGroups: [""], kinds: ["Namespace"] }]
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Namespace"]

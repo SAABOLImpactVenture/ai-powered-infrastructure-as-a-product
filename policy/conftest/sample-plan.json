@@ -4,8 +4,8 @@
       "type": "azurerm_storage_account",
       "name": "bad",
       "change": {
-        "after_properties": {
-          "allowBlobPublicAccess": true
+        "after": {
+          "allow_blob_public_access": true
         }
       }
     },
@@ -13,7 +13,7 @@
       "type": "aws_s3_bucket_public_access_block",
       "name": "badbucket",
       "change": {
-        "after_properties": {
+        "after": {
           "block_public_acls": false
         }
       }

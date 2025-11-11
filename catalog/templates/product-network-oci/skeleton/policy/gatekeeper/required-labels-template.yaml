@@ -11,10 +11,9 @@ spec:
     - target: admission.k8s.gatekeeper.sh
       rego: |
         package k8srequiredlabels
-        violation[{"msg": msg}] {{
-          required := {{"owner","cost-center","env"}}
-          provided := {{k | k := input.review.object.metadata.labels[_]}}
+        violation[{"msg": msg}] {
+          required := {"owner","cost-center","env"}
+          provided := {k | k := input.review.object.metadata.labels[_]}
           missing := required - provided
           count(missing) > 0
           msg := sprintf("Missing labels: %v", [missing])
-        }}

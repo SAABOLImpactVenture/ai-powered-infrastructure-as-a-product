@@ -3,7 +3,7 @@ deny[msg] {
   some i
   rc := input.resource_changes[i]
   rc.type == "azurerm_storage_account"
-  rc.change.after_properties.allowBlobPublicAccess == true
+  rc.change.after.allow_blob_public_access == true
   msg := sprintf("Public blob access is not allowed for storage account %s", [rc.name])
 }
 deny[msg] {
