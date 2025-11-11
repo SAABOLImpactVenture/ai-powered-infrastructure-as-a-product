@@ -9,6 +9,8 @@ import { ApiExplorerPage } from '@backstage/plugin-api-docs';
 import { ScaffolderPage } from '@backstage/plugin-scaffolder';
 import { TechDocsIndexPage, TechDocsReaderPage } from '@backstage/plugin-techdocs';
 import { KubernetesClusterPage } from '@backstage/plugin-kubernetes';
+import { GithubActionsPage } from '@backstage/plugin-github-actions';
+import { FinOpsPage } from '../../plugins/finops-portal/src/FinOpsPage';
 
 const app = createApp({
   apis: appApis,
@@ -31,6 +33,8 @@ export default function App() {
         <Route path="/techdocs" element={<TechDocsIndexPage />} />
         <Route path="/docs/*" element={<TechDocsReaderPage />} />
         <Route path="/kubernetes" element={<KubernetesClusterPage />} />
+        <Route path="/ci" element={<GithubActionsPage />} />
+        <Route path="/finops" element={<FinOpsPage />} />
         <Route path="/*" element={<AppRoutes />} />
       </FlatRoutes>
     </AppProvider>

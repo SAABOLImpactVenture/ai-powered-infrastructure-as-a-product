@@ -1,4 +1,4 @@
-import { createServiceBuilder, loadBackendConfig, ServerTokenManager, CacheManager, UrlReader, HostDiscovery, SingleHostDiscovery, TokenManager } from '@backstage/backend-common';
+import { createServiceBuilder, loadBackendConfig, ServerTokenManager, HostDiscovery, CacheManager, UrlReaders } from '@backstage/backend-common';
 import { Logger } from 'winston';
 import { Server } from 'http';
 import { createRouter as createAppRouter } from '@backstage/plugin-app-backend';
@@ -9,9 +9,11 @@ import { createRouter as createScaffolderRouter } from '@backstage/plugin-scaffo
 import { createRouter as createTechdocsRouter } from '@backstage/plugin-techdocs-backend';
 import { createRouter as createKubernetesRouter } from '@backstage/plugin-kubernetes-backend';
 import { createRouter as createPermissionRouter } from '@backstage/plugin-permission-backend';
-import { ServerPermissionPolicy } from './permission/ServerPermissionPolicy';
-
 import express from 'express';
+import { CatalogClient } from '@backstage/catalog-client';
+import { ServerPermissionPolicy } from '../permission/ServerPermissionPolicy';
+
+import { createFinOpsRouter } from './plugins/finops';
 
 async function main() {
   const logger: Logger = (await import('@backstage/backend-common')).getRootLogger();
@@ -19,38 +21,23 @@ async function main() {
   const app = express();
 
   const discovery = HostDiscovery.fromConfig(config);
-  const cache = CacheManager.fromConfig(config).forPlugin('core');
   const tokenManager = ServerTokenManager.fromConfig(config, { logger });
+  const reader = UrlReaders.default({ logger, config });
+  const catalogClient = new CatalogClient({ discoveryApi: discovery });
 
-  // App (static assets proxy)
   app.use(await createAppRouter({ logger, config }));
-
-  // Auth (OIDC/GitHub configured via app-config)
   app.use('/auth', await createAuthRouter({ logger, config, discovery, tokenManager }));
-
-  // Permission Framework
-  app.use('/permission', await createPermissionRouter({
-    config,
-    logger,
-    discovery,
-    policy: new ServerPermissionPolicy(),
-    tokenManager,
+  app.use('/permission', await (await import('@backstage/plugin-permission-backend')).createRouter({
+    config, logger, discovery, policy: new ServerPermissionPolicy(), tokenManager,
   }));
-
-  // Proxy
   app.use('/proxy', await createProxyRouter({ logger, config }));
-
-  // Catalog
   app.use('/catalog', await createCatalogRouter({ logger, config }));
-
-  // Scaffolder
-  app.use('/scaffolder', await createScaffolderRouter({ logger, config }));
-
-  // TechDocs
+  app.use('/scaffolder', await createScaffolderRouter({ logger, config, reader, catalogClient }));
   app.use('/techdocs', await createTechdocsRouter({ logger, config }));
-
-  // Kubernetes
   app.use('/kubernetes', await createKubernetesRouter({ logger, config }));
+
+  // FinOps custom backend plugin
+  app.use('/finops', await createFinOpsRouter({ logger, config }));
 
   const service = createServiceBuilder(module)
     .setPort(Number(process.env.PORT || 7007))
@@ -78,7 +65,6 @@ async function main() {
 }
 
 main().catch(err => {
-  // eslint-disable-next-line no-console
   console.error(err);
   process.exit(1);
 });

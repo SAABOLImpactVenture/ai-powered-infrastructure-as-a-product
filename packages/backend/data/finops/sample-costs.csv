@@ -1,0 +1,4 @@
+date,provider,account,service,environment,cost,currency
+2025-10-01,aws,123456789012,EC2,Prod,1234.56,USD
+2025-10-01,azure,sub-0001,Storage,Prod,345.67,USD
+2025-10-01,gcp,proj-xyz,BigQuery,Dev,89.10,USD
