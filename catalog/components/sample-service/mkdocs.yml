@@ -1,0 +1,5 @@
+site_name: Sample Service TechDocs
+nav:
+  - Home: index.md
+plugins:
+  - techdocs-core
