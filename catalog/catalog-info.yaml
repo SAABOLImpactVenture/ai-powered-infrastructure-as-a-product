@@ -1,8 +1,4 @@
 apiVersion: backstage.io/v1alpha1
 kind: System
-metadata:
-  name: ai-iaap-accelerator
-  title: AI IaaP Accelerator
-spec:
-  owner: platform-team
-  domain: platform
+metadata: { name: ai-iaap-accelerator, title: AI IaaP Accelerator }
+spec: { owner: platform-team, domain: platform }

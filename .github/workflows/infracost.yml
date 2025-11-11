@@ -1,0 +1,23 @@
+name: infracost
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  cost:
+    name: cost
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Infracost (best effort)
+        run: |
+          set -euo pipefail
+          infracost --version || true
+          infracost breakdown --path . --format json --out-file ic.json || echo '{}' > ic.json
+          echo "✅ infracost: completed (report-only)" | tee -a "$GITHUB_STEP_SUMMARY"

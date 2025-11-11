@@ -1,7 +1,6 @@
 apiVersion: clusterconfig.azure.com/v1beta1
 kind: GitOpsConfig
-metadata:
-  name: product-network-azure
+metadata: { name: product-network-azure }
 spec:
   repositoryRef:
     url: https://github.com/ORG/REPO

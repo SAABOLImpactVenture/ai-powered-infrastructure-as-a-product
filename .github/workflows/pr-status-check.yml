@@ -1,0 +1,26 @@
+cat > .github/workflows/pr-status-check.yml <<'YAML'
+name: PR Status Check
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  summary:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Render summary of open PRs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh pr list --state open --json number,title --jq '
+            "## Open PRs\n" +
+            ( map("- PR #\(.number): \(.title)") | join("\n") )
+          ' | tee -a "$GITHUB_STEP_SUMMARY"
+YAML

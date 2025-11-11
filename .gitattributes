@@ -1,10 +1,4 @@
-﻿* text=auto eol=lf
-
-# Common binaries
-*.png  binary
-*.jpg  binary
-*.gif  binary
-*.pdf  binary
-*.ico  binary
-*.zip  binary
-*.exe  binary
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.sh   text eol=lf
