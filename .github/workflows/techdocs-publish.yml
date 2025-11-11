@@ -1,0 +1,54 @@
+name: techdocs-publish
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - '**/mkdocs.yml'
+      - '**/docs/**'
+      - 'catalog/**'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      TECHDOCS_PUBLISHER_TYPE: azureBlob
+      TECHDOCS_AZURE_ACCOUNT_NAME: ${{ secrets.TECHDOCS_AZURE_ACCOUNT_NAME }}
+      TECHDOCS_AZURE_ACCOUNT_KEY: ${{ secrets.TECHDOCS_AZURE_ACCOUNT_KEY }}
+      TECHDOCS_CONTAINER_NAME: ${{ secrets.TECHDOCS_CONTAINER_NAME }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install techdocs-cli
+        run: npm install -g @techdocs/cli
+
+      - name: Generate list of docs sites
+        id: list
+        run: |
+          python3 scripts/techdocs/find_sites.py > /tmp/sites.txt
+          echo "Found $(wc -l < /tmp/sites.txt) TechDocs sites"
+          cat /tmp/sites.txt
+
+      - name: Build & Publish each site
+        if: always()
+        run: |
+          set -euo pipefail
+          while read -r SITE; do
+            [ -z "$SITE" ] && continue
+            echo "==> Building $SITE"
+            pushd "$SITE"
+            techdocs-cli generate --no-docker
+            echo "==> Publishing $SITE"
+            techdocs-cli publish               --publisher-type $TECHDOCS_PUBLISHER_TYPE               --storage-name $TECHDOCS_AZURE_ACCOUNT_NAME               --entity $([[ -f catalog-info.yaml ]] && yq '.metadata.namespace + "/" + .kind + "/" + .metadata.name' catalog-info.yaml || echo "default/component/$(basename $SITE)")               --container-name $TECHDOCS_CONTAINER_NAME
+            popd
+          done < /tmp/sites.txt
+        shell: bash
