@@ -1,0 +1,162 @@
+name: backstage-ci
+on:
+  pull_request:
+    branches: [ main, master ]
+  push:
+    branches: [ main, master ]
+permissions:
+  contents: read
+  packages: write
+  security-events: write
+  id-token: write
+env:
+  NODE_VERSION: '18'
+  REGISTRY: ${{ secrets.REGISTRY || 'ghcr.io' }}
+  REGISTRY_OWNER: ${{ github.repository_owner }}
+  IMAGE_BACKEND: ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/backstage-backend
+  IMAGE_APP: ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/backstage-app
+jobs:
+  build_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Yarn install
+        run: yarn install --frozen-lockfile || yarn install
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Build (app & backend)
+        run: |
+          yarn build:backend
+          yarn build:app
+
+      - name: Unit tests
+        run: yarn test --ci --no-watch
+
+  container_build:
+    needs: build_test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Derive tags
+        id: tags
+        run: |
+          eval "$(bash scripts/ci/image_tag.sh | sed 's/^/::set-output name=/' | sed 's/$/::/')" || true
+          # Fallback for set-output deprecation
+          eval "$(bash scripts/ci/image_tag.sh)"
+          echo "sha=${version}" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to registry
+        if: env.REGISTRY == 'ghcr.io'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log in to custom registry
+        if: env.REGISTRY != 'ghcr.io'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build & push backend
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: packages/backend/Dockerfile
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ${{ env.IMAGE_BACKEND }}:${{ github.sha }}
+            ${{ env.IMAGE_BACKEND }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build & push app
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: packages/app/Dockerfile
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ${{ env.IMAGE_APP }}:${{ github.sha }}
+            ${{ env.IMAGE_APP }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Generate SBOMs (images)
+        uses: anchore/sbom-action@v0
+        with:
+          image: |
+            ${{ env.IMAGE_BACKEND }}:${{ github.sha }}
+            ${{ env.IMAGE_APP }}:${{ github.sha }}
+          format: cyclonedx-json
+          output-file: sbom.cdx.json
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.cdx.json
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign images (keyless OIDC)
+        env:
+          COSIGN_EXPERIMENTAL: "true"
+        run: |
+          cosign sign --yes ${{ env.IMAGE_BACKEND }}@$(docker buildx imagetools inspect ${{ env.IMAGE_BACKEND }}:${{ github.sha }} | awk '/Digest: /{print $2; exit}')
+          cosign sign --yes ${{ env.IMAGE_APP }}@$(docker buildx imagetools inspect ${{ env.IMAGE_APP }}:${{ github.sha }} | awk '/Digest: /{print $2; exit}')
+
+      - name: Trivy image scan (backend)
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: ${{ env.IMAGE_BACKEND }}:${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-backend.sarif'
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: true
+
+      - name: Trivy image scan (app)
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: ${{ env.IMAGE_APP }}:${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-app.sarif'
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: true
+
+      - name: Upload SARIF (Trivy backend)
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-backend.sarif
+
+      - name: Upload SARIF (Trivy app)
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-app.sarif

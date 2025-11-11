@@ -1,0 +1,67 @@
+name: backstage-deploy
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy (dev|stage|prod)"
+        required: true
+        default: "prod"
+      imageTag:
+        description: "Image tag to deploy (git SHA or semver)"
+        required: true
+      namespace:
+        description: "Kubernetes namespace"
+        required: true
+        default: "backstage"
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ${{ secrets.REGISTRY || 'ghcr.io' }}
+      REGISTRY_OWNER: ${{ github.repository_owner }}
+      IMAGE_BACKEND: ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/backstage-backend
+      IMAGE_APP: ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/backstage-app
+      NAMESPACE: ${{ github.event.inputs.namespace }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup kubectl & helm
+        uses: azure/setup-helm@v4
+
+      - name: Configure kubeconfig from secret
+        run: |
+          echo "${KUBECONFIG_B64}" | base64 -d > $HOME/.kube/config
+        env:
+          KUBECONFIG_B64: ${{ secrets.KUBECONFIG_B64 }}
+
+      - name: Helm repo/update (local chart)
+        run: helm dependency update charts/backstage || true
+
+      - name: Helm Diff (pre)
+        run: |
+          helm plugin install https://github.com/databus23/helm-diff || true
+          helm diff upgrade backstage charts/backstage -n "${NAMESPACE}"             -f charts/backstage/values-${{ github.event.inputs.environment }}.yaml             --set images.backend.repository=${IMAGE_BACKEND}             --set images.backend.tag=${{ github.event.inputs.imageTag }}             --set images.app.repository=${IMAGE_APP}             --set images.app.tag=${{ github.event.inputs.imageTag }}             || true
+
+      - name: Helm Upgrade
+        run: |
+          helm upgrade --install backstage charts/backstage -n "${NAMESPACE}" --create-namespace             -f charts/backstage/values-${{ github.event.inputs.environment }}.yaml             --set images.backend.repository=${IMAGE_BACKEND}             --set images.backend.tag=${{ github.event.inputs.imageTag }}             --set images.app.repository=${IMAGE_APP}             --set images.app.tag=${{ github.event.inputs.imageTag }}
+
+      - name: Wait for rollout
+        run: |
+          kubectl -n "${NAMESPACE}" rollout status deploy/backstage-backend --timeout=300s
+          kubectl -n "${NAMESPACE}" rollout status deploy/backstage-app --timeout=300s
+
+      - name: Capture manifests (evidence)
+        run: |
+          mkdir -p evidence/deploy
+          kubectl -n "${NAMESPACE}" get deploy backstage-backend -o yaml > evidence/deploy/backend.yaml
+          kubectl -n "${NAMESPACE}" get deploy backstage-app -o yaml > evidence/deploy/app.yaml
+
+      - name: Upload deployment evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-manifests
+          path: evidence/deploy
