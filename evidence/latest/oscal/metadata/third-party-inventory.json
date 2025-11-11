@@ -1,0 +1,13 @@
+{
+  "component-definition": {
+    "uuid": "00000000-0000-4000-8000-000000000001",
+    "metadata": {
+      "title": "Third-Party Inventory",
+      "oscal-version": "1.0.4",
+      "props": [
+        {"name":"license","value":"Apache-2.0"}
+      ]
+    },
+    "components": []
+  }
+}

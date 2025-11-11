@@ -1,0 +1,3 @@
+control,policy_id,cloud,evidence_uri
+SC-28,CMEK-required,azure,https://<sa>.blob.core.windows.net/evidence/assessment-results/<run>.json
+AC-6,least-priv-oidc,aws,https://<sa>.blob.core.windows.net/evidence/assessment-results/<run>.json

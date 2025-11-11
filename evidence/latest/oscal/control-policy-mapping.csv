@@ -1,0 +1,4 @@
+control_id,policy_id,cloud,artifact
+SC-28,CMEK-required,azure,landing-zones/azure/enterprise-scale-lite
+AC-6,Least-priv-OIDC,aws,identity/aws/gh_oidc_abac
+AU-12,Evidence retention,azure,evidence/sinks/azure/adx

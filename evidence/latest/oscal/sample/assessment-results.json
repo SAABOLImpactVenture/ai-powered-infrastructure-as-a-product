@@ -1,0 +1,43 @@
+{
+  "assessment-results": {
+    "uuid": "fb30fc24-61eb-4a1b-8c7e-08066ca7f5b9",
+    "metadata": {
+      "title": "Sample Assessment Results",
+      "last-modified": "2025-10-09T23:17:08Z",
+      "version": "1.0.0",
+      "oscal-version": "1.0.4"
+    },
+    "results": [
+      {
+        "uuid": "019030b8-4612-458d-bb2a-f88c3ac34b64",
+        "title": "Automated scan results (sample)",
+        "start": "2025-10-09T23:17:08Z",
+        "end": "2025-10-09T23:17:08Z",
+        "findings": [
+          {
+            "uuid": "13d46f53-6690-48a1-8c7e-51e98c46a63c",
+            "title": "CHECKOV:AWS:S3-001",
+            "description": "S3 bucket should not be public",
+            "related-observations": []
+          }
+        ],
+        "observations": [
+          {
+            "uuid": "7b188ac8-64fa-418a-94d4-0161869cca75",
+            "description": "No HIGH severities detected in sample",
+            "props": [
+              {
+                "name": "repository",
+                "value": "org/repo"
+              },
+              {
+                "name": "github-run-id",
+                "value": "0"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
