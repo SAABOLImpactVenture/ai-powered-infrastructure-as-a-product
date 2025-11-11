@@ -2,6 +2,9 @@ skip-paths:
   - evidence/**
   - artifacts/**
   - policy-exceptions/**
-soft-fail: false
-quiet: true
+  - docs/**
+external-modules-download-path: .external_modules
 framework: all
+quiet: true
+soft-fail: false
+severities: ["HIGH","CRITICAL"]
