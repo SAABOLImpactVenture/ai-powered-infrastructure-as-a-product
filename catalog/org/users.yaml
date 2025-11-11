@@ -1,0 +1,29 @@
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: alice
+spec:
+  profile:
+    displayName: Alice Example
+    email: alice@example.gov
+  memberOf: [developers]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: bob
+spec:
+  profile:
+    displayName: Bob Example
+    email: bob@example.gov
+  memberOf: [security-reviewers]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: admin
+spec:
+  profile:
+    displayName: Admin User
+    email: admin@example.gov
+  memberOf: [platform-admins]

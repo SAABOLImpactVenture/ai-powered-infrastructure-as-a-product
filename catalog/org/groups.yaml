@@ -1,0 +1,33 @@
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: platform-admins
+  description: Platform administrators
+spec:
+  type: team
+  profile:
+    displayName: Platform Admins
+  children: [security-reviewers, developers]
+  members: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: security-reviewers
+  description: Security review board
+spec:
+  type: team
+  profile:
+    displayName: Security Reviewers
+  parent: platform-admins
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: developers
+  description: Application developers
+spec:
+  type: team
+  profile:
+    displayName: Developers
+  parent: platform-admins

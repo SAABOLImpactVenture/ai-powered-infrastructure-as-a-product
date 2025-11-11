@@ -1,4 +1,4 @@
-import { createServiceBuilder, loadBackendConfig } from '@backstage/backend-common';
+import { createServiceBuilder, loadBackendConfig, ServerTokenManager, CacheManager, UrlReader, HostDiscovery, SingleHostDiscovery, TokenManager } from '@backstage/backend-common';
 import { Logger } from 'winston';
 import { Server } from 'http';
 import { createRouter as createAppRouter } from '@backstage/plugin-app-backend';
@@ -8,6 +8,8 @@ import { createRouter as createCatalogRouter } from '@backstage/plugin-catalog-b
 import { createRouter as createScaffolderRouter } from '@backstage/plugin-scaffolder-backend';
 import { createRouter as createTechdocsRouter } from '@backstage/plugin-techdocs-backend';
 import { createRouter as createKubernetesRouter } from '@backstage/plugin-kubernetes-backend';
+import { createRouter as createPermissionRouter } from '@backstage/plugin-permission-backend';
+import { ServerPermissionPolicy } from './permission/ServerPermissionPolicy';
 
 import express from 'express';
 
@@ -16,11 +18,24 @@ async function main() {
   const config = await loadBackendConfig({ logger });
   const app = express();
 
+  const discovery = HostDiscovery.fromConfig(config);
+  const cache = CacheManager.fromConfig(config).forPlugin('core');
+  const tokenManager = ServerTokenManager.fromConfig(config, { logger });
+
   // App (static assets proxy)
   app.use(await createAppRouter({ logger, config }));
 
-  // Auth (OIDC placeholders configured via app-config.production.yaml)
-  app.use('/auth', await createAuthRouter({ logger, config }));
+  // Auth (OIDC/GitHub configured via app-config)
+  app.use('/auth', await createAuthRouter({ logger, config, discovery, tokenManager }));
+
+  // Permission Framework
+  app.use('/permission', await createPermissionRouter({
+    config,
+    logger,
+    discovery,
+    policy: new ServerPermissionPolicy(),
+    tokenManager,
+  }));
 
   // Proxy
   app.use('/proxy', await createProxyRouter({ logger, config }));
