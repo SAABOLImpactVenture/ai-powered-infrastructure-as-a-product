@@ -1,9 +1,5 @@
-cat > .github/workflows/infracost.yml <<'YAML'
 name: infracost
-
-on:
-  pull_request:
-    branches: [ "main" ]
+on: { pull_request: { branches: [ "main" ] } }
 
 jobs:
   cost:
@@ -14,31 +10,25 @@ jobs:
       pull-requests: write
     env:
       INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
-
     steps:
       - name: Skip when no API key
         if: env.INFRACOST_API_KEY == ''
         run: echo "INFRACOST_API_KEY not set; skipping Infracost." | tee -a "$GITHUB_STEP_SUMMARY"
-
       - name: Checkout
         if: env.INFRACOST_API_KEY != ''
         uses: actions/checkout@v4
-
       - name: Setup Infracost
         if: env.INFRACOST_API_KEY != ''
         uses: infracost/actions/setup@v3
         with:
           api-key: ${{ env.INFRACOST_API_KEY }}
-
       - name: Generate cost diff (best effort)
         if: env.INFRACOST_API_KEY != ''
         run: |
           infracost breakdown --path . --format json --out-file ic.json || echo '{}' > ic.json
-
       - name: Comment on PR (non-blocking)
         if: env.INFRACOST_API_KEY != ''
         uses: infracost/actions/comment@v3
         with:
           path: ic.json
         continue-on-error: true
-YAML

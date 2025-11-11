@@ -3,14 +3,9 @@ cat > .github/workflows/plan.yml <<'YAML'
 name: plan
 
 on:
-  pull_request:
-    branches: [ "main" ]
-    paths:
-      - "**/*.tf"
-      - "**/*.tfvars"
-      - "terraform/**"
-      - "platform/**"
-      - "workloads/**"
+  # Always create the required "plan" check for PRs, including forks/Dependabot
+  pull_request_target:
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 jobs:
@@ -18,16 +13,22 @@ jobs:
     name: plan
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: read  # read-only; do NOT grant write on pull_request_target
 
     steps:
-      - name: Checkout
+      - name: Checkout base repo (safe)
         uses: actions/checkout@v4
+        with:
+          # pull_request_target runs in base repo context; don't check out the fork's code with write perms
+          ref: ${{ github.event.pull_request.base.sha }}
 
-      - name: Detect Terraform changes
+      - name: Detect Terraform changes in this PR
         id: changes
         uses: dorny/paths-filter@v3
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          list-files: shell
+          # When event is PR, dorny uses PR file list; works with pull_request_target
           filters: |
             tf:
               - '**/*.tf'
@@ -40,22 +41,23 @@ jobs:
         if: steps.changes.outputs.tf != 'true'
         run: echo "No Terraform changes; skipping." | tee -a "$GITHUB_STEP_SUMMARY"
 
-      - name: Skip for forks (no secrets)
-        if: steps.changes.outputs.tf == 'true' && github.event.pull_request.head.repo.fork == true
-        run: echo "Fork PR; offline plan disabled. Marking success." | tee -a "$GITHUB_STEP_SUMMARY"
-
       - name: Setup Terraform
-        if: steps.changes.outputs.tf == 'true' && github.event.pull_request.head.repo.fork == false
+        if: steps.changes.outputs.tf == 'true'
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_wrapper: false
 
-      - name: Offline validate (init without backend)
-        if: steps.changes.outputs.tf == 'true' && github.event.pull_request.head.repo.fork == false
+      - name: Offline validate each changed module
+        if: steps.changes.outputs.tf == 'true'
         shell: bash
         run: |
           set -euo pipefail
-          mapfile -t DIRS < <(git ls-files '**/*.tf' | xargs -n1 dirname | sort -u)
+          # build a unique dir list from files the PR actually changed
+          mapfile -t DIRS < <(printf "%s\n" ${{ steps.changes.outputs.tf_files }} | xargs -n1 dirname | sort -u)
+          if [ ${#DIRS[@]} -eq 0 ]; then
+            echo "Detector found tf changes but empty file list; skipping." | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
           for d in "${DIRS[@]}"; do
             echo "::group::${d}"
             ( cd "$d"
