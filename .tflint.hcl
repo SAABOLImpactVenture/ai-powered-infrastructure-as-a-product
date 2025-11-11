@@ -1,18 +1,30 @@
-# .tflint.hcl
-
+plugin "aws" {
+  enabled = true
+  version = "0.33.0"
+  source  = "github.com/terraform-linters/tflint-ruleset-aws"
+}
 plugin "azurerm" {
   enabled = true
-  version = "0.76.1" # known-good at time of writing; update as needed
+  version = "0.24.0"
   source  = "github.com/terraform-linters/tflint-ruleset-azurerm"
 }
-
-# General config
-config {
-  module = true
-  force  = true
+plugin "google" {
+  enabled = true
+  version = "0.31.0"
+  source  = "github.com/terraform-linters/tflint-ruleset-google"
+}
+plugin "oci" {
+  enabled = true
+  version = "0.6.1"
+  source  = "github.com/terraform-linters/tflint-ruleset-oci"
 }
 
-# Example: tune severity or disable selected rules here (optional)
-# rule "azurerm_resource_no_deprecated" {
-#   enabled = true
-# }
+config {
+  call_module_type = "local"
+  module = true
+  deep_check = true
+  force = false
+  ignore_module = []
+  plugin_dir = ".tflint.d/plugins"
+  terraform_version = "1.8.0"
+}
