@@ -336,3 +336,19 @@ Desktop.ini
 Icon?
 *.lnk
 h
+#--------------------------------
+# Node Modules
+#--------------------------------
+node_modules
+dist
+coverage
+*.log
+.yarn/*
+.yarnrc.yml
+plugins/*/dist
+custom-actions/*/dist
+packages/*/dist
+app-dist
+packages/app/build
+.env
+*.sqlite3
