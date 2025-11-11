@@ -14,6 +14,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Prepare reports dir
+        run: mkdir -p reports
       - name: Install tools
         run: |
           python -m pip install --upgrade pip
@@ -32,9 +34,14 @@ jobs:
           sarif_file: reports/bandit.sarif
       - name: pip-audit
         run: |
-          pip-audit -r requirements.txt -f json -o reports/pip-audit.json || true
+          if [ -f requirements.txt ] || [ -f pyproject.toml ]; then
+            pip-audit -f json -o reports/pip-audit.json || true
+          else
+            echo "No Python dependency manifest found"
+          fi
       - name: Upload dependency report
         uses: actions/upload-artifact@v4
         with:
           name: python-deps
           path: reports/pip-audit.json
+          if-no-files-found: ignore

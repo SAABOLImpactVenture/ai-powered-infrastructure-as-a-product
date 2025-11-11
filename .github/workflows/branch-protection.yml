@@ -24,7 +24,7 @@ jobs:
                   owner, repo, branch,
                   required_status_checks: {
                     strict: true,
-                    contexts: ["policy-gates", "python-secure", "container-security"]
+                    contexts: ["policy-gates", "python-secure", "container-security", "codeql"]
                   },
                   enforce_admins: true,
                   required_pull_request_reviews: {

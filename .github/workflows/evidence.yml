@@ -1,7 +1,7 @@
 name: evidence
 on:
   workflow_run:
-    workflows: ["policy-gates", "python-secure", "container-security"]
+    workflows: ["policy-gates", "python-secure", "container-security", "codeql"]
     types: [completed]
 permissions:
   contents: write

@@ -11,7 +11,7 @@ permissions:
   actions: read
 jobs:
   iac:
-    name: IaC policy gates (Terraform across repo)
+    name: IaC policy gates (Terraform)
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -20,6 +20,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Prepare reports dir
+        run: mkdir -p reports
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -76,6 +79,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Prepare reports dir
+        run: mkdir -p reports
       - name: Install kubeconform
         run: |
           curl -L https://github.com/yannh/kubeconform/releases/download/v0.6.7/kubeconform-linux-amd64.tar.gz -o kc.tgz
@@ -85,7 +90,7 @@ jobs:
       - name: Validate manifests
         run: |
           if [ -d "k8s" ]; then
-            find k8s -type f -name "*.yaml" -o -name "*.yml" | xargs -I{} kubeconform -strict -ignore-missing-schemas {}
+            find k8s -type f \( -name "*.yaml" -o -name "*.yml" \) -print0 | xargs -0 -I{} kubeconform -strict -ignore-missing-schemas {}
           else
             echo "No k8s/ dir"
           fi
@@ -108,3 +113,4 @@ jobs:
         with:
           config: .gitleaks.toml
           additionalArgs: "--no-banner"
+

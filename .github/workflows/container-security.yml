@@ -11,11 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Prepare reports dir
+        run: mkdir -p reports
       - name: Install Trivy
         uses: aquasecurity/setup-trivy@v0.2.2
       - name: Scan Dockerfiles
         run: |
-          mkdir -p reports
           if [ -d "docker" ]; then
             trivy config --format sarif --output reports/trivy-config.sarif docker || true
           else
