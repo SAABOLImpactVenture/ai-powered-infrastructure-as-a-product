@@ -7,11 +7,14 @@ if len(sys.argv) < 3:
 
 reports_dir, outp = sys.argv[1], sys.argv[2]
 sarif_files = glob.glob(os.path.join(reports_dir, "*.sarif"))
-
 items = []
 for path in sarif_files:
-    with open(path, "r", encoding="utf-8") as f:
-        sarif = json.load(f)
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            sarif = json.load(f)
+    except Exception as e:
+        print(f"[warn] failed to read {path}: {e}")
+        continue
     for run in sarif.get("runs", []):
         tool = run.get("tool", {}).get("driver", {}).get("name", "unknown")
         for r in run.get("results", []):
@@ -25,6 +28,7 @@ for path in sarif_files:
                 "finding": msg
             })
 
+os.makedirs(os.path.dirname(outp), exist_ok=True)
 oscal = {
   "metadata": {
     "title": "POA&M from consolidated SARIF",
@@ -40,8 +44,6 @@ oscal = {
     } for i, r in enumerate(items)
   ]
 }
-
-os.makedirs(os.path.dirname(outp), exist_ok=True)
 with open(outp, "w", encoding="utf-8") as f:
   json.dump(oscal, f, indent=2)
 print(f"[oscal] wrote {outp} with {len(items)} findings")
