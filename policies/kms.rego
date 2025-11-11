@@ -1,9 +1,11 @@
 package terraform.kms
 
+default deny = []
+
 deny[msg] {
   input.resource_type == "aws_kms_key"
   not input.values.enable_key_rotation
-  msg := "KMS keys must enable rotation"
+  msg := "AWS KMS keys must enable rotation"
 }
 
 deny[msg] {

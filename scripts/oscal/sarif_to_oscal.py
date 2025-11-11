@@ -1,32 +1,33 @@
 #!/usr/bin/env python3
-# Convert Checkov SARIF to a minimal OSCAL-like POA&M JSON
-import json, sys, os, time
+import json, os, sys, time, glob
 
 if len(sys.argv) < 3:
-    print("Usage: sarif_to_oscal.py <input.sarif> <output.json>")
+    print("Usage: sarif_to_oscal.py <reports_dir> <output.json>")
     sys.exit(1)
 
-inp, outp = sys.argv[1], sys.argv[2]
-with open(inp, "r", encoding="utf-8") as f:
-    sarif = json.load(f)
+reports_dir, outp = sys.argv[1], sys.argv[2]
+sarif_files = glob.glob(os.path.join(reports_dir, "*.sarif"))
 
-results = []
-for run in sarif.get("runs", []):
-    tool = run.get("tool", {}).get("driver", {}).get("name", "unknown")
-    for r in run.get("results", []):
-        rid = r.get("ruleId") or r.get("rule", {}).get("id")
-        sev = r.get("level", "warning")
-        msg = r.get("message", {}).get("text", "")
-        results.append({
-            "tool": tool,
-            "ruleId": rid,
-            "severity": sev,
-            "finding": msg
-        })
+items = []
+for path in sarif_files:
+    with open(path, "r", encoding="utf-8") as f:
+        sarif = json.load(f)
+    for run in sarif.get("runs", []):
+        tool = run.get("tool", {}).get("driver", {}).get("name", "unknown")
+        for r in run.get("results", []):
+            rid = r.get("ruleId") or r.get("rule", {}).get("id")
+            sev = r.get("level", "warning")
+            msg = r.get("message", {}).get("text", "")
+            items.append({
+                "tool": tool,
+                "ruleId": rid,
+                "severity": sev,
+                "finding": msg
+            })
 
 oscal = {
   "metadata": {
-    "title": "POA&M from SARIF",
+    "title": "POA&M from consolidated SARIF",
     "last-modified": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
   },
   "items": [
@@ -36,11 +37,11 @@ oscal = {
       "risk": r["severity"],
       "description": r["finding"],
       "status": "open"
-    } for i, r in enumerate(results)
+    } for i, r in enumerate(items)
   ]
 }
 
 os.makedirs(os.path.dirname(outp), exist_ok=True)
 with open(outp, "w", encoding="utf-8") as f:
-    json.dump(oscal, f, indent=2)
-print(f"Wrote {outp}")
+  json.dump(oscal, f, indent=2)
+print(f"[oscal] wrote {outp} with {len(items)} findings")
