@@ -1,14 +1,19 @@
 repos:
-  - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.92.0
-    hooks:
-      - id: terraform_fmt
-      - id: terraform_validate
-      - id: terraform_tflint
-        args: [--args=--config=./.tflint.hcl]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
-      - id: check-yaml
-      - id: end-of-file-fixer
       - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+
+  - repo: https://github.com/bridgecrewio/checkov
+    rev: 3.2.281
+    hooks:
+      - id: checkov
+        args: ["-d", ".", "--quiet"]
+
+  - repo: https://github.com/terraform-linters/tflint
+    rev: v0.53.0
+    hooks:
+      - id: tflint
