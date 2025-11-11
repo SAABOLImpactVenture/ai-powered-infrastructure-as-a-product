@@ -1,8 +1,8 @@
 {
   "name": "ai-piap-backstage",
   "private": true,
-  "version": "1.0.0",
-  "description": "Backstage monorepo for AI-PIaP (app + backend)",
+  "version": "1.0.1",
+  "description": "Backstage monorepo for AI-PIaP (app + backend + plugins)",
   "workspaces": [
     "packages/*",
     "plugins/*",
@@ -19,8 +19,7 @@
     "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
     "test": "backstage-cli test",
     "clean": "backstage-cli repo clean",
-    "prepack": "backstage-cli repo build",
-    "postinstall": "patch -p0 < patches/README.patch || true"
+    "prepack": "backstage-cli repo build"
   },
   "engines": {
     "node": ">=18.18.0",

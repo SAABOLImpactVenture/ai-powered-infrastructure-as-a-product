@@ -1,0 +1,8 @@
+# Merge these into your app-config.production.yaml (already present)
+integrations:
+  github:
+    - host: github.com
+      token: ${GITHUB_TOKEN}
+
+finops:
+  csvPath: packages/backend/data/finops/sample-costs.csv
