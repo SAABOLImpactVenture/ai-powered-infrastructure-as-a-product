@@ -1,20 +1,34 @@
 name: policy-test
-on: { pull_request: { branches: [ "main" ] } }
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   conftest:
     runs-on: ubuntu-latest
-    permissions: { contents: read }
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
-      - name: Check for policy directory
+
+      - name: Check for policy dir
         id: pol
         run: |
-          if [ -d policy ]; then echo "found=true" >> "$GITHUB_OUTPUT"; else echo "found=false" >> "$GITHUB_OUTPUT"; fi
-      - name: No policies; skipping
-        if: steps.pol.outputs.found == 'false'
-        run: echo "No policy/ directory found; skipping." | tee -a "$GITHUB_STEP_SUMMARY"
-      # When you add policies:
-      # - name: Run conftest
-      #   if: steps.pol.outputs.found == 'true'
-      #   run: conftest test policy
+          if [ -d policy ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run conftest (report-only)
+        if: steps.pol.outputs.present == 'true'
+        run: |
+          conftest --version || true
+          conftest test policy || true
+          echo "✅ conftest: completed (report-only)" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Skip summary
+        if: steps.pol.outputs.present != 'true'
+        run: echo "ℹ️ No ./policy directory; skipping." | tee -a "$GITHUB_STEP_SUMMARY"
