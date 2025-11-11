@@ -1,0 +1,9 @@
+# Require review from security and platform owners on sensitive paths
+# Adjust team/org handles as appropriate.
+*                                   @org/platform-team
+policies/**                         @org/security-team
+.github/workflows/**                @org/security-team @org/platform-team
+evidence/**                         @org/security-team
+artifacts/oscal/**                  @org/security-team
+terraform/**                        @org/platform-team @org/security-team
+kubernetes/**                       @org/platform-team @org/security-team

@@ -1,0 +1,7 @@
+THIRD PARTY NOTICES
+
+List any third-party components, their licenses, and copyright notices here.
+Example:
+- hashicorp/terraform - MPL-2.0
+- bridgecrewio/checkov - Apache-2.0
+- Open Policy Agent - Apache-2.0
