@@ -14,19 +14,21 @@ backend:
       user: ${POSTGRES_USER}
       password: ${POSTGRES_PASSWORD}
       database: ${POSTGRES_DB:backstage}
-    plugin:
-      catalog:
-        connection:
-          ssl: { rejectUnauthorized: true }
-      auth:
-        connection:
-          ssl: { rejectUnauthorized: true }
+      ssl:
+        rejectUnauthorized: true
   csp:
     connect-src: ["'self'", "https:", "http:"]
   cors:
     origin: ${APP_BASE_URL}
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
+  auth:
+    keys:
+      - secret: ${BACKEND_AUTH_SECRET}
+  reading:
+    allow:
+      - host: ${APP_BASE_URL_HOST}
+      - host: ${BACKEND_BASE_URL_HOST}
 
 auth:
   environment: production
@@ -35,10 +37,19 @@ auth:
       development: false
       clientId: ${MSFT_CLIENT_ID}
       clientSecret: ${MSFT_CLIENT_SECRET}
+      # For Azure Government tenants, set the authority to the Gov cloud:
+      # authority: https://login.microsoftonline.us
       tenantId: ${MSFT_TENANT_ID}
       signIn:
         resolvers:
           - resolver: emailMatchingUserEntityProfileEmail
+    github:
+      development: false
+      clientId: ${GITHUB_CLIENT_ID}
+      clientSecret: ${GITHUB_CLIENT_SECRET}
+      signIn:
+        resolvers:
+          - resolver: usernameMatchingUserEntityName
 
 catalog:
   rules:
