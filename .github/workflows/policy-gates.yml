@@ -1,0 +1,74 @@
+name: policy-gates
+on:
+  pull_request:
+    branches: [ main, master ]
+  push:
+    branches: [ main, master ]
+permissions:
+  contents: read
+  security-events: write
+  id-token: write
+  actions: read
+jobs:
+  policy:
+    name: IaC policy gates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8
+
+      - name: Terraform init/validate
+        run: |
+          if [ -d "terraform" ]; then
+            terraform -chdir=terraform init -backend=false
+            terraform -chdir=terraform validate
+          else
+            echo "No terraform/ directory; skipping validate"
+          fi
+
+      - name: TFLint
+        uses: terraform-linters/tflint-runner-action@v4
+        with:
+          path: ./terraform
+          tflint_version: v0.53.0
+        continue-on-error: false
+
+      - name: Checkov (fail on HIGH/CRIT)
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: .
+          quiet: true
+          soft_fail: false
+          output_format: sarif
+          output_file_path: reports/checkov.sarif
+
+      - name: Upload Checkov SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: reports/checkov.sarif
+
+      - name: Install Conftest
+        run: |
+          CONFT_VER="0.52.0"
+          curl -sSL -o conftest.tar.gz https://github.com/open-policy-agent/conftest/releases/download/v${CONFT_VER}/conftest_${CONFT_VER}_Linux_x86_64.tar.gz
+          tar -xzf conftest.tar.gz
+          sudo mv conftest /usr/local/bin/
+
+      - name: Conftest (OPA policies)
+        run: |
+          if [ -d "policies" ]; then
+            conftest test terraform/ -p policies/
+          else
+            echo "No policies/ directory; skipping conftest"
+          fi
+
+      - name: Gitleaks (secrets scanning)
+        uses: gitleaks/gitleaks-action@v2
+        with:
+          config: .gitleaks.toml
+          additionalArgs: "--no-banner"

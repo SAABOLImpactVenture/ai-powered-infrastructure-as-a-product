@@ -1,0 +1,19 @@
+name: release-evidence-bundle
+on:
+  release:
+    types: [published]
+permissions:
+  contents: write
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create evidence tarball
+        run: |
+          tar -czf evidence-${{ github.ref_name }}.tar.gz evidence || echo "no evidence dir"
+      - name: Upload
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            evidence-${{ github.ref_name }}.tar.gz
