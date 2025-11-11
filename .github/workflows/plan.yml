@@ -1,11 +1,22 @@
-mkdir -p .github/workflows
-cat > .github/workflows/plan.yml <<'YAML'
 name: plan
 
 on:
-  # Always create the required "plan" check for PRs, including forks/Dependabot
-  pull_request_target:
-    types: [opened, synchronize, reopened]
+  push:
+    branches: [ "main" ]
+    paths:
+      - '**/*.tf'
+      - '**/*.tfvars'
+      - 'terraform/**'
+      - 'platform/**'
+      - 'workloads/**'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - '**/*.tf'
+      - '**/*.tfvars'
+      - 'terraform/**'
+      - 'platform/**'
+      - 'workloads/**'
   workflow_dispatch:
 
 jobs:
@@ -13,22 +24,17 @@ jobs:
     name: plan
     runs-on: ubuntu-latest
     permissions:
-      contents: read  # read-only; do NOT grant write on pull_request_target
+      contents: read
 
     steps:
-      - name: Checkout base repo (safe)
-        uses: actions/checkout@v4
-        with:
-          # pull_request_target runs in base repo context; don't check out the fork's code with write perms
-          ref: ${{ github.event.pull_request.base.sha }}
+      - uses: actions/checkout@v4
 
-      - name: Detect Terraform changes in this PR
+      - name: Detect Terraform changes
         id: changes
         uses: dorny/paths-filter@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           list-files: shell
-          # When event is PR, dorny uses PR file list; works with pull_request_target
           filters: |
             tf:
               - '**/*.tf'
@@ -47,23 +53,21 @@ jobs:
         with:
           terraform_wrapper: false
 
-      - name: Offline validate each changed module
+      - name: Offline validate changed dirs
         if: steps.changes.outputs.tf == 'true'
         shell: bash
         run: |
           set -euo pipefail
-          # build a unique dir list from files the PR actually changed
           mapfile -t DIRS < <(printf "%s\n" ${{ steps.changes.outputs.tf_files }} | xargs -n1 dirname | sort -u)
           if [ ${#DIRS[@]} -eq 0 ]; then
-            echo "Detector found tf changes but empty file list; skipping." | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "Detector listed no dirs; skipping." | tee -a "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           for d in "${DIRS[@]}"; do
-            echo "::group::${d}"
-            ( cd "$d"
+            echo "::group::\$d"
+            ( cd "\$d"
               terraform init -backend=false -input=false -no-color || true
               terraform validate -no-color || true
             )
             echo "::endgroup::"
           done
-YAML
