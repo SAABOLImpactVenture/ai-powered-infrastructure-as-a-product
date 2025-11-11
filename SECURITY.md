@@ -1,20 +1,17 @@
 # Security Policy
 
-## Supported Versions
-Main branch is supported. Use tagged releases for production.
-
 ## Reporting a Vulnerability
-Please email security@your-org.example with a proof-of-concept and affected commit SHA.
+Email security@your-org.example with PoC, affected commit SHA, and recommended remediation.
 
-## Disclosure
-We follow responsible disclosure with a 90-day remediation window.
-
-## Secrets
-Do not commit secrets. Gitleaks and GitHub Push Protection will block merges when leaks are detected.
+## CI/CD Enforcement
+The repository enforces:
+- **IaC gates** (`policy-gates.yml`): Terraform validate/TFLint, Checkov (fail on HIGH/CRIT), Conftest (OPA).
+- **Kubernetes gates**: kubeconform schema validation + OPA policies.
+- **Secrets**: gitleaks with blocking.
+- **Python SAST/Deps**: Bandit + pip-audit (SBOM under releases).
+- **Containers**: Trivy config scan for `docker/`.
+- **Supply chain**: CycloneDX SBOM signed with Cosign (keyless OIDC).
+- **Evidence**: Consolidated SARIF → OSCAL POA&M under `evidence/latest`.
 
 ## Compliance
-This repo enforces IaC security against FedRAMP High/NIST 800-53 Rev.5 aligned controls via:
-- Checkov, TFLint (static IaC checks)
-- OPA/Conftest policy gates
-- SBOM generation and signing
-- Automated evidence capture to artifacts
+Controls align to FedRAMP High / NIST 800-53 Rev.5 AC, AU, CM, SC, SI with Zero Trust and TIC 3.0 posture.

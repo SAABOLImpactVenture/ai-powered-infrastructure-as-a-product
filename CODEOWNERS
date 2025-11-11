@@ -1,9 +1,18 @@
 # Require review from security and platform owners on sensitive paths
-# Adjust team/org handles as appropriate.
-*                                   @org/platform-team
-policies/**                         @org/security-team
-.github/workflows/**                @org/security-team @org/platform-team
-evidence/**                         @org/security-team
-artifacts/oscal/**                  @org/security-team
-terraform/**                        @org/platform-team @org/security-team
-kubernetes/**                       @org/platform-team @org/security-team
+# Replace @org/... with your actual GitHub org/team handles.
+*                                       @org/platform-team
+.github/workflows/**                    @org/security-team @org/platform-team
+policies/**                             @org/security-team
+policy/**                               @org/security-team
+evidence/**                             @org/security-team
+artifacts/oscal/**                      @org/security-team
+iac/**                                  @org/platform-team @org/security-team
+terraform/**                            @org/platform-team @org/security-team
+landing-zones/**                        @org/platform-team @org/security-team
+modules/**                              @org/platform-team @org/security-team
+stacks/**                               @org/platform-team @org/security-team
+k8s/**                                  @org/platform-team @org/security-team
+identity/**                             @org/identity-team  @org/security-team
+servers/**                              @org/platform-team
+services/policy-evidence-adapter/**     @org/security-team
+docker/**                               @org/platform-team @org/security-team
