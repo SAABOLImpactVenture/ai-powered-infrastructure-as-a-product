@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: Apache-2.0
+name: repo-quality
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install pre-commit
+        run: pip install pre-commit
+      - name: Run pre-commit
+        run: pre-commit run --all-files
+      - name: Markdown link check
+        uses: lycheeverse/lychee-action@v1
+        with:
+          args: --no-progress --verbose --require-https --accept 200,429 --retry-wait-time 2 --max-retries 2 .
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
