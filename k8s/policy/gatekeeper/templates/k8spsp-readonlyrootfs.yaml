@@ -1,0 +1,20 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8spspreadonlyrootfilesystem
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sPSPReadOnlyRootFilesystem
+  targets:
+  - target: admission.k8s.gatekeeper.sh
+    rego: |
+      package k8spspreadonlyrootfilesystem
+
+      violation[{"msg": msg}] {
+        input.review.kind.kind == "Deployment"
+        c := input.review.object.spec.template.spec.containers[_]
+        not c.securityContext.readOnlyRootFilesystem
+        msg := sprintf("container %q must set securityContext.readOnlyRootFilesystem=true", [c.name])
+      }

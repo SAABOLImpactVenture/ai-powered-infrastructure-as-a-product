@@ -1,0 +1,17 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: require-namespace-labels
+spec:
+  match:
+    kinds:
+    - apiGroups:
+      - ''
+      kinds:
+      - Namespace
+  parameters:
+    labels:
+    - Program
+    - System
+    - Environment
+    - Data-Class

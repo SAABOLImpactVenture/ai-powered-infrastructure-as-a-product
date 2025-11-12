@@ -1,0 +1,14 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPCapabilities
+metadata:
+  name: psp-capabilities-allowlist
+spec:
+  match:
+    kinds:
+    - apiGroups:
+      - apps
+      kinds:
+      - Deployment
+  parameters:
+    allowedCaps:
+    - NET_BIND_SERVICE

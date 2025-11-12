@@ -1,0 +1,20 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequiredimagetag
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequiredImageTag
+  targets:
+  - target: admission.k8s.gatekeeper.sh
+    rego: |
+      package k8srequiredimagetag
+
+      violation[{"msg": msg}] {
+        input.review.kind.kind == "Deployment"
+        c := input.review.object.spec.template.spec.containers[_]
+        endswith(c.image, ":latest")
+        msg := sprintf("container %q must not use :latest tag", [c.name])
+      }

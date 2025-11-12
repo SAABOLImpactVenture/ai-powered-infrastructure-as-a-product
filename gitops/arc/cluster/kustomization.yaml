@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: kube-system
+resources:
+  - ../manifests/namespaces.yaml
+  - ../manifests/psa-labels.yaml
+  - ../manifests/gatekeeper-enable.yaml
+  - ../../k8s/aks/bootstrap/10-gatekeeper-namespace.yaml
+  - ../../k8s/aks/bootstrap/00-namespaces.yaml

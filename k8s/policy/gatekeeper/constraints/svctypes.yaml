@@ -1,0 +1,15 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sServiceTypeDeny
+metadata:
+  name: deny-nodeport-lb
+spec:
+  match:
+    kinds:
+    - apiGroups:
+      - ''
+      kinds:
+      - Service
+  parameters:
+    deniedTypes:
+    - NodePort
+    - LoadBalancer

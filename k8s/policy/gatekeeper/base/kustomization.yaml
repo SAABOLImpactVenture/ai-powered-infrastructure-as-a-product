@@ -1,0 +1,39 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: gatekeeper-system
+resources:
+  - ../config.yaml
+  - ../templates/k8spsp-runasnonroot.yaml
+  - ../templates/k8spsp-readonlyrootfs.yaml
+  - ../templates/k8spsp-privileged.yaml
+  - ../templates/k8spsp-nohostnetwork.yaml
+  - ../templates/k8spsp-nohostpath.yaml
+  - ../templates/k8spsp-seccomp.yaml
+  - ../templates/k8spsp-capabilities.yaml
+  - ../templates/k8s-required-imagetag.yaml
+  - ../templates/k8s-image-registry.yaml
+  - ../templates/k8s-required-labels.yaml
+  - ../templates/k8s-required-probes.yaml
+  - ../templates/k8s-required-resources.yaml
+  - ../templates/k8s-service-type-deny.yaml
+  - ../templates/k8s-ingress-class-tls.yaml
+  - ../templates/k8s-required-networkpolicy.yaml
+  - ../templates/k8s-deny-namespace.yaml
+  - ../templates/k8s-required-secret-volume.yaml
+  - ../constraints/nonroot.yaml
+  - ../constraints/readonlyfs.yaml
+  - ../constraints/privileged.yaml
+  - ../constraints/hostnetwork.yaml
+  - ../constraints/hostpath.yaml
+  - ../constraints/seccomp.yaml
+  - ../constraints/caps.yaml
+  - ../constraints/imagetag.yaml
+  - ../constraints/imageregistry.yaml
+  - ../constraints/nslabels.yaml
+  - ../constraints/probes.yaml
+  - ../constraints/resources.yaml
+  - ../constraints/svctypes.yaml
+  - ../constraints/ingress.yaml
+  - ../constraints/netpol.yaml
+  - ../constraints/deny_default_ns.yaml
+  - ../constraints/require_mtls_secret_prod.yaml

@@ -1,0 +1,45 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8spspcapabilities
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sPSPCapabilities
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            allowedCaps:
+              type: array
+              items: { type: string }
+  targets:
+  - target: admission.k8s.gatekeeper.sh
+    rego: |
+      package k8spspcapabilities
+
+      violation[{"msg": msg}] {
+        input.review.kind.kind == "Deployment"
+        c := input.review.object.spec.template.spec.containers[_]
+        drops_all := contains(c.securityContext.capabilities.drop, "ALL")
+        not drops_all
+        not caps_allowed(c, input.parameters.allowedCaps)
+        msg := sprintf("container %q must drop ALL capabilities or be limited to allowed set", [c.name])
+      }
+
+      caps_allowed(c, allowed) {
+        # All added capabilities must be within allowed list
+        forall(c.securityContext.capabilities.add, func(x) { allowed[_] == x })
+      }
+
+      contains(arr, v) {
+        arr[_] == v
+      }
+
+      forall(arr, f) {
+        not exists_not(arr, f)
+      }
+      exists_not(arr, f) {
+        some i; not f(arr[i])
+      }

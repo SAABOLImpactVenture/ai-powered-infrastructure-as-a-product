@@ -1,0 +1,35 @@
+{
+  "name": "iaap-baseline",
+  "type": "Microsoft.Authorization/policySetDefinitions",
+  "properties": {
+    "displayName": "IAAP Baseline (Deny Public IP + Deploy Diagnostics)",
+    "description": "A baseline initiative for network hardening and diagnostics.",
+    "metadata": {
+      "category": "IAAP",
+      "version": "1.0.0"
+    },
+    "parameters": {
+      "logAnalyticsId": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Log Analytics Workspace Resource ID"
+        }
+      }
+    },
+    "policyDefinitions": [
+      {
+        "policyDefinitionReferenceId": "deny-public-ip-ref",
+        "policyDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/policyDefinitions','deny-public-ip')]"
+      },
+      {
+        "policyDefinitionReferenceId": "deploy-diagnostics-ref",
+        "policyDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/policyDefinitions','deploy-diagnostics')]",
+        "parameters": {
+          "logAnalyticsId": {
+            "value": "[parameters('logAnalyticsId')]"
+          }
+        }
+      }
+    ]
+  }
+}

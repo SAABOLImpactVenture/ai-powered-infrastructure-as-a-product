@@ -1,0 +1,15 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sImageRegistry
+metadata:
+  name: allow-image-registries
+spec:
+  match:
+    kinds:
+    - apiGroups:
+      - apps
+      kinds:
+      - Deployment
+  parameters:
+    allowedRegistries:
+    - ghcr.io/
+    - mcr.microsoft.com/

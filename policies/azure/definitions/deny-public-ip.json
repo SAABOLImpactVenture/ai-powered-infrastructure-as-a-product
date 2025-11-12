@@ -1,0 +1,46 @@
+{
+  "name": "deny-public-ip",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "properties": {
+    "displayName": "Deny Public IP on Network Interfaces",
+    "description": "Prevents association of public IP addresses to NIC IP configurations.",
+    "mode": "All",
+    "metadata": {
+      "category": "Network",
+      "version": "1.0.0"
+    },
+    "policyRule": {
+      "if": {
+        "anyOf": [
+          {
+            "allOf": [
+              {
+                "field": "type",
+                "equals": "Microsoft.Network/networkInterfaces"
+              },
+              {
+                "field": "Microsoft.Network/networkInterfaces/ipconfigurations[*].publicIpAddress.id",
+                "exists": true
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "field": "type",
+                "equals": "Microsoft.Network/networkInterfaces/ipConfigurations"
+              },
+              {
+                "field": "Microsoft.Network/networkInterfaces/ipConfigurations/publicIpAddress.id",
+                "exists": true
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    }
+  }
+}

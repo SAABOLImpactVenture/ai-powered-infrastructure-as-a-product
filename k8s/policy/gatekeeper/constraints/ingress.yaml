@@ -1,0 +1,13 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sIngressClassTLS
+metadata:
+  name: require-private-class-and-tls
+spec:
+  match:
+    kinds:
+    - apiGroups:
+      - networking.k8s.io
+      kinds:
+      - Ingress
+  parameters:
+    allowedClass: private

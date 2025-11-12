@@ -1,0 +1,83 @@
+# AKS-specific overlay for the Backstage chart
+namespace: backstage
+
+serviceAccount:
+  annotations:
+    azure.workload.identity/client-id: "${WORKLOAD_IDENTITY_CLIENT_ID}"
+
+# Enforce private ingress class
+ingress:
+  enabled: true
+  className: "private"
+  tls:
+    enabled: true
+    secretName: backstage-tls
+  backend:
+    enabled: true
+    host: backstage-api.internal.example.gov
+  app:
+    enabled: true
+    host: backstage.internal.example.gov
+
+# mTLS and proxy egress configuration for backend
+backend:
+  env:
+    APP_CONFIG_PATH: /app/config/app-config.production.yaml
+  extraEnv:
+    # Trust a private CA bundle for outbound TLS (server-auth)
+    NODE_EXTRA_CA_CERTS: /etc/mtls/ca.crt
+    # Postgres client certificate auth (enable if your PG requires mTLS)
+    PGSSLMODE: verify-full
+    PGSSLCERT: /etc/mtls/client.crt
+    PGSSLKEY: /etc/mtls/client.key
+    PGSSLROOTCERT: /etc/mtls/ca.crt
+    # Egress proxy (if required)
+    HTTPS_PROXY: http://egress-proxy.egress.svc.cluster.local:8080
+    HTTP_PROXY: http://egress-proxy.egress.svc.cluster.local:8080
+    NO_PROXY: "localhost,127.0.0.1,.svc,.cluster.local"
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 1
+      memory: 1Gi
+  # Mount mTLS material from a Secret named 'backstage-mtls'
+  volumeMounts:
+    - name: mtls
+      mountPath: /etc/mtls
+      readOnly: true
+  volumes:
+    - name: mtls
+      secret:
+        secretName: backstage-mtls
+
+# Frontend can inherit CA bundle to avoid TLS MITM issues when fetching /techdocs, etc.
+app:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  # Optional: mount CA certs
+  volumeMounts:
+    - name: mtls
+      mountPath: /etc/mtls
+      readOnly: true
+  volumes:
+    - name: mtls
+      secret:
+        secretName: backstage-mtls
+
+# NetworkPolicy egress — allow only in-namespace + proxy + Postgres/Key Vault CIDRs
+networkPolicy:
+  enabled: true
+  egressAllowCIDRs:
+    # Proxy (if it's exposed via cluster IP, prefer selecting by podSelector in a dedicated policy)
+    - "10.50.0.10/32"        # replace with proxy ClusterIP or egress CIDR
+    # Postgres private endpoint subnet
+    - "10.60.0.0/24"         # replace with actual PE subnet for Postgres
+    # Azure Key Vault private endpoint subnet (if used with private endpoints)
+    - "10.61.0.0/24"         # replace with actual PE subnet for KV

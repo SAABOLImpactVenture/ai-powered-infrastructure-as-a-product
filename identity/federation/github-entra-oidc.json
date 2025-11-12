@@ -1,0 +1,9 @@
+{
+  "name": "github-actions-main",
+  "issuer": "https://token.actions.githubusercontent.com",
+  "subject": "repo:SAABOLImpactVenture/ai-powered-infrastructure-as-a-product:ref:refs/heads/main",
+  "description": "GitHub Actions OIDC for main branch",
+  "audiences": [
+    "api://AzureADTokenExchange"
+  ]
+}
