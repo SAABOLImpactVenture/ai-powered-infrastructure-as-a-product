@@ -1,0 +1,53 @@
+{
+  "assessment-results": {
+    "uuid": "a1b2b3c4-d5e6-4f70-8a90-1234567890ab",
+    "metadata": {
+      "title": "IAAP Sample Assessment Results",
+      "version": "1.0.0",
+      "oscal-version": "1.0.4",
+      "last-modified": "2025-01-01T00:00:00Z"
+    },
+    "results": [
+      {
+        "uuid": "11111111-2222-3333-4444-555555555555",
+        "title": "Policy Conformance Snapshot",
+        "start": "2025-01-01T00:00:00Z",
+        "end": "2025-01-01T00:05:00Z",
+        "observations": [
+          {
+            "uuid": "aaaaaaa1-bbbb-cccc-dddd-eeeeeeeeeee1",
+            "description": "Azure Policy initiative IAAP Baseline assigned; deny-public-ip and deploy-diagnostics enforced.",
+            "methods": [
+              "EXAMINE"
+            ],
+            "collected": "2025-01-01T00:02:00Z"
+          },
+          {
+            "uuid": "aaaaaaa2-bbbb-cccc-dddd-eeeeeeeeeee2",
+            "description": "AWS Config rules: CloudTrail enabled, S3 SSE, GuardDuty enabled, EBS encryption by default, RDS storage encrypted.",
+            "methods": [
+              "TEST"
+            ],
+            "collected": "2025-01-01T00:03:00Z"
+          },
+          {
+            "uuid": "aaaaaaa3-bbbb-cccc-dddd-eeeeeeeeeee3",
+            "description": "GCP Policy Controller constraints applied: required labels and allowed repos.",
+            "methods": [
+              "EXAMINE"
+            ],
+            "collected": "2025-01-01T00:04:00Z"
+          },
+          {
+            "uuid": "aaaaaaa4-bbbb-cccc-dddd-eeeeeeeeeee4",
+            "description": "OCI Cloud Guard recipe detecting public buckets and unencrypted volumes.",
+            "methods": [
+              "TEST"
+            ],
+            "collected": "2025-01-01T00:05:00Z"
+          }
+        ]
+      }
+    ]
+  }
+}
