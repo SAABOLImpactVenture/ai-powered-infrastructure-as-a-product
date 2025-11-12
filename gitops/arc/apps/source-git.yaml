@@ -1,0 +1,13 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: platform-repo
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://github.com/REPLACE_ORG/REPLACE_REPO.git
+  ref:
+    branch: main
+  ignore: |
+    # exclude nothing; use Kustomization paths to scope
+    !*

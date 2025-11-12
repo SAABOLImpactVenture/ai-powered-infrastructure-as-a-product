@@ -1,0 +1,45 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: backstage-chart
+  namespace: flux-system
+spec:
+  interval: 2m
+  url: https://github.com/REPLACE_ORG/REPLACE_REPO.git
+  ref:
+    branch: main
+  ignore: |
+    # only consume charts/backstage
+    /*
+    !/charts/backstage
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: backstage
+  namespace: backstage
+spec:
+  interval: 5m
+  releaseName: backstage
+  chart:
+    spec:
+      chart: charts/backstage
+      sourceRef:
+        kind: GitRepository
+        name: backstage-chart
+        namespace: flux-system
+  valuesFrom: []
+  values:
+    namespace: backstage
+    ingress:
+      enabled: true
+      className: private
+      tls:
+        enabled: true
+        secretName: backstage-tls
+      backend:
+        enabled: true
+        host: backstage-api.internal.example.gov
+      app:
+        enabled: true
+        host: backstage.internal.example.gov
