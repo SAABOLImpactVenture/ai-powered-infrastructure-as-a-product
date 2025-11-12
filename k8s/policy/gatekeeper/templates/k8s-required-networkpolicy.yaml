@@ -1,0 +1,23 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequirednetworkpolicy
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequiredNetworkPolicy
+  targets:
+  - target: admission.k8s.gatekeeper.sh
+    rego: |
+      package k8srequirednetworkpolicy
+
+      violation[{"msg": msg}] {
+        input.review.kind.kind == "Namespace"
+        not has_np(input.inventory["networking.k8s.io/v1/NetworkPolicy"][input.review.object.metadata.name])
+        msg := sprintf("namespace %q must define at least one NetworkPolicy", [input.review.object.metadata.name])
+      }
+
+      has_np(npmap) {
+        count(npmap) > 0
+      }

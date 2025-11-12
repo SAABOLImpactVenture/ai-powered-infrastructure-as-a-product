@@ -1,0 +1,11 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPReadOnlyRootFilesystem
+metadata:
+  name: psp-readonly-rootfs
+spec:
+  match:
+    kinds:
+    - apiGroups:
+      - apps
+      kinds:
+      - Deployment

@@ -1,0 +1,47 @@
+# Helm values for Gatekeeper (OPA) hardened baseline
+# Chart: gatekeeper/gatekeeper
+replicaCount: 2
+auditInterval: 60
+constraintViolationsLimit: 1000
+emitAdmissionEvents: true
+emitAuditEvents: true
+admissionController:
+  enabled: true
+  replicas: 2
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  # PSP-like hardening of the controller pods
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop: ["ALL"]
+audit:
+  enabled: true
+  replicas: 1
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+pdb:
+  enabled: true
+serviceMonitor:
+  enabled: false
+enableDeleteOperations: false
+mutatingWebhook:
+  enabled: false
