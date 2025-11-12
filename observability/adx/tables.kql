@@ -1,0 +1,3 @@
+.create table evidence_policy_results (ts:datetime, provider:string, control:string, resource:string, status:string, details:string)
+.create table evidence_terraform_runs (ts:datetime, repo:string, commit:string, workflow:string, result:string, artifacts:string)
+.create table evidence_dns_failover (ts:datetime, service:string, from_region:string, to_region:string, operator:string, reason:string)

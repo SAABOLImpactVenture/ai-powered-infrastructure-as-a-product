@@ -1,0 +1,31 @@
+{
+  "profile": {
+    "uuid": "4b8f8f18-2a7b-4b7a-9f61-2f0b5b9a1f02",
+    "metadata": {
+      "title": "IAAP Enterprise Profile",
+      "version": "1.0.0",
+      "oscal-version": "1.0.4",
+      "last-modified": "2025-01-01T00:00:00Z"
+    },
+    "imports": [
+      {
+        "href": "https://raw.githubusercontent.com/GSA/fedramp-automation/master/baselines/rev5/json/FedRAMP_low-baseline_profile.json"
+      }
+    ],
+    "merge": {
+      "as-is": true
+    },
+    "modify": {
+      "set-parameters": [
+        {
+          "param-id": "sc-13.1",
+          "constraints": [
+            {
+              "description": "Use FIPS 140-2/3 validated cryptographic modules for all cryptographic functions."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

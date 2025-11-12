@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: IAAP — AWS Guardrails (Config recorder, delivery, aggregator, and baseline managed rules)
+
+Resources:
+  ConfigDeliveryBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  ConfigRecorder:
+    Type: AWS::Config::ConfigurationRecorder
+    Properties:
+      Name: default
+      RoleARN: !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/aws-service-role/config.amazonaws.com/AWSServiceRoleForConfig
+      RecordingGroup:
+        AllSupported: true
+        IncludeGlobalResourceTypes: true
+    DependsOn: ConfigDeliveryBucket
+
+  DeliveryChannel:
+    Type: AWS::Config::DeliveryChannel
+    Properties:
+      S3BucketName: !Ref ConfigDeliveryBucket
+    DependsOn: ConfigRecorder
+
+  AccountAggregator:
+    Type: AWS::Config::ConfigurationAggregator
+    Properties:
+      AccountAggregationSources:
+        - AccountIds:
+            - !Ref AWS::AccountId
+          AllAwsRegions: true
+
+  CloudTrailEnabled:
+    Type: AWS::Config::ConfigRule
+    Properties:
+      ConfigRuleName: cloudtrail-enabled
+      Source:
+        Owner: AWS
+        SourceIdentifier: CLOUD_TRAIL_ENABLED
+    DependsOn: DeliveryChannel
+
+  S3SSEnabled:
+    Type: AWS::Config::ConfigRule
+    Properties:
+      ConfigRuleName: s3-bucket-server-side-encryption-enabled
+      Source:
+        Owner: AWS
+        SourceIdentifier: S3_BUCKET_SERVER_SIDE_ENCRYPTION_ENABLED
+    DependsOn: DeliveryChannel
+
+  GuardDutyEnabled:
+    Type: AWS::Config::ConfigRule
+    Properties:
+      ConfigRuleName: guardduty-enabled
+      Source:
+        Owner: AWS
+        SourceIdentifier: GUARDDUTY_ENABLED
+    DependsOn: DeliveryChannel
+
+  EbsEncryptionByDefault:
+    Type: AWS::Config::ConfigRule
+    Properties:
+      ConfigRuleName: ebs-encryption-by-default
+      Source:
+        Owner: AWS
+        SourceIdentifier: EBS_ENCRYPTION_BY_DEFAULT
+    DependsOn: DeliveryChannel
+
+  RdsStorageEncrypted:
+    Type: AWS::Config::ConfigRule
+    Properties:
+      ConfigRuleName: rds-storage-encrypted
+      Source:
+        Owner: AWS
+        SourceIdentifier: RDS_STORAGE_ENCRYPTED
+    DependsOn: DeliveryChannel

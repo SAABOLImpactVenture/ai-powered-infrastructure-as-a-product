@@ -1,0 +1,102 @@
+{
+  "name": "deploy-diagnostics",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "properties": {
+    "displayName": "Deploy diagnostic settings to Log Analytics",
+    "description": "Ensures resources send diagnostics to the specified Log Analytics workspace.",
+    "mode": "Indexed",
+    "metadata": {
+      "category": "Monitoring",
+      "version": "1.0.0"
+    },
+    "parameters": {
+      "logAnalyticsId": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Log Analytics Workspace Resource ID",
+          "description": "The resource ID of the Log Analytics workspace to receive diagnostics."
+        }
+      }
+    },
+    "policyRule": {
+      "if": {
+        "field": "type",
+        "in": [
+          "Microsoft.Network/publicIPAddresses",
+          "Microsoft.Network/loadBalancers",
+          "Microsoft.KeyVault/vaults",
+          "Microsoft.ContainerService/managedClusters",
+          "Microsoft.Storage/storageAccounts"
+        ]
+      },
+      "then": {
+        "effect": "deployIfNotExists",
+        "details": {
+          "type": "Microsoft.Insights/diagnosticSettings",
+          "name": "send-to-loganalytics",
+          "existenceCondition": {
+            "allOf": [
+              {
+                "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                "equals": "[parameters('logAnalyticsId')]"
+              }
+            ]
+          },
+          "roleDefinitionIds": [
+            "/providers/Microsoft.Authorization/roleDefinitions/f526a384-b230-433a-b45c-95f59c4a2dec",
+            "/providers/Microsoft.Authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+          ],
+          "deployment": {
+            "properties": {
+              "mode": "incremental",
+              "template": {
+                "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                "resources": [
+                  {
+                    "type": "Microsoft.Insights/diagnosticSettings",
+                    "apiVersion": "2021-05-01-preview",
+                    "name": "send-to-loganalytics",
+                    "properties": {
+                      "workspaceId": "[parameters('logAnalyticsId')]",
+                      "metrics": [
+                        {
+                          "category": "AllMetrics",
+                          "enabled": true
+                        }
+                      ],
+                      "logs": [
+                        {
+                          "category": "AuditEvent",
+                          "enabled": true
+                        },
+                        {
+                          "category": "Administrative",
+                          "enabled": true
+                        },
+                        {
+                          "category": "Security",
+                          "enabled": true
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "parameters": {
+                  "logAnalyticsId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "parameters": {
+                "logAnalyticsId": {
+                  "value": "[parameters('logAnalyticsId')]"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "displayName": "IAAP Cloud Guard Recipe",
+  "description": "Detect public object storage buckets and unencrypted block volumes; auto-remediate public buckets.",
+  "owner": "CUSTOMER",
+  "detectorRules": [
+    {
+      "displayName": "Public Object Storage Bucket",
+      "description": "Detects Object Storage buckets exposed to public.",
+      "detector": "IAAS_OBJECTSTORAGE",
+      "condition": "bucket.publicAccess = true",
+      "recommendation": "Make the bucket private.",
+      "responderRules": [
+        {
+          "displayName": "Make Bucket Private",
+          "isEnabled": true,
+          "description": "Remediate by removing public access.",
+          "responderType": "IAAS_OBJECTSTORAGE_MAKE_BUCKET_PRIVATE"
+        }
+      ]
+    },
+    {
+      "displayName": "Unencrypted Block Volume",
+      "description": "Detects Block Volumes without encryption at rest.",
+      "detector": "IAAS_BLOCKVOLUME",
+      "condition": "volume.kmsKeyId IS NULL",
+      "recommendation": "Enable encryption at rest with a KMS key.",
+      "responderRules": []
+    }
+  ]
+}
