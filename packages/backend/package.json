@@ -23,7 +23,7 @@
     "@backstage/plugin-scaffolder-backend": "^1.21.2",
     "@backstage/plugin-techdocs-backend": "^1.8.8",
     "@backstage/plugin-kubernetes-backend": "^0.12.7",
-    "express": "^4.19.2",
+    "express": "^5.1.0",
     "winston": "^3.11.0",
     "better-sqlite3": "^9.4.3",
     "pg": "^8.11.3",
