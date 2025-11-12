@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@backstage/backend-common": "^0.24.7",
-    "@backstage/backend-defaults": "^0.6.6",
+    "@backstage/backend-defaults": "^0.13.0",
     "@backstage/catalog-client": "^1.8.0",
     "@backstage/catalog-model": "^1.5.1",
     "@backstage/config": "^1.2.0",
