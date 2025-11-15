@@ -1,0 +1,26 @@
+// 1) Prompt-injection signal followed by danger verb tool call
+let danger = dynamic(["delete","transfer","terminate","truncate","open_ingress","change_dns","approve_payment","make_public","disable_mfa"]);
+AgentLogs
+| where Event == "ToolCall"
+| extend verb = tostring(parse_json(Properties).verb)
+| where tolower(verb) in (danger)
+| join kind=inner (
+  AgentLogs
+  | where Event == "ModelCompletion"
+  | where TimeGenerated between (ago(10m) .. now())
+  | where tostring(parse_json(Properties).injectionSignals) has "INJECTION_RISK"
+) on CorrelationId
+| project TimeGenerated, User, verb, Tool=tostring(parse_json(Properties).tool), CorrelationId
+
+// 2) Output exfiltration (secrets/PII)
+AgentLogs
+| where Event == "ModelCompletion"
+| extend has_secret = tobool(parse_json(Properties).secretDetectorHit)
+| where has_secret
+
+// 3) Cross-tenant tool use
+AgentLogs
+| where Event == "ToolCall"
+| extend dstTenant = tostring(parse_json(Properties).targetTenant)
+| where dstTenant != tostring(parse_json(Properties).userTenant)
+| summarize count() by User, dstTenant
