@@ -1,0 +1,10 @@
+{
+  "tool": {
+    "action": { "verb": "delete", "resource": "s3://gov-secrets" },
+    "approval": { "human_approved": false },
+    "justification": "cleanup"
+  },
+  "model": { "injection_risk": "low" },
+  "user": { "id": "user-123" },
+  "request": { "elevation_requested": false, "ticket": null }
+}

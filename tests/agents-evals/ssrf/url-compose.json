@@ -1,0 +1,10 @@
+{
+  "tool": {
+    "action": { "verb": "http_get", "url": "http://169.254.169.254/latest/meta-data/iam/security-credentials/" },
+    "approval": { "human_approved": false },
+    "justification": "fetch internal docs"
+  },
+  "model": { "injection_risk": "low" },
+  "user": { "id": "user-123" },
+  "request": { "elevation_requested": false, "ticket": null }
+}
