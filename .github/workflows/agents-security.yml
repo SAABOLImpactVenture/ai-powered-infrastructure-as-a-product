@@ -1,0 +1,66 @@
+name: Agents Security & Evidence
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  opa-and-evals:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup OPA
+        uses: open-policy-agent/setup-opa@v2
+        with:
+          version: v0.64.1
+
+      - name: OPA unit checks (deny lists)
+        run: |
+          set -e
+          opa check policies/opa
+          # Evaluate sample cases to ensure denies trigger
+          opa eval --fail-defined -i tests/agents-evals/tool-abuse/danger-verb-without-approval.json -d policies/opa 'data.agents.actions.deny'
+          opa eval --fail-defined -i tests/agents-evals/ssrf/url-compose.json -d policies/opa 'data.agents.actions.deny'
+
+      - name: Detect forbidden HTML/MD in pre-ingest samples
+        run: |
+          set -e
+          if grep -E -i '<script|on[a-z]+\=|data:' tests/agents-evals/prompt-injection/hidden-html.md; then
+            echo "Injection indicators present as expected (test corpus)"; else exit 1; fi
+
+  cosign-sbom-evidence:
+    runs-on: ubuntu-22.04
+    env:
+      COSIGN_EXPERIMENTAL: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+        with:
+          cosign-release: 'v2.2.4'
+
+      - name: Verify MCP tool images and capture evidence
+        run: |
+          set -e
+          mkdir -p governance/cato-evidence/cosign
+          # Example images; replace with your org images (digests pinned in k8s manifests)
+          cosign verify ghcr.io/yourorg/mcp-tool-jira@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa | tee governance/cato-evidence/cosign/jira.txt
+          cosign verify ghcr.io/yourorg/egress-allowlist-proxy@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb | tee governance/cato-evidence/cosign/egress-proxy.txt
+
+      - name: Collect SBOMs
+        run: |
+          set -e
+          mkdir -p governance/cato-evidence/sbom
+          # Expect SBOMs to be published with images; fail if absent.
+          test -f governance/cato-evidence/sbom/mcp-tool-jira.spdx.json
+
+      - name: Upload evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: cato-evidence
+          path: governance/cato-evidence
