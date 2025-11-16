@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: infra-product-template
+  description: Backstage template for secure infra products.
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: template
+  owner: platform-team
+  lifecycle: production

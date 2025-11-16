@@ -1,0 +1,124 @@
+schema_version: 1.1.0
+name: hybrid-persona-infra-product
+description: Hybrid AI persona Prompt Flow for infra products and Backstage publishing.
+inputs:
+  product_name:
+    type: string
+    description: Name of the infra product.
+  target_clouds:
+    type: list
+    description: Target clouds (azure, aws, gcp, oci).
+  data_classification:
+    type: string
+    description: Data classification (public, internal, sensitive, restricted).
+  rto_target:
+    type: int
+    description: Recovery Time Objective in minutes.
+  rpo_target:
+    type: int
+    description: Recovery Point Objective in minutes.
+outputs:
+  repo_pr_path:
+    type: string
+    description: Repo PR path for the infra product.
+    value: ${nodes.EvidenceSink.outputs.repo_pr_path}
+  backstage_template_path:
+    type: string
+    description: Backstage template path.
+    value: ${nodes.EvidenceSink.outputs.backstage_template_path}
+  evidence_bundle_path:
+    type: string
+    description: Evidence bundle root path.
+    value: ${nodes.EvidenceSink.outputs.evidence_bundle_path}
+nodes:
+  - name: ProductManager
+    type: python
+    source:
+      type: code
+      path: tools/product_manager.py
+    inputs:
+      product_name: ${inputs.product_name}
+      target_clouds: ${inputs.target_clouds}
+      data_classification: ${inputs.data_classification}
+      rto_target: ${inputs.rto_target}
+      rpo_target: ${inputs.rpo_target}
+    outputs:
+      product_spec: ${outputs.product_spec}
+  - name: CloudArchitect
+    type: python
+    source:
+      type: code
+      path: tools/cloud_architect.py
+    inputs:
+      product_spec: ${nodes.ProductManager.outputs.product_spec}
+    outputs:
+      architecture_spec: ${outputs.architecture_spec}
+  - name: SecurityCompliance
+    type: python
+    source:
+      type: code
+      path: tools/security_compliance.py
+    inputs:
+      architecture_spec: ${nodes.CloudArchitect.outputs.architecture_spec}
+      data_classification: ${inputs.data_classification}
+    outputs:
+      security_profile: ${outputs.security_profile}
+  - name: IaCEngineer
+    type: python
+    source:
+      type: code
+      path: tools/iac_engineer.py
+    inputs:
+      security_profile: ${nodes.SecurityCompliance.outputs.security_profile}
+    outputs:
+      iac_plan: ${outputs.iac_plan}
+  - name: QA
+    type: python
+    source:
+      type: code
+      path: tools/qa_verification.py
+    inputs:
+      iac_plan: ${nodes.IaCEngineer.outputs.iac_plan}
+    outputs:
+      qa_summary: ${outputs.qa_summary}
+  - name: BackstagePublisher
+    type: python
+    source:
+      type: code
+      path: tools/backstage_publisher.py
+    inputs:
+      product_spec: ${nodes.ProductManager.outputs.product_spec}
+      iac_plan: ${nodes.IaCEngineer.outputs.iac_plan}
+      qa_summary: ${nodes.QA.outputs.qa_summary}
+    outputs:
+      repo_pr_path: ${outputs.repo_pr_path}
+      backstage_template_path: ${outputs.backstage_template_path}
+  - name: Approvals
+    type: python
+    source:
+      type: code
+      path: tools/qa_verification.py
+    inputs:
+      qa_summary: ${nodes.QA.outputs.qa_summary}
+      repo_pr_path: ${nodes.BackstagePublisher.outputs.repo_pr_path}
+      backstage_template_path: ${nodes.BackstagePublisher.outputs.backstage_template_path}
+    outputs:
+      approval_record: ${outputs.approval_record}
+  - name: EvidenceSink
+    type: python
+    source:
+      type: code
+      path: tools/evidence_sink.py
+    inputs:
+      product_spec: ${nodes.ProductManager.outputs.product_spec}
+      architecture_spec: ${nodes.CloudArchitect.outputs.architecture_spec}
+      security_profile: ${nodes.SecurityCompliance.outputs.security_profile}
+      iac_plan: ${nodes.IaCEngineer.outputs.iac_plan}
+      qa_summary: ${nodes.QA.outputs.qa_summary}
+      approval_record: ${nodes.Approvals.outputs.approval_record}
+      repo_pr_path: ${nodes.BackstagePublisher.outputs.repo_pr_path}
+      backstage_template_path: ${nodes.BackstagePublisher.outputs.backstage_template_path}
+    outputs:
+      repo_pr_path: ${outputs.repo_pr_path}
+      backstage_template_path: ${outputs.backstage_template_path}
+      evidence_bundle_path: ${outputs.evidence_bundle_path}

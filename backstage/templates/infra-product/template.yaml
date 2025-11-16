@@ -1,0 +1,68 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: infra-product
+  title: Infrastructure Product
+  description: Create a secure infra product with storage and guardrails.
+  tags:
+    - infrastructure
+    - multi-cloud
+spec:
+  owner: platform-team
+  type: service
+  parameters:
+    - title: Infra product configuration
+      required:
+        - product_name
+        - target_clouds
+        - data_classification
+        - rto_target
+        - rpo_target
+      properties:
+        product_name:
+          type: string
+          title: Product name
+        target_clouds:
+          type: array
+          title: Target clouds
+          items:
+            type: string
+            enum: [azure, aws, gcp, oci]
+        data_classification:
+          type: string
+          title: Data classification
+          enum: [public, internal, sensitive, restricted]
+        rto_target:
+          type: number
+          title: RTO (minutes)
+        rpo_target:
+          type: number
+          title: RPO (minutes)
+  steps:
+    - id: fetch-base
+      name: Fetch base template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          product_name: "{{ parameters.product_name }}"
+          target_clouds: "{{ parameters.target_clouds }}"
+          data_classification: "{{ parameters.data_classification }}"
+          rto_target: "{{ parameters.rto_target }}"
+          rpo_target: "{{ parameters.rpo_target }}"
+    - id: publish
+      name: Publish to GitHub
+      action: publish:github:pull-request
+      input:
+        repoUrl: "{{ parameters.repo_url | default('github.com/saabol/ai-iaap') }}"
+        branchName: "feature/{{ parameters.product_name | lower }}-infra-product"
+        title: "Create infra product {{ parameters.product_name }}"
+        description: "Bootstrap infra product using the hybrid persona framework."
+        targetPath: "."
+        draft: false
+  output:
+    links:
+      - title: Pull Request
+        url: "{{ steps.publish.output.remoteUrl }}"
+      - title: Repository
+        url: "{{ steps.publish.output.repoContentsUrl }}"

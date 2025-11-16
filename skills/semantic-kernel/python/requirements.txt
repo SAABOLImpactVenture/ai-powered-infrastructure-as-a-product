@@ -1,0 +1,5 @@
+pydantic==2.9.2
+jinja2==3.1.4
+ruamel.yaml==0.18.6
+jsonschema==4.23.0
+pytest==8.3.3
