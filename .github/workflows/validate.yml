@@ -45,11 +45,5 @@ jobs:
           directory: .
           soft_fail: false
           framework: terraform,kubernetes,helm
-      - name: Conftest (OPA) — validate maintained contract fixture
-        run: |
-          test -f policy/conftest/sample-plan.json
-          docker run --rm \
-            -v "${GITHUB_WORKSPACE}:/project" \
-            -w /project \
-            openpolicyagent/conftest:v0.64.0 \
-            test --policy policy/conftest policy/conftest/sample-plan.json
+      - name: Policy contract ownership
+        run: echo "Policy behavior is evaluated by the canonical policy-gates workflow."
