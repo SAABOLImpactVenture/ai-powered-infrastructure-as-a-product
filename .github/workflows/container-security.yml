@@ -1,28 +1,35 @@
 name: container-security
+
 on:
   pull_request:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
+
 permissions:
   contents: read
   security-events: write
+
 jobs:
   trivy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare reports dir
+
+      - name: Prepare reports directory
         run: mkdir -p reports
-      - name: Install Trivy
-        uses: aquasecurity/setup-trivy@v0.2.2
-      - name: Scan Dockerfiles
-        run: |
-          if [ -d "docker" ]; then
-            trivy config --format sarif --output reports/trivy-config.sarif docker || true
-          else
-            echo "No docker/ directory"
-          fi
+
+      - name: Scan container configuration
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: config
+          scan-ref: containers
+          format: sarif
+          output: reports/trivy-config.sarif
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+
       - name: Upload SARIF
+        if: always() && hashFiles('reports/trivy-config.sarif') != ''
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: reports/trivy-config.sarif
