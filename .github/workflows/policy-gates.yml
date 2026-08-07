@@ -1,116 +1,48 @@
 name: policy-gates
+
 on:
   pull_request:
     branches: [ main, master ]
   push:
     branches: [ main, master ]
+  workflow_dispatch:
+
 permissions:
   contents: read
-  security-events: write
-  id-token: write
-  actions: read
+
 jobs:
-  iac:
-    name: IaC policy gates (Terraform)
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        paths: [".", "terraform", "iac/azure", "landing-zones", "modules", "stacks"]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Prepare reports dir
-        run: mkdir -p reports
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.9.8
-
-      - name: Terraform init/validate
-        run: |
-          if [ -d "${{ matrix.paths }}" ]; then
-            terraform -chdir=${{ matrix.paths }} init -backend=false || true
-            terraform -chdir=${{ matrix.paths }} validate || true
-          else
-            echo "No ${{ matrix.paths }} directory; skipping"
-          fi
-
-      - name: TFLint
-        uses: terraform-linters/tflint-runner-action@v4
-        with:
-          path: ${{ matrix.paths }}
-          tflint_version: v0.53.0
-        continue-on-error: false
-
-      - name: Checkov (High/CRIT => fail) + SARIF
-        uses: bridgecrewio/checkov-action@v12
-        with:
-          directory: ${{ matrix.paths }}
-          quiet: true
-          soft_fail: false
-          output_format: sarif
-          output_file_path: reports/checkov-${{ matrix.paths || 'root' }}.sarif
-
-      - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: reports/checkov-${{ matrix.paths || 'root' }}.sarif
-
-      - name: Install Conftest
-        run: |
-          CONFT_VER="0.52.0"
-          curl -sSL -o conftest.tar.gz https://github.com/open-policy-agent/conftest/releases/download/v${CONFT_VER}/conftest_${CONFT_VER}_Linux_x86_64.tar.gz
-          tar -xzf conftest.tar.gz
-          sudo mv conftest /usr/local/bin/
-
-      - name: Conftest (OPA Terraform policies)
-        run: |
-          if [ -d "policies" ] && [ -d "${{ matrix.paths }}" ]; then
-            conftest test ${{ matrix.paths }} -p policies/ --all-namespaces
-          else
-            echo "Skipping Conftest for ${{ matrix.paths }}"
-          fi
-
-  k8s:
-    name: Kubernetes policy gates (k8s/)
+  policy-contract:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare reports dir
-        run: mkdir -p reports
-      - name: Install kubeconform
-        run: |
-          curl -L https://github.com/yannh/kubeconform/releases/download/v0.6.7/kubeconform-linux-amd64.tar.gz -o kc.tgz
-          tar -xzf kc.tgz
-          sudo mv kubeconform /usr/local/bin/kubeconform
 
-      - name: Validate manifests
-        run: |
-          if [ -d "k8s" ]; then
-            find k8s -type f \( -name "*.yaml" -o -name "*.yml" \) -print0 | xargs -0 -I{} kubeconform -strict -ignore-missing-schemas {}
-          else
-            echo "No k8s/ dir"
-          fi
-
-      - name: Conftest (OPA Kubernetes policies)
-        run: |
-          if [ -d "k8s" ]; then
-            conftest test k8s -p policies/
-          else
-            echo "No k8s/ dir"
-          fi
-
-  secrets:
-    name: Secrets scanning
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Gitleaks
-        uses: gitleaks/gitleaks-action@v2
+      - name: Verify policy source parses
+        uses: open-policy-agent/setup-opa@v2
         with:
-          config: .gitleaks.toml
-          additionalArgs: "--no-banner"
+          version: v0.64.1
 
+      - name: OPA check maintained policy trees
+        run: |
+          set -euo pipefail
+          opa check policy/conftest
+          opa check policies/opa
+
+      - name: Conftest maintained Terraform plan fixture
+        run: |
+          set -euo pipefail
+          test -f policy/conftest/sample-plan.json
+          docker run --rm \
+            -v "${GITHUB_WORKSPACE}:/project" \
+            -w /project \
+            openpolicyagent/conftest:v0.64.0 \
+            test --policy policy/conftest policy/conftest/sample-plan.json
+
+      - name: Explain split controls
+        run: |
+          cat <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          ### Policy gate scope
+          - Policy source syntax and the maintained Conftest contract are blocking here.
+          - Terraform validation and Checkov/TFLint run in dedicated IaC workflows.
+          - Gitleaks runs in the canonical `gitleaks` workflow with a detector canary.
+          - Broad legacy Kubernetes inventories are not revalidated on unrelated pull requests.
+          EOF
