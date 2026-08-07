@@ -5,6 +5,30 @@ repo_name: SAABOLImpactVenture/ai-powered-infrastructure-as-a-product
 site_description: IaaS is what we buy; infrastructure-as-a-product is what we build.
 site_dir: generated-site
 
+# The repository preserves a broad accelerator and historical implementation IP.
+# The public program site intentionally publishes only the curated thesis,
+# architecture, POC portfolio, selected operating-model material, and visuals.
+exclude_docs: |
+  /*
+  !/index.md
+  !/THESIS.md
+  !/poc-portfolio.md
+  !/AZURE-ARC.md
+  !/architecture/
+  /architecture/*
+  !/architecture/product-control-plane.md
+  !/architecture/v1-azure-arc-terraform-pattern.md
+  !/architecture/target-architecture.md
+  !/agents/
+  /agents/*
+  !/agents/operating-model.md
+  !/agents/agent-workflows.md
+  !/personas/
+  /personas/*
+  !/personas/team.md
+  !/assets/
+  !/assets/**
+
 theme:
   name: material
   features:
