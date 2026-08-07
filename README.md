@@ -20,7 +20,7 @@
     <img src="https://img.shields.io/badge/POC-integration-purple" alt="POC Integration Badge"/>
   </a>
   <a href="LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License Badge"/>
+    <img src="https://img.shields.io/badge/license-Apache--2.0-green" alt="Apache 2.0 License Badge"/>
   </a>
 </p>
 
@@ -52,14 +52,14 @@ Read the fuller position in [The Infrastructure-as-a-Product Thesis](docs/THESIS
 ```mermaid
 flowchart TB
   CON[Consumer intent and business metadata]
-  AI[Bounded composite AI<br/>request • review • operations • evidence]
-  GIT[GitHub change proposal<br/>tests • policy • approval • traceability]
-  API[Infrastructure product APIs<br/>stable contracts and profiles]
-  XP[Crossplane product control plane<br/>continuous reconciliation and status]
+  AI[Bounded composite AI for request, review, operations, and evidence]
+  GIT[GitHub proposal, tests, policy, approval, and traceability]
+  API[Infrastructure product APIs with stable contracts and profiles]
+  XP[Crossplane product control plane with reconciliation and status]
   AWS[AWS implementation]
   GCP[GCP implementation]
   AZ[Azure implementation]
-  OPT[Optional implementation paths<br/>TFE • OpenTofu • cloud-native APIs]
+  OPT[Optional TFE, OpenTofu, or cloud-native implementation]
   EVID[Product status and control evidence]
 
   CON --> AI
@@ -167,7 +167,7 @@ It does **not** yet establish live AWS/GCP provisioning, live model value, workl
 ```mermaid
 flowchart LR
   INTENT[Intent] --> AIP[AI proposes and explains]
-  AIP --> DET[Schema • policy • tests validate]
+  AIP --> DET[Schema, policy, and tests validate]
   DET --> HUMAN[Authorized people approve]
   HUMAN --> EXEC[Crossplane or approved engine executes]
   EXEC --> CLOUD[Cloud-native controls enforce]
@@ -249,7 +249,7 @@ These assets are now framed as a **V1 Azure Arc and Terraform implementation pat
 flowchart TB
   PROD[Infrastructure product contract]
   PROD --> XPIMPL[Crossplane-native implementation]
-  PROD --> V1[V1 Arc • Backstage • Terraform implementation]
+  PROD --> V1[V1 Arc, Backstage, and Terraform implementation]
   PROD --> OTHER[Other approved implementation]
   V1 --> TF[Terraform modules and plans]
   V1 --> ARC[Azure Arc inventory and GitOps]
@@ -394,4 +394,4 @@ Discuss large architectural changes through an issue or ADR before implementatio
 
 ## License
 
-MIT
+Apache License 2.0. See [LICENSE](LICENSE).
