@@ -62,20 +62,28 @@ jobs:
         include:
           - image: mcp-azure
             file: servers/mcp/azure/Dockerfile.distroless
+            context: servers/mcp/azure
           - image: mcp-policy-azure
             file: servers/mcp-policy/azure/Dockerfile.distroless
+            context: servers/mcp-policy/azure
           - image: mcp-aws
             file: servers/mcp/aws/Dockerfile.distroless
+            context: servers/mcp/aws
           - image: mcp-policy-aws
             file: servers/mcp-policy/aws/Dockerfile.distroless
+            context: servers/mcp-policy/aws
           - image: mcp-gcp
             file: servers/mcp/gcp/Dockerfile.distroless
+            context: servers/mcp/gcp
           - image: mcp-policy-gcp
             file: servers/mcp-policy/gcp/Dockerfile.distroless
+            context: servers/mcp-policy/gcp
           - image: mcp-oci
             file: servers/mcp/oci/Dockerfile.distroless
+            context: servers/mcp/oci
           - image: mcp-policy-oci
             file: servers/mcp-policy/oci/Dockerfile.distroless
+            context: servers/mcp-policy/oci
     permissions:
       contents: read
     steps:
@@ -85,7 +93,7 @@ jobs:
       - name: Validate image build without publishing
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ${{ matrix.context }}
           file: ${{ matrix.file }}
           push: false
           tags: ${{ env.IMAGE_REPO }}:${{ matrix.image }}-pr
@@ -102,20 +110,28 @@ jobs:
         include:
           - image: mcp-azure
             file: servers/mcp/azure/Dockerfile.distroless
+            context: servers/mcp/azure
           - image: mcp-policy-azure
             file: servers/mcp-policy/azure/Dockerfile.distroless
+            context: servers/mcp-policy/azure
           - image: mcp-aws
             file: servers/mcp/aws/Dockerfile.distroless
+            context: servers/mcp/aws
           - image: mcp-policy-aws
             file: servers/mcp-policy/aws/Dockerfile.distroless
+            context: servers/mcp-policy/aws
           - image: mcp-gcp
             file: servers/mcp/gcp/Dockerfile.distroless
+            context: servers/mcp/gcp
           - image: mcp-policy-gcp
             file: servers/mcp-policy/gcp/Dockerfile.distroless
+            context: servers/mcp-policy/gcp
           - image: mcp-oci
             file: servers/mcp/oci/Dockerfile.distroless
+            context: servers/mcp/oci
           - image: mcp-policy-oci
             file: servers/mcp-policy/oci/Dockerfile.distroless
+            context: servers/mcp-policy/oci
     permissions:
       contents: read
       id-token: write
@@ -137,7 +153,7 @@ jobs:
       - name: Build and push (multi-arch + provenance + SBOM)
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ${{ matrix.context }}
           file: ${{ matrix.file }}
           push: true
           tags: ${{ env.IMAGE_REPO }}:${{ matrix.image }}-latest
