@@ -1,3 +1,0 @@
-SPDX-License-Identifier: Apache-2.0
-# Zero Trust & TIC 3.0 Alignment
-...

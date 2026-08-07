@@ -1,9 +1,0 @@
-﻿area/docs:
-  - "docs/**"
-  - "**/*.md"
-
-area/ci:
-  - ".github/workflows/**"
-
-area/code:
-  - "**/*.py"

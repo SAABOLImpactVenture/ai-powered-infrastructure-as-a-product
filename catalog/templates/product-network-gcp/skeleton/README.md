@@ -1,1 +1,0 @@
-# GCP network instance skeleton

@@ -1,39 +1,20 @@
-# Marketplace listing metadata
 name: AI-Powered Infrastructure as a Product
-short_description: Product-led multi-cloud foundation architecture using Crossplane, bounded composite AI, GitHub governance, and replaceable execution.
+short_description: Modern multi-cloud IaaP reference architecture using Crossplane, bounded composite AI, GitHub governance, and evidence.
 long_description: |
-  AI-Powered Infrastructure as a Product is a program-level accelerator and reference architecture
-  built around the mental model: IaaS is what we buy; infrastructure-as-a-product is what we build.
+  IaaS is what we buy; infrastructure-as-a-product is what we build.
 
-  The current architecture uses stable infrastructure-product contracts, a minimal trusted Crossplane
-  seed, bounded composite AI for request/review/operations/evidence, deterministic policy, human
-  approval, and cloud-native enforcement. Existing Terraform, Azure Arc, Backstage, observability,
-  policy, and OSCAL assets are preserved as optional implementation patterns rather than deleted.
-
-  Related bounded POC repositories demonstrate the seed, CloudFoundationEnvironment product,
-  composite-AI authority boundary, and credential-free integrated acceptance flow.
+  This repository is the program front door for a modern product-control-plane architecture.
+  Runtime implementation is deliberately decomposed across bounded Crossplane, product, composite-AI,
+  and integration POCs. Historical Terraform, Arc, Backstage, and execution-MCP implementations are
+  preserved in Git history rather than maintained as dependencies of the current accelerator.
 tags:
   - infrastructure-as-a-product
   - platform-engineering
   - crossplane
   - composite-ai
   - multi-cloud
-  - gitops
   - governance
   - evidence
-  - terraform
-  - azure-arc
 license: Apache-2.0
-pricing:
-  - tier: community
-    description: Public reference architecture, documentation, preserved accelerator assets, and bounded POC patterns.
-    price: 0
-  - tier: advisory
-    description: Architecture, product operating model, implementation comparison, and regulated-environment advisory.
-    price: contact
-  - tier: enterprise
-    description: Product portfolio design, live-sandbox implementation, evidence architecture, and operating-model support.
-    price: contact
 documentation_url: https://saabolimpactventure.github.io/ai-powered-infrastructure-as-a-product/
-support_url: https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/discussions
-release_notes_url: https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/releases
+support_url: https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/issues

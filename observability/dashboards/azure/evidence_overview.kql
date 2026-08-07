@@ -1,4 +1,0 @@
-// KQL — count evidence by status
-Evidence_CL
-| summarize count() by status_s
-| render piechart

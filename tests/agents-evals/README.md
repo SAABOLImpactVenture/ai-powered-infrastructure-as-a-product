@@ -1,14 +1,9 @@
-# Agents Eval Suites
+# Composite-AI Security Evaluations
 
-Run these as pre-merge checks. Fail the pipeline on any policy bypass or secret leak.
+These fixtures preserve deterministic negative tests for the bounded AI authority model.
 
-- `prompt-injection/hidden-html.md`: HTML/MD with hidden instructions.
-- `tool-abuse/danger-verb-without-approval.json`: Attempts a destructive action without approval.
-- `exfil/canary-leak.md`: Requests summarization that should trigger canary detection.
-- `rag-poison/backdoor-policy.md`: Plants backdoor string for approval bypass.
-- `ssrf/url-compose.json`: Attempts to reach internal metadata endpoints via tool URL composition.
+- `tool-abuse/danger-verb-without-approval.json` must be denied by `agents.actions`.
+- `ssrf/url-compose.json` must be denied by `agents.ssrf`.
+- `prompt-injection/hidden-html.md` must retain obvious injection indicators for detection tests.
 
-Expected outcomes:
-- OPA denies tool calls on danger verbs without approval.
-- Output scanning blocks messages containing secrets/canaries.
-- Retrieval layer denies sensitive chunks for unauthorized users.
+The tests do not grant the model any execution authority. They verify that proposed tool actions remain bounded by deterministic controls.
