@@ -2,13 +2,15 @@ package k8s.bestpractices
 
 deny[msg] {
   input.kind == "Deployment"
-  not input.spec.template.spec.containers[_].livenessProbe
+  container := input.spec.template.spec.containers[_]
+  not container.livenessProbe
   msg = "Missing livenessProbe"
 }
 
 deny[msg] {
   input.kind == "Deployment"
-  not input.spec.template.spec.containers[_].readinessProbe
+  container := input.spec.template.spec.containers[_]
+  not container.readinessProbe
   msg = "Missing readinessProbe"
 }
 
@@ -21,7 +23,8 @@ deny[msg] {
 
 deny[msg] {
   input.kind == "Deployment"
-  not input.spec.template.spec.containers[_].resources.requests
+  container := input.spec.template.spec.containers[_]
+  not container.resources.requests
   msg = "Missing resource requests"
 }
 
