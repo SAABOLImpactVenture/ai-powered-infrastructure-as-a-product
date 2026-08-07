@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "evaluationId": "six-repo-poc-evaluation-2026-08-07",
+  "evaluationDate": "2026-08-07",
+  "scope": "Six-repository Infrastructure-as-a-Product POC estate",
+  "productionReadinessAssessment": false,
+  "portfolioEngineeringQualityScore": 85,
+  "scoreScale": 100,
+  "rubric": {
+    "roleClarityAndArchitecture": 20,
+    "securityAndAuthority": 20,
+    "contractAndDependencyIntegrity": 20,
+    "validationAndEvidence": 20,
+    "reproducibilityAndMaintainability": 20
+  },
+  "referenceEvidence": {
+    "integrationWorkflowRun": 31210928432,
+    "testedIntegrationCommit": "3984c0dde508be10b0e07ddcdac319bd996efcde",
+    "artifacts": [
+      {
+        "kubernetes": "1.34",
+        "artifactId": 9006702474,
+        "sha256": "15d9377ec8183e93867cdd9c8614cee97e8d2cb8a0d9f4ef1a9b63ccd9e2b839",
+        "score": 100,
+        "result": "pass"
+      },
+      {
+        "kubernetes": "1.35",
+        "artifactId": 9006703569,
+        "sha256": "6f4e158851895afb2b76a550d055f596dc3469ea55e91665194d449b7659d379",
+        "score": 100,
+        "result": "pass"
+      },
+      {
+        "kubernetes": "1.36",
+        "artifactId": 9006705030,
+        "sha256": "baae3ded10ec9fcb9aa349e48dc3b58128f42303bfa345e3c4a3fb0c6c130542",
+        "score": 100,
+        "result": "pass"
+      }
+    ]
+  },
+  "repositories": [
+    {
+      "repository": "SAABOLImpactVenture/crossplane-multicloud-seed-poc",
+      "head": "2afa74322adddda5b24f6ad1dc04ec05de0d7aa0",
+      "score": 88,
+      "assessment": "strong",
+      "primaryGap": "Tool-download supply-chain integrity and stale handoff example"
+    },
+    {
+      "repository": "SAABOLImpactVenture/multicloud-foundation-product-poc",
+      "head": "164fe8d9d5e7698770f056e5daac3125d9a2c247",
+      "score": 80,
+      "assessment": "good-with-material-corrections",
+      "primaryGap": "Consumer-contract leakage, CIDR validation gaps, and biased synthetic TFE comparison data"
+    },
+    {
+      "repository": "SAABOLImpactVenture/composite-ai-infrastructure-product-poc",
+      "head": "08af22093ee69c683948175512ca800f75fecab9",
+      "score": 87,
+      "assessment": "strong",
+      "primaryGap": "Deterministic provider only, duplicated contract rules, and stale portfolio language"
+    },
+    {
+      "repository": "SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc",
+      "head": "2c3ea43cabb57de016b9a6bcbb8cf14ea4fde0eb",
+      "score": 76,
+      "assessment": "good-poc-contract-alignment-correction-required",
+      "primaryGap": "Storefront-valid owner/cost-center values can be invalid downstream; deployed Backstage runtime/status path not yet proven"
+    },
+    {
+      "repository": "SAABOLImpactVenture/multicloud-foundation-poc-integration",
+      "head": "207357972bad7b44e8e7a8ae962dda89620255d0",
+      "testedHead": "3984c0dde508be10b0e07ddcdac319bd996efcde",
+      "score": 90,
+      "assessment": "strongest-evidence-repository",
+      "primaryGap": "Human approval and actual Backstage PR action are asserted/encoded rather than executed end-to-end"
+    },
+    {
+      "repository": "SAABOLImpactVenture/ai-powered-infrastructure-as-a-product",
+      "head": "2063967124f70ca7dd78c7a0ac68714fac329697",
+      "score": 88,
+      "assessment": "strong-program-governance-hub",
+      "primaryGap": "Backstage-inclusive successful baseline not yet frozen and evidence-gate documentation is behind the proven state"
+    }
+  ],
+  "findings": [
+    {
+      "id": "P1-CONTRACT-001",
+      "severity": "P1",
+      "category": "cross-repository-contract",
+      "repositories": [
+        "SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc",
+        "SAABOLImpactVenture/composite-ai-infrastructure-product-poc",
+        "SAABOLImpactVenture/multicloud-foundation-product-poc",
+        "SAABOLImpactVenture/multicloud-foundation-poc-integration"
+      ],
+      "finding": "Storefront-valid owner and costCenter values can be invalid in the AI/product contract because validation rules are manually duplicated and have drifted.",
+      "recommendedAction": "Establish a canonical contract or generated compatibility layer and add a scored schema-conformance control proving every storefront-valid order is downstream-valid.",
+      "status": "open"
+    },
+    {
+      "id": "P1-EVIDENCE-001",
+      "severity": "P1",
+      "category": "evidence-semantics",
+      "repositories": [
+        "SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc",
+        "SAABOLImpactVenture/multicloud-foundation-poc-integration",
+        "SAABOLImpactVenture/ai-powered-infrastructure-as-a-product"
+      ],
+      "finding": "The current proof encodes a human-approval boundary and validates an importable Backstage template, but does not execute a deployed Backstage runtime, real publish:github:pull-request action, human approval/merge event, or GitOps handoff.",
+      "recommendedAction": "Use precise evidence language now and create a separate Backstage runtime smoke gate before live cloud validation.",
+      "status": "open"
+    },
+    {
+      "id": "P1-SUPPLY-CHAIN-001",
+      "severity": "P1",
+      "category": "reproducibility",
+      "repositories": [
+        "SAABOLImpactVenture/crossplane-multicloud-seed-poc",
+        "SAABOLImpactVenture/multicloud-foundation-product-poc",
+        "SAABOLImpactVenture/composite-ai-infrastructure-product-poc",
+        "SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc",
+        "SAABOLImpactVenture/multicloud-foundation-poc-integration",
+        "SAABOLImpactVenture/ai-powered-infrastructure-as-a-product"
+      ],
+      "finding": "Exact repository SHAs are pinned but third-party execution dependencies remain partly mutable: GitHub Action tags, runner images, Python package installs, semver package tags, and downloaded Kind/kubectl/Helm binaries without checksum verification.",
+      "recommendedAction": "Pin actions and dependencies immutably where practical, verify downloaded tools, and capture execution dependency identities in evidence.",
+      "status": "open"
+    },
+    {
+      "id": "P1-TFE-COMPARE-001",
+      "severity": "P1",
+      "category": "evaluation-methodology",
+      "repositories": [
+        "SAABOLImpactVenture/multicloud-foundation-product-poc",
+        "SAABOLImpactVenture/ai-powered-infrastructure-as-a-product"
+      ],
+      "finding": "The TFE experiment says scores must come from observed evidence, but the example results pre-score Crossplane and TFE while several evidence fields are placeholders. The test/scorer accepts them.",
+      "recommendedAction": "Make unobserved metrics null/unscored or reject placeholder evidence; run the residual TFE comparison from measured scenarios only.",
+      "status": "open"
+    },
+    {
+      "id": "P1-BASELINE-001",
+      "severity": "P1",
+      "category": "evidence-governance",
+      "repositories": [
+        "SAABOLImpactVenture/ai-powered-infrastructure-as-a-product",
+        "SAABOLImpactVenture/multicloud-foundation-poc-integration"
+      ],
+      "finding": "The coordinating repository still freezes the pre-storefront baseline even though run 31210928432 is the first successful Backstage-inclusive 1.34/1.35/1.36 100/100 proof.",
+      "recommendedAction": "Create a new immutable Backstage-inclusive baseline without overwriting the historical v1 baseline.",
+      "status": "open"
+    },
+    {
+      "id": "P1-PRODUCT-CONTRACT-001",
+      "severity": "P1",
+      "category": "product-abstraction",
+      "repositories": [
+        "SAABOLImpactVenture/multicloud-foundation-product-poc"
+      ],
+      "finding": "networkCidr, subnetCidr, and deletionPolicy remain writable on the stable product API even though the consumer experience treats network implementation and lifecycle defaults as platform-owned concerns.",
+      "recommendedAction": "Review whether these fields belong behind profile/IPAM/lifecycle policy before declaring the product contract durable beyond the POC.",
+      "status": "open"
+    },
+    {
+      "id": "P1-CIDR-001",
+      "severity": "P1",
+      "category": "input-validation",
+      "repositories": [
+        "SAABOLImpactVenture/multicloud-foundation-product-poc"
+      ],
+      "finding": "CIDR schema checks allow invalid octets and do not verify subnet containment within the network, allowing live-provider failures to occur after admission.",
+      "recommendedAction": "Use semantically correct CIDR validation and enforce subnet containment before the live AWS gate.",
+      "status": "open"
+    },
+    {
+      "id": "P2-DEPENDENCY-001",
+      "severity": "P2",
+      "category": "dependency-graph",
+      "repositories": [
+        "SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc",
+        "SAABOLImpactVenture/multicloud-foundation-poc-integration"
+      ],
+      "finding": "The storefront lock file treats the integration harness and architecture baseline as upstreams even though integration consumes the storefront, creating a conceptual dependency cycle and stale references.",
+      "recommendedAction": "Separate runtime/build upstreams from historical evidence/baseline references and keep the dependency graph acyclic.",
+      "status": "open"
+    },
+    {
+      "id": "P2-AI-OWNERSHIP-001",
+      "severity": "P2",
+      "category": "repository-ownership",
+      "repositories": [
+        "SAABOLImpactVenture/multicloud-foundation-product-poc",
+        "SAABOLImpactVenture/composite-ai-infrastructure-product-poc"
+      ],
+      "finding": "AI prompts/tool-boundary material exists in the product repository while the dedicated composite-AI repository is defined as the owner of agent contracts and evaluations.",
+      "recommendedAction": "Keep only the product-facing interface contract in the product repo or explicitly define which artifacts are normative to prevent drift.",
+      "status": "open"
+    },
+    {
+      "id": "P2-STATUS-001",
+      "severity": "P2",
+      "category": "developer-experience",
+      "repositories": [
+        "SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc"
+      ],
+      "finding": "The Backstage status/evidence tracking experience is documented as a target read model but is not implemented or validated in a running Backstage instance.",
+      "recommendedAction": "Add a read-only status/evidence adapter in the Backstage runtime smoke gate without adding infrastructure execution authority.",
+      "status": "open"
+    }
+  ],
+  "conclusion": {
+    "architectureMayProceed": true,
+    "tfeMandatoryForDemonstratedPath": false,
+    "liveCloudGateReadyNow": false,
+    "requiredNextGate": "Portfolio contract and reproducibility correction gate",
+    "statement": "The architecture and credential-free evidence support continuation and the existing TFE-optional conclusion, but contract consistency, comparison neutrality, evidence semantics, and supply-chain reproducibility should be corrected before the live AWS gate."
+  }
+}
