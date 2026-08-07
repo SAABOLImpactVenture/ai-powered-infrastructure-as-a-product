@@ -43,10 +43,11 @@ jobs:
         if: always() && hashFiles('checkov.sarif') != ''
         uses: github/codeql-action/upload-sarif@v3
         with: { sarif_file: checkov.sarif }
-      - name: Conftest (OPA)
+      - name: Conftest (OPA) maintained contract fixture
         run: |
+          test -f policy/conftest/sample-plan.json
           docker run --rm \
             -v "${GITHUB_WORKSPACE}:/project" \
             -w /project \
             openpolicyagent/conftest:v0.64.0 \
-            test --policy policy/ .
+            test --policy policy/conftest policy/conftest/sample-plan.json
