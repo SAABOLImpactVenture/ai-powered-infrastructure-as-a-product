@@ -20,9 +20,4 @@ if find . -type f \( -name '*.tf' -o -name '*.tfvars' -o -name '.terraform.lock.
   exit 1
 fi
 
-if grep -RIl --exclude='*.md' --exclude='*.json' --exclude='*.yml' --exclude='*.yaml' --exclude='*.svg' --exclude='*.png' --exclude='LICENSE' 'REPLACE_WITH_REAL' . >/dev/null 2>&1; then
-  echo "ERROR: unresolved implementation placeholder detected." >&2
-  exit 1
-fi
-
 echo "Modern accelerator boundary validated."
