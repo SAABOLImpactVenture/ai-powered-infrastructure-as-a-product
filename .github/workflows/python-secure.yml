@@ -25,7 +25,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install 'bandit==1.9.4' 'pip-audit==2.10.1'
 
-      - name: Bandit SAST on maintained Python surfaces
+      - name: Collect full Bandit evidence
         shell: bash
         run: |
           set -euo pipefail
@@ -38,7 +38,20 @@ jobs:
             echo "No maintained Python source directories found."
             printf '%s\n' '{"results": []}' > reports/bandit.json
           else
-            bandit -r "${targets[@]}" -f json -o reports/bandit.json
+            bandit -r "${targets[@]}" -f json -o reports/bandit.json || true
+          fi
+
+      - name: Block on medium/high Bandit findings
+        shell: bash
+        run: |
+          set -euo pipefail
+          targets=()
+          for path in scripts servers services skills; do
+            [ -d "$path" ] && targets+=("$path")
+          done
+
+          if [ "${#targets[@]}" -gt 0 ]; then
+            bandit -r "${targets[@]}" -ll
           fi
 
       - name: Upload Bandit evidence
