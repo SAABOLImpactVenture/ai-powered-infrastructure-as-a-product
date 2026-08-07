@@ -1,7 +1,8 @@
-﻿site_name: AI Powered Infrastructure as a Product
+site_name: AI-Powered Infrastructure as a Product
 site_url: https://saabolimpactventure.github.io/ai-powered-infrastructure-as-a-product/
 repo_url: https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product
 repo_name: SAABOLImpactVenture/ai-powered-infrastructure-as-a-product
+site_description: IaaS is what we buy; infrastructure-as-a-product is what we build.
 
 theme:
   name: material
@@ -9,6 +10,7 @@ theme:
     - navigation.sections
     - navigation.indexes
     - navigation.tracking
+    - navigation.top
     - content.code.copy
   palette:
     - scheme: default
@@ -31,7 +33,25 @@ markdown_extensions:
   - pymdownx.emoji
   - pymdownx.highlight
   - pymdownx.inlinehilite
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_javascript:
+  - https://unpkg.com/mermaid@11/dist/mermaid.min.js
 
 nav:
   - Home: index.md
+  - Thesis: THESIS.md
+  - POC Portfolio: poc-portfolio.md
+  - Architecture:
+      - Product Control Plane: architecture/product-control-plane.md
+      - Preserved V1 Arc and Terraform Pattern: architecture/v1-azure-arc-terraform-pattern.md
+      - Original Azure Control-Plane Architecture: architecture/target-architecture.md
+  - Existing Reference Material:
+      - Azure Arc: AZURE-ARC.md
+      - Agent Operating Model: agents/operating-model.md
+      - Agent Workflows: agents/agent-workflows.md
+      - Team and Personas: personas/team.md
