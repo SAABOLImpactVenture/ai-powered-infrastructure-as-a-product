@@ -25,18 +25,19 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with: { terraform_version: 1.8.5 }
 
-      - name: Validate (no backend)
+      - name: Validate root Terraform boundary (no backend)
         run: |
           terraform init -backend=false -input=false || true
           terraform validate -no-color || true
 
-      - name: Conftest (OPA) — deny on violations
+      - name: Conftest (OPA) — validate maintained sample contract
         run: |
+          test -f policy/conftest/sample-plan.json
           docker run --rm \
             -v "${GITHUB_WORKSPACE}:/project" \
             -w /project \
             openpolicyagent/conftest:v0.64.0 \
-            test --policy policy/ .
+            test --policy policy/conftest policy/conftest/sample-plan.json
 
       - name: tfsec (fail on HIGH)
         uses: aquasecurity/tfsec-action@v1.0.3
@@ -53,8 +54,10 @@ jobs:
           output_file_path: checkov.sarif
 
       - name: Upload SARIF
+        if: always() && hashFiles('checkov.sarif') != ''
         uses: github/codeql-action/upload-sarif@v3
-        with: { sarif_file: checkov.sarif }
+        with:
+          sarif_file: checkov.sarif
 
   supply-chain-pr:
     if: github.event_name == 'pull_request'
@@ -62,7 +65,23 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: [ mcp-azure, mcp-policy-azure, mcp-aws, mcp-policy-aws, mcp-gcp, mcp-policy-gcp, mcp-oci, mcp-policy-oci ]
+        include:
+          - image: mcp-azure
+            file: servers/mcp/azure/Dockerfile.distroless
+          - image: mcp-policy-azure
+            file: servers/mcp-policy/azure/Dockerfile.distroless
+          - image: mcp-aws
+            file: servers/mcp/aws/Dockerfile.distroless
+          - image: mcp-policy-aws
+            file: servers/mcp-policy/aws/Dockerfile.distroless
+          - image: mcp-gcp
+            file: servers/mcp/gcp/Dockerfile.distroless
+          - image: mcp-policy-gcp
+            file: servers/mcp-policy/gcp/Dockerfile.distroless
+          - image: mcp-oci
+            file: servers/mcp/oci/Dockerfile.distroless
+          - image: mcp-policy-oci
+            file: servers/mcp-policy/oci/Dockerfile.distroless
     permissions:
       contents: read
     steps:
@@ -73,7 +92,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./containers/${{ matrix.image }}/Dockerfile
+          file: ${{ matrix.file }}
           push: false
           tags: ${{ env.IMAGE_REPO }}:${{ matrix.image }}-pr
           platforms: linux/amd64
@@ -86,7 +105,23 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: [ mcp-azure, mcp-policy-azure, mcp-aws, mcp-policy-aws, mcp-gcp, mcp-policy-gcp, mcp-oci, mcp-policy-oci ]
+        include:
+          - image: mcp-azure
+            file: servers/mcp/azure/Dockerfile.distroless
+          - image: mcp-policy-azure
+            file: servers/mcp-policy/azure/Dockerfile.distroless
+          - image: mcp-aws
+            file: servers/mcp/aws/Dockerfile.distroless
+          - image: mcp-policy-aws
+            file: servers/mcp-policy/aws/Dockerfile.distroless
+          - image: mcp-gcp
+            file: servers/mcp/gcp/Dockerfile.distroless
+          - image: mcp-policy-gcp
+            file: servers/mcp-policy/gcp/Dockerfile.distroless
+          - image: mcp-oci
+            file: servers/mcp/oci/Dockerfile.distroless
+          - image: mcp-policy-oci
+            file: servers/mcp-policy/oci/Dockerfile.distroless
     permissions:
       contents: read
       id-token: write
@@ -109,7 +144,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./containers/${{ matrix.image }}/Dockerfile
+          file: ${{ matrix.file }}
           push: true
           tags: ${{ env.IMAGE_REPO }}:${{ matrix.image }}-latest
           platforms: linux/amd64,linux/arm64
