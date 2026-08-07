@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 5.0"
-    }
-  }
-}
-
 provider "aws" {
   region = var.region
 }
@@ -89,7 +80,7 @@ resource "aws_config_configuration_recorder" "recorder" {
   role_arn = aws_iam_role.config.arn
 
   recording_group {
-    all_supported                 = true
+    all_supported                  = true
     include_global_resource_types = true
   }
 }
