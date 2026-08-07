@@ -30,14 +30,8 @@ jobs:
           terraform init -backend=false -input=false || true
           terraform validate -no-color || true
 
-      - name: Conftest (OPA) — validate maintained sample contract
-        run: |
-          test -f policy/conftest/sample-plan.json
-          docker run --rm \
-            -v "${GITHUB_WORKSPACE}:/project" \
-            -w /project \
-            openpolicyagent/conftest:v0.64.0 \
-            test --policy policy/conftest policy/conftest/sample-plan.json
+      - name: Policy contract ownership
+        run: echo "Policy behavior is evaluated by the canonical policy-gates workflow."
 
       - name: tfsec (fail on HIGH)
         uses: aquasecurity/tfsec-action@v1.0.3
