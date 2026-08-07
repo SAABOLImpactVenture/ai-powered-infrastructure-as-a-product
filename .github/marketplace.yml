@@ -1,31 +1,39 @@
 # Marketplace listing metadata
-name: AI-Powered Infrastructure-as-a-Product
-short_description: Self-contained infra accelerator with Terraform, AI emitters, governance, and dashboards.
+name: AI-Powered Infrastructure as a Product
+short_description: Product-led multi-cloud foundation architecture using Crossplane, bounded composite AI, GitHub governance, and replaceable execution.
 long_description: |
-  The AI-Powered Infrastructure-as-a-Product (IaaP) accelerator delivers a paved path for
-  cloud infrastructure with evidence-first operations, Azure-as-control-plane, and policy enforcement.
-  Offline-first demos run locally; cloud modules and dashboards are included for production use.
+  AI-Powered Infrastructure as a Product is a program-level accelerator and reference architecture
+  built around the mental model: IaaS is what we buy; infrastructure-as-a-product is what we build.
+
+  The current architecture uses stable infrastructure-product contracts, a minimal trusted Crossplane
+  seed, bounded composite AI for request/review/operations/evidence, deterministic policy, human
+  approval, and cloud-native enforcement. Existing Terraform, Azure Arc, Backstage, observability,
+  policy, and OSCAL assets are preserved as optional implementation patterns rather than deleted.
+
+  Related bounded POC repositories demonstrate the seed, CloudFoundationEnvironment product,
+  composite-AI authority boundary, and credential-free integrated acceptance flow.
 tags:
-  - infrastructure
-  - devops
-  - terraform
-  - azure
-  - observability
+  - infrastructure-as-a-product
+  - platform-engineering
+  - crossplane
+  - composite-ai
+  - multi-cloud
+  - gitops
   - governance
-  - ai
-license: proprietary
+  - evidence
+  - terraform
+  - azure-arc
+license: Apache-2.0
 pricing:
-  - tier: free
-    description: Offline modules, local emitters, MVP-03 demo; community support.
+  - tier: community
+    description: Public reference architecture, documentation, preserved accelerator assets, and bounded POC patterns.
     price: 0
-  - tier: professional
-    description: Cloud modules (Log Analytics, Gatekeeper), dashboards, CI-cloud workflow.
-    price: 49
-    currency: USD
+  - tier: advisory
+    description: Architecture, product operating model, implementation comparison, and regulated-environment advisory.
+    price: contact
   - tier: enterprise
-    description: Full CI matrix, policy packs, support SLAs, roadmap guidance.
-    price: 199
-    currency: USD
-documentation_url: https://github.com/OWNER/REPO#readme
-support_url: https://github.com/OWNER/REPO/discussions
-release_notes_url: https://github.com/OWNER/REPO/releases
+    description: Product portfolio design, live-sandbox implementation, evidence architecture, and operating-model support.
+    price: contact
+documentation_url: https://saabolimpactventure.github.io/ai-powered-infrastructure-as-a-product/
+support_url: https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/discussions
+release_notes_url: https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/releases

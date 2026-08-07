@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" role="img" aria-labelledby="title desc">
+  <title id="title">AI-Powered Infrastructure as a Product</title>
+  <desc id="desc">IaaS is what we buy; infrastructure-as-a-product is what we build. Composite AI, Crossplane, product APIs, and multi-cloud evidence.</desc>
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#0ea5e9"/>
@@ -6,10 +8,13 @@
     </linearGradient>
   </defs>
   <rect width="100%" height="100%" fill="url(#g)"/>
-  <text x="50%" y="45%" text-anchor="middle" font-family="Inter, Arial" font-size="64" fill="#ffffff">
-    AI-Powered Infrastructure-as-a-Product
+  <text x="50%" y="38%" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="60" font-weight="700" fill="#ffffff">
+    AI-Powered Infrastructure as a Product
   </text>
-  <text x="50%" y="58%" text-anchor="middle" font-family="Inter, Arial" font-size="28" fill="#e5e7eb">
-    Terraform • Azure Arc • Gatekeeper • Workbooks • Evidence
+  <text x="50%" y="52%" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" fill="#e5e7eb">
+    IaaS is what we buy; infrastructure-as-a-product is what we build.
+  </text>
+  <text x="50%" y="64%" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" fill="#e5e7eb">
+    Composite AI • Crossplane • Product APIs • Multi-Cloud Evidence
   </text>
 </svg>

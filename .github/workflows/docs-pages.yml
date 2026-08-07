@@ -1,4 +1,4 @@
-﻿name: docs (GitHub Pages)
+name: docs (GitHub Pages)
 
 on:
   push:
@@ -38,12 +38,12 @@ jobs:
           fi
 
       - name: Build MkDocs
-        run: mkdocs build --strict
+        run: mkdocs build --clean
 
       - name: Upload artifact for Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: generated-site
 
   deploy:
     needs: build
