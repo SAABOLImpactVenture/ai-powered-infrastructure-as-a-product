@@ -3,7 +3,7 @@ package agents.scopes
 # Deny wildcard or admin-like scopes.
 deny[msg] {
   s := input.tool.requested_scopes[_]
-  re_match("(?i)^(\*|admin|owner|full_access|all|god|superuser)$", s)
+  re_match("(?i)^([*]|admin|owner|full_access|all|god|superuser)$", s)
   msg := sprintf("Denied wildcard/admin scope: %v", [s])
 }
 
