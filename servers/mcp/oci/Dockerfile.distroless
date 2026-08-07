@@ -1,22 +1,16 @@
 # syntax=docker/dockerfile:1
-# Multi-stage: build a slim Python app, then run it on distroless as non-root.
-FROM python:3.12-slim AS build
+# Preserved V1 MCP execution service: Node application + pinned Terraform CLI.
+FROM node:20-slim AS app
 WORKDIR /app
-# Copy only what we need first for better caching
-COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt -t /app/site
-# Then copy sources
-COPY . /app
+COPY package.json index.js ./
+RUN mkdir -p /app/evidence && chown -R 65532:65532 /app
 
-# Final: Distroless
-FROM gcr.io/distroless/python3-debian12
+FROM hashicorp/terraform:1.8.5 AS terraform
+
+FROM gcr.io/distroless/nodejs20-debian12:nonroot
 WORKDIR /app
-COPY --from=build /app /app
-ENV PYTHONPATH=/app/site
-# Security hardening
-USER 65532:65532
-# Prefer read-only FS (enable when writing to ephemeral volume)
-# VOLUME ["/tmp"]
+COPY --from=terraform /bin/terraform /usr/local/bin/terraform
+COPY --from=app --chown=65532:65532 /app /app
+ENV PATH="/usr/local/bin:/usr/bin:/bin"
 EXPOSE 8080
-# Health + metrics should be served by app (e.g., /healthz)
-ENTRYPOINT ["python","-m","uvicorn","app:app","--host","0.0.0.0","--port","8080"]
+CMD ["index.js"]
