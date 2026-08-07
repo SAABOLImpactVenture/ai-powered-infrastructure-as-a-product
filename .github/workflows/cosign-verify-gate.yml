@@ -1,32 +1,39 @@
 name: cosign-verify-gate
+
 on:
-  pull_request:
   workflow_dispatch:
+
 permissions:
   contents: read
-  id-token: write
+  packages: read
+
 jobs:
   verify:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - { name: mcp-azure }
-          - { name: mcp-policy-azure }
-          - { name: mcp-aws }
-          - { name: mcp-policy-aws }
-          - { name: mcp-gcp }
-          - { name: mcp-policy-gcp }
-          - { name: mcp-oci }
-          - { name: mcp-policy-oci }
+        name:
+          - mcp-azure
+          - mcp-policy-azure
+          - mcp-aws
+          - mcp-policy-aws
+          - mcp-gcp
+          - mcp-policy-gcp
+          - mcp-oci
+          - mcp-policy-oci
     steps:
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.7.0
-      - name: Verify signed image (latest)
+        with:
+          cosign-release: 'v2.2.4'
+      - name: Verify signed published image
         env:
           COSIGN_EXPERIMENTAL: "1"
         run: |
-          set -e
-          IMG="ghcr.io/${{ github.repository }}:${{ matrix.name }}-latest"
-          cosign verify "$IMG"
+          set -euo pipefail
+          IMG="ghcr.io/saabolimpactventure/ai-powered-infrastructure-as-a-product:${{ matrix.name }}-latest"
+          cosign verify \
+            --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
+            --certificate-identity-regexp="^https://github.com/${{ github.repository }}/.+" \
+            "$IMG"

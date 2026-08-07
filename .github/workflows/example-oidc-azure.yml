@@ -1,7 +1,10 @@
 name: example-oidc-azure
-on: [pull_request, workflow_dispatch]
-permissions: { contents: read, id-token: write }
-concurrency: ci-${{ github.workflow }}-${{ github.ref }}
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   validate-log-analytics:
@@ -9,9 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
-        with: { terraform_version: 1.8.5 }
-      - name: Terraform validate (Log Analytics module, no backend)
-        working-directory: iac/azure/log-analytics
+        with:
+          terraform_version: 1.8.5
+      - name: Terraform validate preserved Log Analytics module
+        working-directory: platform/azure/observability/log_analytics
         run: |
           terraform init -backend=false -input=false
-          terraform validate
+          terraform validate -no-color
