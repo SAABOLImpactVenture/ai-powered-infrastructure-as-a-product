@@ -14,7 +14,8 @@ deny[msg] {
 
 deny[msg] {
   input.kind == "Deployment"
-  input.spec.template.spec.containers[_].image == /:latest$/
+  image := input.spec.template.spec.containers[_].image
+  endswith(image, ":latest")
   msg = "Image tag 'latest' is not allowed"
 }
 
