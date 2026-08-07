@@ -1,14 +1,21 @@
 name: planreview-validate
+
 on:
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '20' }
-      - run: npm --prefix tools/planreview ci
+        with:
+          node-version: '20'
+      - name: Install pinned PlanReview validator dependencies
+        run: npm --prefix tools/planreview install --ignore-scripts --no-audit --no-fund
       - name: Validate PlanReview summaries against schema
         run: node tools/planreview/validate.js workloads/agents-mcp-aoai/prompts/output-schema.json evidence
