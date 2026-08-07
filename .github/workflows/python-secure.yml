@@ -18,7 +18,7 @@ jobs:
           python-version: '3.11'
 
       - name: Prepare reports directory
-        run: mkdir -p reports
+        run: mkdir -p reports/pip-audit
 
       - name: Install pinned security tools
         run: |
@@ -63,17 +63,46 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: pip-audit root dependency manifest
+      - name: Audit repository Python dependency manifests
         shell: bash
         run: |
           set -euo pipefail
-          if [ -f requirements.txt ]; then
-            pip-audit -r requirements.txt -f json -o reports/pip-audit.json
-          elif [ -f pyproject.toml ]; then
-            pip-audit -f json -o reports/pip-audit.json
-          else
-            echo "No root Python dependency manifest found."
-            printf '%s\n' '[]' > reports/pip-audit.json
+          mapfile -t manifests < <(find . -type f \( -name 'requirements.txt' -o -name 'requirements-*.txt' \) \
+            -not -path './.git/*' -not -path './.venv/*' -not -path './venv/*' | sort)
+
+          if [ "${#manifests[@]}" -eq 0 ]; then
+            echo "No repository Python requirements manifests found."
+            printf '%s\n' '{"manifests": []}' > reports/pip-audit/summary.json
+            exit 0
+          fi
+
+          failures=0
+          printf '%s\n' '{"manifests": [' > reports/pip-audit/summary.json
+          first=true
+          for manifest in "${manifests[@]}"; do
+            safe_name="$(printf '%s' "${manifest#./}" | tr '/ ' '__')"
+            report="reports/pip-audit/${safe_name}.json"
+            echo "== pip-audit: $manifest =="
+
+            set +e
+            pip-audit -r "$manifest" -f json -o "$report"
+            rc=$?
+            set -e
+
+            if [ "$first" = false ]; then printf ',\n' >> reports/pip-audit/summary.json; fi
+            first=false
+            jq -n --arg manifest "${manifest#./}" --argjson exit_code "$rc" \
+              '{manifest: $manifest, exit_code: $exit_code}' >> reports/pip-audit/summary.json
+
+            if [ "$rc" -ne 0 ]; then
+              failures=$((failures + 1))
+            fi
+          done
+          printf '\n]}\n' >> reports/pip-audit/summary.json
+
+          if [ "$failures" -ne 0 ]; then
+            echo "$failures repository dependency manifest(s) contain audit findings or could not be audited."
+            exit 1
           fi
 
       - name: Upload dependency evidence
@@ -81,6 +110,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: python-dependency-audit
-          path: reports/pip-audit.json
+          path: reports/pip-audit
           if-no-files-found: error
           retention-days: 14
