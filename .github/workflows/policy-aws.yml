@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
-        with: { terraform_version: 1.8.6 }
+        with: { terraform_version: 1.8.5 }
       - run: terraform init -input=false
       - run: terraform plan -out=tfplan.bin -input=false -lock=false -detailed-exitcode
       - uses: actions/upload-artifact@v4
@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
-        with: { terraform_version: 1.8.6 }
+        with: { terraform_version: 1.8.5 }
       - uses: actions/download-artifact@v4
         with: { name: tfplan }
       - run: terraform init -input=false
