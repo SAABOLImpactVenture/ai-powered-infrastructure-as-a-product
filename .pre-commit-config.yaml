@@ -5,6 +5,10 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
+        # GitHub Actions expressions can be valid workflow syntax while generic
+        # PyYAML rejects legacy flow mappings containing `${{ ... }}`. GitHub
+        # validates workflow syntax; pre-commit validates the rest of the repo.
+        exclude: ^\.github/(workflows/.*|[^/]+\.ya?ml)$
       - id: check-json
 
 # IaC security and policy tools remain dedicated CI concerns. Checkov, TFLint,
