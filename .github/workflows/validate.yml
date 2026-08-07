@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
-  id-token: write
 concurrency: ci-${{ github.workflow }}-${{ github.ref }}
 
 jobs:
@@ -22,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
-        with: { terraform_version: 1.8.6 }
+        with: { terraform_version: 1.8.5 }
       - name: Init & Validate (read-only; no backend)
         working-directory: ${{ matrix.path }}
         run: |
@@ -47,4 +46,9 @@ jobs:
           soft_fail: false
           framework: terraform,kubernetes,helm
       - name: Conftest (OPA) — block on denies
-        run: conftest test --policy policy/ .
+        run: |
+          docker run --rm \
+            -v "${GITHUB_WORKSPACE}:/project" \
+            -w /project \
+            openpolicyagent/conftest:v0.64.0 \
+            test --policy policy/ .
