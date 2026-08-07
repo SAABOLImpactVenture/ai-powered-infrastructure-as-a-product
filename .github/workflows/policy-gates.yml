@@ -27,21 +27,41 @@ jobs:
           opa check policy/conftest
           opa check policies/opa
 
-      - name: Conftest maintained Terraform plan fixture
+      - name: Prove unsafe Terraform plan fixture is denied
+        shell: bash
         run: |
           set -euo pipefail
           test -f policy/conftest/sample-plan.json
-          docker run --rm \
+
+          set +e
+          output=$(docker run --rm \
             -v "${GITHUB_WORKSPACE}:/project" \
             -w /project \
             openpolicyagent/conftest:v0.64.0 \
-            test --policy policy/conftest policy/conftest/sample-plan.json
+            test --policy policy/conftest policy/conftest/sample-plan.json 2>&1)
+          rc=$?
+          set -e
+
+          printf '%s\n' "$output"
+
+          if [ "$rc" -eq 0 ]; then
+            echo "Unsafe sample plan unexpectedly passed policy evaluation."
+            exit 1
+          fi
+
+          if ! grep -Eq 'FAIL|failures|failure' <<<"$output"; then
+            echo "Conftest failed, but did not produce a policy-denial result."
+            exit 1
+          fi
+
+          echo "Unsafe sample plan was denied as expected."
 
       - name: Explain split controls
         run: |
           cat <<'EOF' >> "$GITHUB_STEP_SUMMARY"
           ### Policy gate scope
-          - Policy source syntax and the maintained Conftest contract are blocking here.
+          - OPA syntax checks are blocking for the maintained policy trees.
+          - The committed unsafe sample plan is a negative fixture and must be denied.
           - Terraform validation and Checkov/TFLint run in dedicated IaC workflows.
           - Gitleaks runs in the canonical `gitleaks` workflow with a detector canary.
           - Broad legacy Kubernetes inventories are not revalidated on unrelated pull requests.
