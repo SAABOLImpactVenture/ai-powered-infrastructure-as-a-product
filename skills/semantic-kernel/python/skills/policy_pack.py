@@ -1,4 +1,5 @@
 from typing import Dict
+from io import StringIO
 import json
 
 from ruamel.yaml import YAML
@@ -78,13 +79,13 @@ def build_policy_pack(product_name: str) -> Dict[str, str]:
         ],
     }
 
-    aws_stream = []
+    aws_stream = StringIO()
     yaml.dump(aws_pack, aws_stream)
-    aws_yaml = "".join(aws_stream)
+    aws_yaml = aws_stream.getvalue()
 
-    gcp_stream = []
+    gcp_stream = StringIO()
     yaml.dump(gcp_constraint, gcp_stream)
-    gcp_yaml = "".join(gcp_stream)
+    gcp_yaml = gcp_stream.getvalue()
 
     return {
         "policy/azure/initiative.json": json.dumps(azure_initiative, indent=2) + "\n",
