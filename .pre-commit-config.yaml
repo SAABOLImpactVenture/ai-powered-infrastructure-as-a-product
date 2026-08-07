@@ -7,12 +7,6 @@ repos:
       - id: check-yaml
       - id: check-json
 
-  - repo: https://github.com/bridgecrewio/checkov
-    rev: 3.2.281
-    hooks:
-      - id: checkov
-        args: ["-d", ".", "--quiet"]
-
-# TFLint remains a dedicated CI concern. The upstream TFLint repository no
-# longer exposes a pre-commit hook manifest, so keeping it here makes every
-# pre-commit run fail before repository files are evaluated.
+# IaC security and policy tools remain dedicated CI concerns. Checkov, TFLint,
+# Conftest, Trivy, and related gates are run by their purpose-built workflows
+# rather than duplicated inside developer pre-commit bootstrap.
