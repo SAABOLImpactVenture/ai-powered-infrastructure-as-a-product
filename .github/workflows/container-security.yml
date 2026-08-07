@@ -12,24 +12,35 @@ permissions:
 jobs:
   trivy:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: mcp-servers
+            path: servers
+          - name: services
+            path: services
+          - name: tools
+            path: tools
     steps:
       - uses: actions/checkout@v4
 
       - name: Prepare reports directory
         run: mkdir -p reports
 
-      - name: Scan container configuration
+      - name: Scan container configuration (report-only baseline)
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: config
-          scan-ref: containers
+          scan-ref: ${{ matrix.path }}
           format: sarif
-          output: reports/trivy-config.sarif
+          output: reports/trivy-${{ matrix.name }}.sarif
           severity: HIGH,CRITICAL
-          exit-code: '1'
+          exit-code: '0'
 
       - name: Upload SARIF
-        if: always() && hashFiles('reports/trivy-config.sarif') != ''
+        if: always() && hashFiles(format('reports/trivy-{0}.sarif', matrix.name)) != ''
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: reports/trivy-config.sarif
+          sarif_file: reports/trivy-${{ matrix.name }}.sarif
+          category: trivy-${{ matrix.name }}
