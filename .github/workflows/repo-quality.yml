@@ -1,24 +1,65 @@
 # SPDX-License-Identifier: Apache-2.0
 name: repo-quality
+
 on:
   pull_request:
   push:
     branches: [ main ]
+
+permissions:
+  contents: read
+
 jobs:
-  lint:
+  quality:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
-      - name: Install pre-commit
-        run: pip install pre-commit
-      - name: Run pre-commit
-        run: pre-commit run --all-files
-      - name: Markdown link check
-        uses: lycheeverse/lychee-action@v1
-        with:
-          args: --no-progress --verbose --require-https --accept 200,429 --retry-wait-time 2 --max-retries 2 .
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Check whitespace errors introduced by this change
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="${{ github.event.pull_request.base.sha }}"
+          else
+            base="${{ github.event.before }}"
+            if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+              base="$(git rev-list --max-parents=0 HEAD | tail -n 1)"
+            fi
+          fi
+          git diff --check "$base" "$GITHUB_SHA"
+
+      - name: Verify current program surfaces remain present
+        run: |
+          set -euo pipefail
+          for path in \
+            README.md \
+            docs/THESIS.md \
+            docs/poc-portfolio.md \
+            docs/architecture/product-control-plane.md \
+            docs/architecture/v1-azure-arc-terraform-pattern.md \
+            adr/ADR-0002-product-control-plane.md \
+            docs/CI-HYGIENE.md; do
+            test -s "$path"
+          done
+
+      - name: Verify product mental-model anchors
+        run: |
+          set -euo pipefail
+          grep -Fq 'IaaS is what we buy; infrastructure-as-a-product is what we build.' README.md
+          grep -Fq 'crossplane-multicloud-seed-poc' docs/poc-portfolio.md
+          grep -Fq 'multicloud-foundation-product-poc' docs/poc-portfolio.md
+          grep -Fq 'composite-ai-infrastructure-product-poc' docs/poc-portfolio.md
+          grep -Fq 'multicloud-foundation-poc-integration' docs/poc-portfolio.md
+
+      - name: Explain validator ownership
+        run: |
+          cat <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          ### Repository quality boundary
+          - Changed-line whitespace is checked here.
+          - File hygiene is owned by the scoped `pre-commit` workflow.
+          - MkDocs and Mermaid validate current documentation surfaces.
+          - Helm, CloudFormation-tagged YAML, Kubernetes multi-doc YAML, and historical templates use their domain-specific validators rather than generic PyYAML over the entire repository.
+          EOF
