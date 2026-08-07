@@ -54,7 +54,7 @@ Owns bounded request, review, operations, and evidence-agent contracts and evalu
 
 ### `multicloud-foundation-poc-integration`
 
-Owns pinned upstream integration, including the storefront handoff, clean-cluster acceptance, active network-policy proof, AI authority checks, simulated reconciliation, evidence, teardown, and scorecard.
+Owns pinned upstream integration, including the storefront handoff, clean-cluster acceptance, active network-policy proof, AI authority checks, simulated reconciliation, evidence, teardown, scorecard, and cross-repository storefront/product contract compatibility.
 
 The integrated consumer path is:
 
@@ -91,13 +91,18 @@ Owns the thesis, architecture, product operating model, decisions, frozen eviden
 
 ## Evidence gates
 
-1. **Credential-free control-plane integration** — passed baseline retained.
-2. **Storefront-to-product integration** — implemented in the integration harness; validate as part of the current credential-free matrix.
-3. **Live AWS sandbox** — next live-cloud gate after the complete consumer path is repeatable.
-4. **Live GCP sandbox** — after AWS is repeatable.
-5. **Live model adapter** — same tool and authority boundary as the deterministic baseline.
-6. **Residual TFE comparison** — only the remaining justified use cases.
-7. **Production pilot** — authorization, SLOs, recovery, support, and lifecycle evidence.
+1. **Credential-free control-plane integration** — passed and retained as v1.
+2. **Storefront-to-product integration** — passed as historical v2.
+3. **Storefront/product accepted-domain compatibility** — corrected and passed as current v3 across Kubernetes 1.34/1.35/1.36 at 100/100.
+4. **Build/supply-chain reproducibility correction** — next correction gate before treating live-cloud evidence as an enterprise control demonstration.
+5. **Backstage runtime smoke** — execute the reference template/action in an actual Backstage runtime while preserving the same authority boundary.
+6. **Live AWS sandbox** — first live-cloud gate after the correction gates are satisfied.
+7. **Live GCP sandbox** — after AWS is repeatable.
+8. **Live model adapter** — same tool and authority boundary as the deterministic baseline.
+9. **Residual TFE comparison** — observed evidence only for remaining justified use cases.
+10. **Production pilot** — authorization, SLOs, recovery, support, and lifecycle evidence.
+
+See [POC Baseline Lineage](poc-baselines/README.md) for the frozen evidence history.
 
 ## Boundary principle
 
