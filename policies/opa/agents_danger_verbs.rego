@@ -29,4 +29,6 @@ deny[msg] {
   msg := "High injection risk without human approval"
 }
 
-allow { not deny[_] }
+allow {
+  count(deny) == 0
+}
