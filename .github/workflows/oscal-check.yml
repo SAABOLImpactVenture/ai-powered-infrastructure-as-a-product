@@ -1,13 +1,18 @@
-name: oscal-check
+name: oscal-check (legacy manual compatibility)
+
 on:
   workflow_dispatch:
-  pull_request:
+
+permissions:
+  contents: read
+
 jobs:
-  validate:
+  validate-generator:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Check OSCAL artifact
+      - name: Validate OSCAL generator source
         run: |
-          test -f artifacts/oscal/assessment-results.json || (echo "Missing OSCAL assessment-results.json" && exit 1)
-          jq -e '.["assessment-results"]' artifacts/oscal/assessment-results.json >/dev/null || (echo "Invalid OSCAL structure" && exit 1)
+          test -f scripts/oscal/sarif_to_oscal.py
+          python3 -m py_compile scripts/oscal/sarif_to_oscal.py
+          echo "Generated assessment-results are validated in evidence-oscal-pipeline; they are not expected to be committed to the source tree."
