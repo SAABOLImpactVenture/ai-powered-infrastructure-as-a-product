@@ -1,3 +1,0 @@
-site_name: {{ name | upper }} TechDocs
-plugins: [techdocs-core]
-nav: [{ Home: docs/index.md }]

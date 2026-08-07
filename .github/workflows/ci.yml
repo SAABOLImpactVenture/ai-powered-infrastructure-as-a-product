@@ -1,75 +1,38 @@
-name: CI (lint + optional tests)
+name: Modern accelerator CI
 
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
 
-concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  lint:
+  boundary:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-      - run: python -m pip install --upgrade pip pre-commit
-      - name: Run pre-commit on changed files
-        shell: bash
+      - name: Validate modern accelerator boundary
+        run: ./scripts/validate-modern-accelerator.sh
+      - name: Validate JSON evidence
         run: |
-          set -euo pipefail
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            base="${{ github.event.pull_request.base.sha }}"
-          else
-            base="${{ github.event.before }}"
-            if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
-              base="$(git rev-list --max-parents=0 HEAD | tail -n 1)"
-            fi
-          fi
+          python - <<'PY'
+          import json, pathlib
+          for p in pathlib.Path('.').rglob('*.json'):
+              json.loads(p.read_text())
+              print('validated', p)
+          PY
 
-          mapfile -t files < <(git diff --name-only --diff-filter=ACMR "$base" "$GITHUB_SHA")
-          if [ "${#files[@]}" -eq 0 ]; then
-            echo "No changed files to lint."
-            exit 0
-          fi
-          pre-commit run --files "${files[@]}"
-
-  tests:
-    needs: lint
+  docs:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
-          cache: "pip"
-      - name: Install dependencies and pytest
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
-          python -m pip install pytest
-      - name: Run tests when present
-        shell: bash
-        run: |
-          set -euo pipefail
-          if compgen -G "tests/test_*.py" > /dev/null || compgen -G "*_test.py" > /dev/null; then
-            pytest -q
-          else
-            echo "No tests detected; skipping pytest."
-          fi
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-docs.txt
+      - run: pip install -r requirements-docs.txt
+      - run: mkdocs build --strict

@@ -1,39 +1,23 @@
 SPDX-License-Identifier: Apache-2.0
 
-# Contributing Guide
+# Contributing
 
-Thanks for contributing! This project treats **infrastructure as a product**—code quality, security, and compliance are first-class.
+This project treats infrastructure as a product rather than a collection of implementation tools.
 
-## Ground rules
+## Contribution principles
 
-* Follow the **DCO** (Developer Certificate of Origin). Sign commits with `-s`.
-* Use SPDX headers: `SPDX-License-Identifier: Apache-2.0`.
-* Write tests for new features; keep coverage ≥ 80% for touched code.
-* Run pre-commit hooks locally before pushing.
+1. Preserve the mental model: **IaaS is what we buy; infrastructure-as-a-product is what we build.**
+2. Keep product contracts independent of provider implementation details that consumers do not need.
+3. Keep composite AI bounded to proposal, explanation, diagnosis, and evidence.
+4. Keep deterministic policy and human authorization authoritative.
+5. Do not add Terraform/TFE, Azure Arc, Backstage, or legacy execution-MCP implementations back to the maintained reference architecture without a new accepted ADR.
+6. Prefer bounded implementation work in the corresponding POC repository rather than duplicating runtime code here.
+7. Add evidence for material architectural claims.
 
 ## Workflow
 
-1. **Issue first**: open an issue describing the problem/feature with acceptance criteria.
-2. **Branch**: `feat/<short>`, `fix/<short>`, or `docs/<short>`.
-3. **Code style**: Terraform (tflint, fmt), Python (black, flake8), YAML (yamllint).
-4. **Policy gates**: Checkov/Conftest must pass locally and in CI.
-5. **Tests**: `make test` runs unit/static/policy tests. Add integration tests under `tests/`.
-6. **PR**: link to the issue, include a changelog entry, and describe risk & rollback.
-7. **Review**: at least one maintainer review; CI must be green.
-
-## Development setup
-
-```bash
-make bootstrap
-pre-commit run --all-files
-make test
-```
-
-## Release
-
-* Use Conventional Commits; releases are generated from `CHANGELOG.md`.
-* Tag as `vMAJOR.MINOR.PATCH`. Patches should be security/bug fixes only.
-
-## Code of Conduct
-
-See **CODE_OF_CONDUCT.md**—we follow the Contributor Covenant.
+- Open an issue for material architecture changes.
+- Use an ADR for durable decisions.
+- Run `make validate` before submitting a PR.
+- Keep documentation and Mermaid diagrams synchronized with the implemented POC portfolio.
+- Do not claim live-cloud, production, or investment proof from simulated evidence.

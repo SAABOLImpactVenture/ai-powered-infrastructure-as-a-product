@@ -82,4 +82,4 @@ This does not establish that TFE has no value. It changes the investment questio
 
 ## Machine-readable record
 
-See [`artifacts/poc-baselines/credential-free-multicloud-foundation-v1.json`](../../artifacts/poc-baselines/credential-free-multicloud-foundation-v1.json).
+See the [machine-readable baseline manifest](https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/blob/main/artifacts/poc-baselines/credential-free-multicloud-foundation-v1.json).

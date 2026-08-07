@@ -1,1 +1,0 @@
-# AZURE network instance skeleton

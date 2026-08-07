@@ -1,4 +1,0 @@
-*                 @org/platform-team
-policies/**       @org/security-team
-.github/**        @org/security-team @org/platform-team
-terraform/**      @org/platform-team @org/security-team

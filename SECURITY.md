@@ -2,48 +2,27 @@ SPDX-License-Identifier: Apache-2.0
 
 # Security Policy
 
-## Supported branches
+## Scope
 
-* `main`: actively maintained; security fixes released via patch tags.
-* Release branches `release/*`: supported for 6 months after cut.
+`main` contains the maintained Infrastructure-as-a-Product thesis, architecture, policy, agent-security evaluations, and evidence baseline. Runtime implementations live in the bounded POC repositories referenced by this project.
 
 ## Reporting a vulnerability
 
-Please email **[security@saabolimpactventure.org](mailto:security@saabolimpactventure.org)** with:
+Report security issues privately to **security@saabolimpactventure.org** with the affected path/repository, reproduction steps, impact, and any suggested mitigation.
 
-* Affected component/path and version/commit
-* Reproduction steps or PoC
-* Impact assessment (CIA), CVSS (if available)
+## Security principles
 
-We commit to:
+- No long-lived cloud credentials in source.
+- Workload identity/federation is preferred for live cloud execution.
+- Composite AI is proposal, explanation, diagnosis, and evidence only.
+- AI may not approve, merge, apply, delete, expand privileges, modify policy, or read unrestricted secrets/state.
+- Deterministic policy and tests are authoritative over AI output.
+- One external resource has one authoritative reconciler.
+- Pull-request validation is credential-free by default.
+- Live-cloud and production actions are separate, explicit trust boundaries.
+- Git history and evidence digests preserve accepted proof points.
 
-* Triage within **3 business days**
-* Provide a remediation plan within **10 business days**
-* Credit reporters if desired
+## Supported branch
 
-## Disclosure
-
-We follow **coordinated disclosure**. We will publish advisories via GitHub Security Advisories and tag patched releases.
-
-## Hardening & protections
-
-* **Branch protection**: required reviews; required checks (lint, tests, policy gates); signed commits.
-* **Secret scanning**: GitHub secret scanning and `gitleaks` in CI.
-* **Dependency security**: Dependabot/`pip-audit`/`npm audit` as applicable; fail builds on high/critical vulns.
-* **Build provenance**: Artifact signing with **Cosign**; SBOM generation with `syft` uploaded to releases.
-* **Runtime**: No plaintext secrets; KMS-managed keys; least privilege IAM; network egress control.
-
-## Vulnerability remediation SLAs
-
-* **Critical**: patch or mitigation within **72 hours**
-* **High**: within **14 days**
-* **Medium**: within **30 days**
-* **Low**: best effort
-
-## Cryptographic signing
-
-Container images and release artifacts are signed with **Sigstore Cosign**. Verify:
-
-```bash
-cosign verify ghcr.io/saabolimpactventure/ai-powered-infrastructure-as-a-product:<tag>
-```
+- `main`: actively maintained.
+- `archive/legacy-accelerator-v1`: historical recovery branch; not maintained or supported as a current architecture.
