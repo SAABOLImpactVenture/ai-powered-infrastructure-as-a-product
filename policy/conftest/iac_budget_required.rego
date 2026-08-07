@@ -6,7 +6,6 @@ deny[msg] {
 }
 
 module_has_budget {
-  some x
-  input.path := p
+  p := input.path
   re_match("observability/cost/(azure|aws|gcp|oci)/budget", p)
 }

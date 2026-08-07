@@ -1,10 +1,11 @@
-skip-paths:
-  - evidence/**
-  - artifacts/**
-  - policy-exceptions/**
-  - docs/**
+# Repository-level Checkov defaults.
+# Keep generated/archival surfaces out of source-IaC validation while allowing
+# workflows to select the applicable frameworks explicitly.
+skip-path:
+  - ^evidence/
+  - ^artifacts/
+  - ^policy-exceptions/
+  - ^docs/
 external-modules-download-path: .external_modules
-framework: all
 quiet: true
 soft-fail: false
-severities: ["HIGH","CRITICAL"]

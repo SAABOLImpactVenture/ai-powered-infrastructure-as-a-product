@@ -21,13 +21,34 @@ jobs:
         with:
           version: v0.64.1
 
-      - name: OPA unit checks (deny lists)
+      - name: Validate agent policy source
         run: |
           set -euo pipefail
           opa check policies/opa
-          # Evaluate sample cases to ensure denies trigger.
-          opa eval --fail-defined -i tests/agents-evals/tool-abuse/danger-verb-without-approval.json -d policies/opa 'data.agents.actions.deny'
-          opa eval --fail-defined -i tests/agents-evals/ssrf/url-compose.json -d policies/opa 'data.agents.actions.deny'
+
+      - name: Prove destructive action is denied
+        run: |
+          set -euo pipefail
+          opa eval --format=json \
+            -i tests/agents-evals/tool-abuse/danger-verb-without-approval.json \
+            -d policies/opa \
+            'data.agents.actions.deny' > danger-deny.json
+
+          jq -e '.result[0].expressions[0].value | type == "array" and length > 0' danger-deny.json >/dev/null
+          jq -e '.result[0].expressions[0].value | any(. == "Danger verb '\''delete'\'' requires human approval")' danger-deny.json >/dev/null
+          echo "Destructive action was denied as expected."
+
+      - name: Prove metadata-target SSRF is denied
+        run: |
+          set -euo pipefail
+          opa eval --format=json \
+            -i tests/agents-evals/ssrf/url-compose.json \
+            -d policies/opa \
+            'data.agents.ssrf.deny' > ssrf-deny.json
+
+          jq -e '.result[0].expressions[0].value | type == "array" and length > 0' ssrf-deny.json >/dev/null
+          jq -e '.result[0].expressions[0].value | any(contains("metadata"))' ssrf-deny.json >/dev/null
+          echo "Metadata-target SSRF attempt was denied as expected."
 
       - name: Detect forbidden HTML/MD in pre-ingest samples
         run: |
@@ -35,8 +56,18 @@ jobs:
           if grep -E -i '<script|on[a-z]+\=|data:' tests/agents-evals/prompt-injection/hidden-html.md; then
             echo "Injection indicators present as expected (test corpus)"
           else
+            echo "Prompt-injection fixture no longer contains the expected indicators."
             exit 1
           fi
+
+      - name: Upload policy evaluation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-policy-evals
+          path: |
+            danger-deny.json
+            ssrf-deny.json
+          retention-days: 14
 
   cosign-sbom-evidence:
     if: github.event_name == 'workflow_dispatch'

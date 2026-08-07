@@ -6,5 +6,13 @@ deny[msg] {
 }
 
 contains_backend(plan) {
-  re_match("backend\s+\"(azurerm|s3|gcs)\"", plan)
+  contains(plan, "backend \"azurerm\"")
+}
+
+contains_backend(plan) {
+  contains(plan, "backend \"s3\"")
+}
+
+contains_backend(plan) {
+  contains(plan, "backend \"gcs\"")
 }

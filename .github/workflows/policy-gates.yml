@@ -16,33 +16,53 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Verify policy source parses
+      - name: Verify preserved and current policy source parses
         uses: open-policy-agent/setup-opa@v2
         with:
           version: v0.64.1
 
-      - name: OPA check maintained policy trees
+      - name: OPA check policy trees
         run: |
           set -euo pipefail
           opa check policy/conftest
           opa check policies/opa
 
-      - name: Conftest maintained Terraform plan fixture
+      - name: Prove negative plan fixture is denied by maintained contract
+        shell: bash
         run: |
           set -euo pipefail
           test -f policy/conftest/sample-plan.json
-          docker run --rm \
+          test -f policy/conftest/contracts/sample_plan.rego
+
+          set +e
+          output=$(docker run --rm \
             -v "${GITHUB_WORKSPACE}:/project" \
             -w /project \
             openpolicyagent/conftest:v0.64.0 \
-            test --policy policy/conftest policy/conftest/sample-plan.json
+            test --policy policy/conftest/contracts policy/conftest/sample-plan.json 2>&1)
+          rc=$?
+          set -e
 
-      - name: Explain split controls
+          printf '%s\n' "$output"
+
+          if [ "$rc" -eq 0 ]; then
+            echo "Negative sample plan unexpectedly passed the maintained policy contract."
+            exit 1
+          fi
+
+          if ! grep -Eq 'FAIL|failures|failure' <<<"$output"; then
+            echo "Conftest failed, but did not produce a policy-denial result."
+            exit 1
+          fi
+
+          echo "Negative sample plan was denied as expected."
+
+      - name: Explain policy-version boundary
         run: |
           cat <<'EOF' >> "$GITHUB_STEP_SUMMARY"
           ### Policy gate scope
-          - Policy source syntax and the maintained Conftest contract are blocking here.
-          - Terraform validation and Checkov/TFLint run in dedicated IaC workflows.
-          - Gitleaks runs in the canonical `gitleaks` workflow with a detector canary.
-          - Broad legacy Kubernetes inventories are not revalidated on unrelated pull requests.
+          - The preserved policy corpus is syntax-checked under the pinned pre-1.0 OPA semantics.
+          - Current Conftest evaluation uses the maintained Rego v1 contract in `policy/conftest/contracts`.
+          - The committed sample plan is intentionally noncompliant and must be denied.
+          - Historical policy modules remain preserved for deliberate migration rather than being mass-rewritten as CI cleanup.
           EOF

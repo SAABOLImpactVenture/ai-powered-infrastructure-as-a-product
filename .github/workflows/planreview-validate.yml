@@ -1,14 +1,33 @@
 name: planreview-validate
+
 on:
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '20' }
-      - run: npm --prefix tools/planreview ci
-      - name: Validate PlanReview summaries against schema
-        run: node tools/planreview/validate.js workloads/agents-mcp-aoai/prompts/output-schema.json evidence
+        with:
+          node-version: '20'
+
+      - name: Install pinned PlanReview validator dependencies
+        run: npm --prefix tools/planreview install --ignore-scripts --no-audit --no-fund
+
+      - name: Validate deterministic PlanReview contract fixture
+        run: node tools/planreview/validate.js workloads/agents-mcp-aoai/prompts/output-schema.json tools/planreview/fixtures
+
+      - name: Validate generated PlanReview summaries when present
+        shell: bash
+        run: |
+          set -euo pipefail
+          if find evidence -type f -name '*summary*.json' -print -quit | grep -q .; then
+            node tools/planreview/validate.js workloads/agents-mcp-aoai/prompts/output-schema.json evidence
+          else
+            echo "No generated PlanReview summaries are present. Runtime evidence is not fabricated for CI."
+          fi

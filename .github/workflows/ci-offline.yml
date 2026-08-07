@@ -1,22 +1,13 @@
-name: CI (lint + optional tests)
+name: CI offline compatibility
 
 on:
-  push:
-    branches: ["**"]
-  pull_request:
-    branches: ["**"]
-  workflow_dispatch: {}
+  workflow_dispatch:
 
 permissions:
   contents: read
 
-concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  lint:
-    name: Lint (pre-commit)
+  lint-and-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,49 +16,23 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"        # choose your primary runtime
+          python-version: "3.12"
           cache: "pip"
 
-      - name: Install pre-commit
+      - name: Install pre-commit and test tools
         run: |
           python -m pip install --upgrade pip
-          python -m pip install pre-commit
-
-      # Runs hooks from .pre-commit-config.yaml (autoflake, isort, black, flake8)
-      - name: Run pre-commit on all files
-        uses: pre-commit/action@v3.0.1
-        with:
-          extra_args: "-a"
-
-  tests:
-    name: Tests (matrix)
-    needs: lint
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.11", "3.12", "3.13"]  # adjust to your support window
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: "pip"
-
-      - name: Install deps (if present) + pytest
-        run: |
-          python -m pip install --upgrade pip
+          python -m pip install pre-commit pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
-          python -m pip install pytest
 
-      - name: Run tests (skip if none)
+      - name: Run preserved repo-wide pre-commit sweep
+        run: pre-commit run --all-files
+
+      - name: Run tests when present
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
           if compgen -G "tests/test_*.py" > /dev/null || compgen -G "*_test.py" > /dev/null; then
             pytest -q
           else

@@ -1,38 +1,52 @@
-
-terraform {
-  required_providers { aws = { source = "hashicorp/aws", version = ">= 5.0" } }
-}
-
 provider "aws" {
   region = var.region
 }
 
-variable "region" { type = string }
-variable "org_account_id" { type = string }
-variable "s3_log_bucket" { type = string description = "S3 bucket to store access logs and AWS Config data" }
+variable "region" {
+  type = string
+}
 
-# S3 bucket with Object Lock & access logging (WORM/immutability)
+variable "org_account_id" {
+  type = string
+}
+
+variable "s3_log_bucket" {
+  type        = string
+  description = "S3 bucket to store access logs and AWS Config data"
+}
+
+# S3 bucket with versioning, encryption, and public-access blocking.
 resource "aws_s3_bucket" "logs" {
-  bucket = var.s3_log_bucket
+  bucket        = var.s3_log_bucket
   force_destroy = false
 }
 
 resource "aws_s3_bucket_ownership_controls" "logs" {
   bucket = aws_s3_bucket.logs.id
-  rule { object_ownership = "BucketOwnerPreferred" }
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
 }
 
 resource "aws_s3_bucket_versioning" "logs" {
   bucket = aws_s3_bucket.logs.id
-  versioning_configuration { status = "Enabled" }
+
+  versioning_configuration {
+    status = "Enabled"
+  }
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "logs" {
   bucket = aws_s3_bucket.logs.id
-  rule { apply_server_side_encryption_by_default { sse_algorithm = "AES256" } }
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
 }
 
-# Block public access
 resource "aws_s3_bucket_public_access_block" "logs" {
   bucket                  = aws_s3_bucket.logs.id
   block_public_acls       = true
@@ -41,15 +55,16 @@ resource "aws_s3_bucket_public_access_block" "logs" {
   restrict_public_buckets = true
 }
 
-# (Optional) Object Lock - requires special bucket create params; include policy to enable retention using governance mode via console/CLI.
-# AWS Config setup
 resource "aws_iam_role" "config" {
   name = "fedramp-aws-config-role"
+
   assume_role_policy = jsonencode({
-    Version = "2012-10-17",
+    Version = "2012-10-17"
     Statement = [{
-      Effect = "Allow",
-      Principal = { Service = "config.amazonaws.com" },
+      Effect = "Allow"
+      Principal = {
+        Service = "config.amazonaws.com"
+      }
       Action = "sts:AssumeRole"
     }]
   })
@@ -61,10 +76,11 @@ resource "aws_iam_role_policy_attachment" "config_attach" {
 }
 
 resource "aws_config_configuration_recorder" "recorder" {
-  name = "default"
+  name     = "default"
   role_arn = aws_iam_role.config.arn
+
   recording_group {
-    all_supported = true
+    all_supported                  = true
     include_global_resource_types = true
   }
 }
@@ -81,15 +97,13 @@ resource "aws_config_configuration_recorder_status" "status" {
   depends_on = [aws_config_delivery_channel.channel]
 }
 
-# Enable Security Hub + standards (CIS, NIST 800-53)
 resource "aws_securityhub_account" "this" {}
 
 resource "aws_securityhub_standards_subscription" "nist80053" {
   standards_arn = "arn:aws:securityhub:::standards/aws-foundational-security-best-practices/v/1.0.0"
-  depends_on = [aws_securityhub_account.this]
+  depends_on    = [aws_securityhub_account.this]
 }
 
-# Key Config managed rules
 locals {
   config_rules = [
     "S3_BUCKET_PUBLIC_READ_PROHIBITED",
@@ -104,20 +118,21 @@ locals {
 resource "aws_config_config_rule" "managed" {
   for_each = toset(local.config_rules)
   name     = lower(each.value)
+
   source {
     owner             = "AWS"
     source_identifier = each.value
   }
 }
 
-# CloudTrail multi-region + encryption
 resource "aws_cloudtrail" "org" {
   name                          = "fedramp-org-trail"
   s3_bucket_name                = aws_s3_bucket.logs.bucket
   is_multi_region_trail         = true
   include_global_service_events = true
   enable_log_file_validation    = true
-  kms_key_id                    = null
 }
 
-output "logs_bucket" { value = aws_s3_bucket.logs.bucket }
+output "logs_bucket" {
+  value = aws_s3_bucket.logs.bucket
+}

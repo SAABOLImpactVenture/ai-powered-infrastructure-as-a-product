@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import os
 
@@ -41,7 +41,7 @@ def agg_athena(q: Query) -> dict:
 def aggregate(q: Query):
     if LAKE == "adx":
         return agg_adx(q)
-    elif LAKE == "athena":
+    if LAKE == "athena":
         return agg_athena(q)
     raise HTTPException(status_code=500, detail="Unsupported lake")
 
@@ -49,8 +49,10 @@ def aggregate(q: Query):
 if __name__ == "__main__":
     import uvicorn
 
+    # Direct execution is local-only by default. The container entrypoint owns
+    # its explicit 0.0.0.0 bind and Compose constrains host publication.
     uvicorn.run(
         app,
-        host="0.0.0.0",
-        port=int(os.getenv("PORT", "8000")),
+        host=os.getenv("HOST", "127.0.0.1"),
+        port=int(os.getenv("PORT", "8088")),
     )

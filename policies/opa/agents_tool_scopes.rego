@@ -34,6 +34,6 @@ deny[msg] {
 
 # Final decision: allowed when no denies and requester identity is present.
 allow {
-  not deny[_]
+  count(deny) == 0
   input.user.id
 }

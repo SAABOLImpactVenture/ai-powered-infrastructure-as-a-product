@@ -30,14 +30,8 @@ jobs:
           terraform init -backend=false -input=false || true
           terraform validate -no-color || true
 
-      - name: Conftest (OPA) — validate maintained sample contract
-        run: |
-          test -f policy/conftest/sample-plan.json
-          docker run --rm \
-            -v "${GITHUB_WORKSPACE}:/project" \
-            -w /project \
-            openpolicyagent/conftest:v0.64.0 \
-            test --policy policy/conftest policy/conftest/sample-plan.json
+      - name: Policy contract ownership
+        run: echo "Policy behavior is evaluated by the canonical policy-gates workflow."
 
       - name: tfsec (fail on HIGH)
         uses: aquasecurity/tfsec-action@v1.0.3
@@ -68,30 +62,26 @@ jobs:
         include:
           - image: mcp-azure
             file: servers/mcp/azure/Dockerfile.distroless
-          - image: mcp-policy-azure
-            file: servers/mcp-policy/azure/Dockerfile.distroless
+            context: servers/mcp/azure
           - image: mcp-aws
             file: servers/mcp/aws/Dockerfile.distroless
-          - image: mcp-policy-aws
-            file: servers/mcp-policy/aws/Dockerfile.distroless
+            context: servers/mcp/aws
           - image: mcp-gcp
             file: servers/mcp/gcp/Dockerfile.distroless
-          - image: mcp-policy-gcp
-            file: servers/mcp-policy/gcp/Dockerfile.distroless
+            context: servers/mcp/gcp
           - image: mcp-oci
             file: servers/mcp/oci/Dockerfile.distroless
-          - image: mcp-policy-oci
-            file: servers/mcp-policy/oci/Dockerfile.distroless
+            context: servers/mcp/oci
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Validate image build without publishing
+      - name: Validate runnable image build without publishing
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ${{ matrix.context }}
           file: ${{ matrix.file }}
           push: false
           tags: ${{ env.IMAGE_REPO }}:${{ matrix.image }}-pr
@@ -108,20 +98,16 @@ jobs:
         include:
           - image: mcp-azure
             file: servers/mcp/azure/Dockerfile.distroless
-          - image: mcp-policy-azure
-            file: servers/mcp-policy/azure/Dockerfile.distroless
+            context: servers/mcp/azure
           - image: mcp-aws
             file: servers/mcp/aws/Dockerfile.distroless
-          - image: mcp-policy-aws
-            file: servers/mcp-policy/aws/Dockerfile.distroless
+            context: servers/mcp/aws
           - image: mcp-gcp
             file: servers/mcp/gcp/Dockerfile.distroless
-          - image: mcp-policy-gcp
-            file: servers/mcp-policy/gcp/Dockerfile.distroless
+            context: servers/mcp/gcp
           - image: mcp-oci
             file: servers/mcp/oci/Dockerfile.distroless
-          - image: mcp-policy-oci
-            file: servers/mcp-policy/oci/Dockerfile.distroless
+            context: servers/mcp/oci
     permissions:
       contents: read
       id-token: write
@@ -140,10 +126,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push (multi-arch + provenance + SBOM)
+      - name: Build and push runnable image (multi-arch + provenance + SBOM)
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ${{ matrix.context }}
           file: ${{ matrix.file }}
           push: true
           tags: ${{ env.IMAGE_REPO }}:${{ matrix.image }}-latest
@@ -168,3 +154,7 @@ jobs:
           IMG="${IMAGE_REPO}:${{ matrix.image }}-latest"
           cosign sign --yes "$IMG"
           cosign attest --yes --predicate sbom-${{ matrix.image }}.spdx.json --type spdx "$IMG"
+
+      - name: Explain preserved policy-image boundary
+        run: |
+          echo "mcp-policy-* Dockerfile stubs remain preserved as V1 IP but are not published until a runnable source contract exists." >> "$GITHUB_STEP_SUMMARY"
