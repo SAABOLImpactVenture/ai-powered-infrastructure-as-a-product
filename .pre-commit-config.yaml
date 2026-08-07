@@ -13,7 +13,6 @@ repos:
       - id: checkov
         args: ["-d", ".", "--quiet"]
 
-  - repo: https://github.com/terraform-linters/tflint
-    rev: v0.53.0
-    hooks:
-      - id: tflint
+# TFLint remains a dedicated CI concern. The upstream TFLint repository no
+# longer exposes a pre-commit hook manifest, so keeping it here makes every
+# pre-commit run fail before repository files are evaluated.
