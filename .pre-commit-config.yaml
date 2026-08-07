@@ -5,15 +5,12 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
+        # GitHub Actions expressions can be valid workflow syntax while generic
+        # PyYAML rejects legacy flow mappings containing `${{ ... }}`. GitHub
+        # validates workflow syntax; pre-commit validates the rest of the repo.
+        exclude: ^\.github/(workflows/.*|[^/]+\.ya?ml)$
       - id: check-json
 
-  - repo: https://github.com/bridgecrewio/checkov
-    rev: 3.2.281
-    hooks:
-      - id: checkov
-        args: ["-d", ".", "--quiet"]
-
-  - repo: https://github.com/terraform-linters/tflint
-    rev: v0.53.0
-    hooks:
-      - id: tflint
+# IaC security and policy tools remain dedicated CI concerns. Checkov, TFLint,
+# Conftest, Trivy, and related gates are run by their purpose-built workflows
+# rather than duplicated inside developer pre-commit bootstrap.

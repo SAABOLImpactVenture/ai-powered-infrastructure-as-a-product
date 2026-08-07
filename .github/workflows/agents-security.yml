@@ -4,6 +4,10 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   opa-and-evals:
@@ -19,25 +23,34 @@ jobs:
 
       - name: OPA unit checks (deny lists)
         run: |
-          set -e
+          set -euo pipefail
           opa check policies/opa
-          # Evaluate sample cases to ensure denies trigger
+          # Evaluate sample cases to ensure denies trigger.
           opa eval --fail-defined -i tests/agents-evals/tool-abuse/danger-verb-without-approval.json -d policies/opa 'data.agents.actions.deny'
           opa eval --fail-defined -i tests/agents-evals/ssrf/url-compose.json -d policies/opa 'data.agents.actions.deny'
 
       - name: Detect forbidden HTML/MD in pre-ingest samples
         run: |
-          set -e
+          set -euo pipefail
           if grep -E -i '<script|on[a-z]+\=|data:' tests/agents-evals/prompt-injection/hidden-html.md; then
-            echo "Injection indicators present as expected (test corpus)"; else exit 1; fi
+            echo "Injection indicators present as expected (test corpus)"
+          else
+            exit 1
+          fi
 
   cosign-sbom-evidence:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-22.04
     env:
       COSIGN_EXPERIMENTAL: "1"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Explain preserved external evidence lane
+        run: |
+          echo "This job is a preserved V1 external-image evidence pattern."
+          echo "Replace placeholder image identities and provide published SBOMs before treating it as an operational gate."
 
       - name: Install cosign
         uses: sigstore/cosign-installer@v3
@@ -48,7 +61,6 @@ jobs:
         run: |
           set -e
           mkdir -p governance/cato-evidence/cosign
-          # Example images; replace with your org images (digests pinned in k8s manifests)
           cosign verify ghcr.io/yourorg/mcp-tool-jira@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa | tee governance/cato-evidence/cosign/jira.txt
           cosign verify ghcr.io/yourorg/egress-allowlist-proxy@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb | tee governance/cato-evidence/cosign/egress-proxy.txt
 
@@ -56,7 +68,6 @@ jobs:
         run: |
           set -e
           mkdir -p governance/cato-evidence/sbom
-          # Expect SBOMs to be published with images; fail if absent.
           test -f governance/cato-evidence/sbom/mcp-tool-jira.spdx.json
 
       - name: Upload evidence

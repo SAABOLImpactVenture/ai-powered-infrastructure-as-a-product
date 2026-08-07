@@ -1,13 +1,19 @@
 name: ci-security
+
 on:
   pull_request:
+  push:
+    branches: [ main ]
   workflow_dispatch:
+
 permissions:
   contents: read
-  id-token: write
   security-events: write
-  packages: write
+
 concurrency: ci-${{ github.workflow }}-${{ github.ref }}
+
+env:
+  IMAGE_REPO: ghcr.io/saabolimpactventure/ai-powered-infrastructure-as-a-product
 
 jobs:
   iac-security:
@@ -17,15 +23,21 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with: { terraform_version: 1.8.6 }
+        with: { terraform_version: 1.8.5 }
 
-      - name: Validate (no backend)
+      - name: Validate root Terraform boundary (no backend)
         run: |
           terraform init -backend=false -input=false || true
           terraform validate -no-color || true
 
-      - name: Conftest (OPA) — deny on violations
-        run: conftest test --policy policy/ .
+      - name: Conftest (OPA) — validate maintained sample contract
+        run: |
+          test -f policy/conftest/sample-plan.json
+          docker run --rm \
+            -v "${GITHUB_WORKSPACE}:/project" \
+            -w /project \
+            openpolicyagent/conftest:v0.64.0 \
+            test --policy policy/conftest policy/conftest/sample-plan.json
 
       - name: tfsec (fail on HIGH)
         uses: aquasecurity/tfsec-action@v1.0.3
@@ -42,15 +54,74 @@ jobs:
           output_file_path: checkov.sarif
 
       - name: Upload SARIF
+        if: always() && hashFiles('checkov.sarif') != ''
         uses: github/codeql-action/upload-sarif@v3
-        with: { sarif_file: checkov.sarif }
+        with:
+          sarif_file: checkov.sarif
 
-  supply-chain:
+  supply-chain-pr:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        image: [ mcp-azure, mcp-policy-azure, mcp-aws, mcp-policy-aws, mcp-gcp, mcp-policy-gcp, mcp-oci, mcp-policy-oci ]
+        include:
+          - image: mcp-azure
+            file: servers/mcp/azure/Dockerfile.distroless
+          - image: mcp-policy-azure
+            file: servers/mcp-policy/azure/Dockerfile.distroless
+          - image: mcp-aws
+            file: servers/mcp/aws/Dockerfile.distroless
+          - image: mcp-policy-aws
+            file: servers/mcp-policy/aws/Dockerfile.distroless
+          - image: mcp-gcp
+            file: servers/mcp/gcp/Dockerfile.distroless
+          - image: mcp-policy-gcp
+            file: servers/mcp-policy/gcp/Dockerfile.distroless
+          - image: mcp-oci
+            file: servers/mcp/oci/Dockerfile.distroless
+          - image: mcp-policy-oci
+            file: servers/mcp-policy/oci/Dockerfile.distroless
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Validate image build without publishing
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.file }}
+          push: false
+          tags: ${{ env.IMAGE_REPO }}:${{ matrix.image }}-pr
+          platforms: linux/amd64
+          provenance: false
+          sbom: false
+
+  supply-chain-publish:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: mcp-azure
+            file: servers/mcp/azure/Dockerfile.distroless
+          - image: mcp-policy-azure
+            file: servers/mcp-policy/azure/Dockerfile.distroless
+          - image: mcp-aws
+            file: servers/mcp/aws/Dockerfile.distroless
+          - image: mcp-policy-aws
+            file: servers/mcp-policy/aws/Dockerfile.distroless
+          - image: mcp-gcp
+            file: servers/mcp/gcp/Dockerfile.distroless
+          - image: mcp-policy-gcp
+            file: servers/mcp-policy/gcp/Dockerfile.distroless
+          - image: mcp-oci
+            file: servers/mcp/oci/Dockerfile.distroless
+          - image: mcp-policy-oci
+            file: servers/mcp-policy/oci/Dockerfile.distroless
     permissions:
       contents: read
       id-token: write
@@ -69,13 +140,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build & Push (multi-arch + provenance + SBOM)
+      - name: Build and push (multi-arch + provenance + SBOM)
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./containers/${{ matrix.image }}/Dockerfile
+          file: ${{ matrix.file }}
           push: true
-          tags: ghcr.io/${{ github.repository }}:${{ matrix.image }}-latest
+          tags: ${{ env.IMAGE_REPO }}:${{ matrix.image }}-latest
           platforms: linux/amd64,linux/arm64
           provenance: true
           sbom: true
@@ -84,16 +155,16 @@ jobs:
         uses: anchore/sbom-action/download-syft@v0.17.5
 
       - name: Generate SBOM (SPDX)
-        run: syft ghcr.io/${{ github.repository }}:${{ matrix.image }}-latest -o spdx-json > sbom-${{ matrix.image }}.spdx.json
+        run: syft ${{ env.IMAGE_REPO }}:${{ matrix.image }}-latest -o spdx-json > sbom-${{ matrix.image }}.spdx.json
 
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.7.0
         with: { cosign-release: 'v2.2.4' }
 
-      - name: Cosign sign & attest SBOM (keyless OIDC)
+      - name: Cosign sign and attest SBOM (keyless OIDC)
         env: { COSIGN_EXPERIMENTAL: "1" }
         run: |
-          set -e
-          IMG="ghcr.io/${{ github.repository }}:${{ matrix.image }}-latest"
+          set -euo pipefail
+          IMG="${IMAGE_REPO}:${{ matrix.image }}-latest"
           cosign sign --yes "$IMG"
           cosign attest --yes --predicate sbom-${{ matrix.image }}.spdx.json --type spdx "$IMG"

@@ -14,7 +14,7 @@ jobs:
       - uses: azure/setup-helm@v4
         with: { version: 'v3.15.3' }
       - uses: hashicorp/setup-terraform@v3
-        with: { terraform_version: 1.8.6 }
+        with: { terraform_version: 1.8.5 }
       - run: |
           kubectl version --client --output=yaml
           helm version

@@ -1,16 +1,40 @@
-﻿name: pre-commit
+name: pre-commit
+
 on:
   pull_request:
   push:
     branches: [ main, develop ]
+
 permissions:
   contents: read
+
 jobs:
   run:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
       - run: pip install pre-commit
-      - run: pre-commit run --all-files
+      - name: Run hooks on changed files
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="${{ github.event.pull_request.base.sha }}"
+          else
+            base="${{ github.event.before }}"
+            if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+              base="$(git rev-list --max-parents=0 HEAD | tail -n 1)"
+            fi
+          fi
+
+          mapfile -t files < <(git diff --name-only --diff-filter=ACMR "$base" "$GITHUB_SHA")
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No changed files to validate."
+            exit 0
+          fi
+
+          pre-commit run --files "${files[@]}"

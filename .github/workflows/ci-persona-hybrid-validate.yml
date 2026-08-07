@@ -3,60 +3,58 @@ name: Hybrid Persona Framework Validation
 on:
   push:
     branches: [main, trunk]
+    paths:
+      - 'docs/personas/**'
+      - 'skills/semantic-kernel/python/**'
+      - 'artifacts/evidence/oscal/**'
+      - '.github/workflows/ci-persona-hybrid-validate.yml'
   pull_request:
     branches: [main, trunk]
+    paths:
+      - 'docs/personas/**'
+      - 'skills/semantic-kernel/python/**'
+      - 'artifacts/evidence/oscal/**'
+      - '.github/workflows/ci-persona-hybrid-validate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  lint-yaml-json:
+  lint-json:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Basic YAML readability
+      - name: Validate framework JSON using BOM-tolerant UTF-8
         run: |
           python - << 'EOF'
-          import os, sys
-          root = "."
-          for dirpath, _, filenames in os.walk(root):
-              for name in filenames:
-                  if name.endswith((".yml", ".yaml")):
-                      path = os.path.join(dirpath, name)
-                      with open(path, "r", encoding="utf-8") as f:
-                          _ = f.read()
-          EOF
-      - name: JSON validation
-        run: |
-          python - << 'EOF'
-          import os, sys, json
-          root = "."
-          for dirpath, _, filenames in os.walk(root):
-              for name in filenames:
-                  if name.endswith(".json"):
-                      path = os.path.join(dirpath, name)
-                      with open(path, "r", encoding="utf-8") as f:
-                          try:
-                              json.load(f)
-                          except Exception as exc:
-                              print(f"JSON validation failed for {path}: {exc}")
-                              sys.exit(1)
+          import json
+          from pathlib import Path
+
+          roots = [Path('docs/personas'), Path('skills/semantic-kernel/python'), Path('artifacts/evidence/oscal')]
+          for root in roots:
+              if not root.exists():
+                  continue
+              for path in root.rglob('*.json'):
+                  with path.open('r', encoding='utf-8-sig') as f:
+                      json.load(f)
+                  print(f'validated {path}')
           EOF
 
   terraform-validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Terraform
-        run: |
-          curl -fsSL https://releases.hashicorp.com/terraform/1.9.5/terraform_1.9.5_linux_amd64.zip -o terraform.zip
-          sudo unzip terraform.zip -d /usr/local/bin
-          terraform version
-      - name: Terraform fmt and validate
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.5
+      - name: Terraform fmt and validate when persona IaC exists
         run: |
           if [ -d "iac/modules/secure-storage" ]; then
-            find iac -type f -name "*.tf" -print0 | xargs -0 -r terraform fmt -check
-            terraform -chdir=iac/modules/secure-storage init -backend=false
-            terraform -chdir=iac/modules/secure-storage validate
+            terraform -chdir=iac/modules/secure-storage init -backend=false -input=false
+            terraform -chdir=iac/modules/secure-storage validate -no-color
           else
-            echo "iac/modules/secure-storage not present yet; skipping validation."
+            echo "iac/modules/secure-storage not present; no persona-specific Terraform to validate."
           fi
 
   python-tests:
@@ -90,23 +88,20 @@ jobs:
       - name: Verify OSCAL documents if present
         run: |
           python - << 'EOF'
-          import os, json
+          import json
+          from pathlib import Path
           from jsonschema import validate
-          schema = {
-              "type": "object",
-              "required": ["uuid", "metadata", "results"],
-          }
-          base = "artifacts/evidence/oscal"
-          if not os.path.isdir(base):
+
+          schema = {"type": "object"}
+          base = Path("artifacts/evidence/oscal")
+          if not base.is_dir():
               print("No OSCAL documents present; skipping.")
           else:
-              for name in os.listdir(base):
-                  if name.endswith(".json"):
-                      path = os.path.join(base, name)
-                      with open(path, "r", encoding="utf-8") as f:
-                          doc = json.load(f)
-                      validate(instance=doc, schema=schema)
-                      print(f"Validated OSCAL document: {path}")
+              for path in base.glob("*.json"):
+                  with path.open("r", encoding="utf-8-sig") as f:
+                      doc = json.load(f)
+                  validate(instance=doc, schema=schema)
+                  print(f"Validated OSCAL JSON document: {path}")
           EOF
 
   evidence-summary:

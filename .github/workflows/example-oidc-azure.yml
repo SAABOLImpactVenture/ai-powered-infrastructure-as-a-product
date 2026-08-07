@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
-        with: { terraform_version: 1.8.6 }
+        with: { terraform_version: 1.8.5 }
       - name: Terraform validate (Log Analytics module, no backend)
         working-directory: iac/azure/log-analytics
         run: |

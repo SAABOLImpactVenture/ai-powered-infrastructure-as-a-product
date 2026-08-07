@@ -1,10 +1,13 @@
-name: docs-site
+name: legacy nested docs preview
+
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
+
+permissions:
+  contents: read
+
 jobs:
-  build-deploy:
+  build-preview:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -13,11 +16,12 @@ jobs:
         with: { python-version: '3.11' }
       - name: Install MkDocs
         run: pip install -r docs/site/requirements.txt
-      - name: Build site
+      - name: Build legacy nested site
         working-directory: docs/site
         run: mkdocs build --clean
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload legacy preview
+        uses: actions/upload-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/site/site
+          name: legacy-nested-docs-preview
+          path: docs/site/site
+          retention-days: 7
