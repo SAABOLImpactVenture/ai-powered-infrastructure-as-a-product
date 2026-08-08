@@ -54,7 +54,7 @@ Owns bounded request, review, operations, and evidence-agent contracts and evalu
 
 ### `multicloud-foundation-poc-integration`
 
-Owns pinned upstream integration, including the storefront handoff, clean-cluster acceptance, active network-policy proof, AI authority checks, simulated reconciliation, evidence, teardown, scorecard, and cross-repository storefront/product contract compatibility.
+Owns pinned upstream integration, including the storefront handoff, clean-cluster acceptance, active network-policy proof, AI authority checks, simulated reconciliation, evidence, teardown, scorecard, cross-repository storefront/product contract compatibility, and workflow/bootstrap reproducibility checks.
 
 The integrated consumer path is:
 
@@ -93,14 +93,15 @@ Owns the thesis, architecture, product operating model, decisions, frozen eviden
 
 1. **Credential-free control-plane integration** — passed and retained as v1.
 2. **Storefront-to-product integration** — passed as historical v2.
-3. **Storefront/product accepted-domain compatibility** — corrected and passed as current v3 across Kubernetes 1.34/1.35/1.36 at 100/100.
-4. **Build/supply-chain reproducibility correction** — next correction gate before treating live-cloud evidence as an enterprise control demonstration.
-5. **Backstage runtime smoke** — execute the reference template/action in an actual Backstage runtime while preserving the same authority boundary.
-6. **Live AWS sandbox** — first live-cloud gate after the correction gates are satisfied.
-7. **Live GCP sandbox** — after AWS is repeatable.
-8. **Live model adapter** — same tool and authority boundary as the deterministic baseline.
-9. **Residual TFE comparison** — observed evidence only for remaining justified use cases.
-10. **Production pilot** — authorization, SLOs, recovery, support, and lifecycle evidence.
+3. **Storefront/product accepted-domain compatibility** — corrected and passed as historical v3 across Kubernetes 1.34/1.35/1.36 at 100/100.
+4. **Workflow/bootstrap supply-chain reproducibility** — passed as current v4 across Kubernetes 1.34/1.35/1.36 at 100/100, with immutable GitHub Action revisions, pinned Python, hash-locked CI dependencies, and publisher SHA-256 verification for Kind/kubectl/Helm.
+5. **Backstage runtime smoke** — **next gate**; execute the reference template/action in an actual Backstage runtime while preserving the same authority boundary.
+6. **Product live-cloud readiness corrections** — semantic CIDR validation/containment, lifecycle-field decision, and removal of unobserved pre-scoring from the TFE comparison example before live-cloud evidence is treated as enterprise product proof.
+7. **Live AWS sandbox** — first live-cloud gate after the correction gates are satisfied.
+8. **Live GCP sandbox** — after AWS is repeatable.
+9. **Live model adapter** — same tool and authority boundary as the deterministic baseline.
+10. **Residual TFE comparison** — observed evidence only for remaining justified use cases.
+11. **Production pilot** — authorization, SLOs, recovery, support, and lifecycle evidence.
 
 See [POC Baseline Lineage](poc-baselines/README.md) for the frozen evidence history.
 
