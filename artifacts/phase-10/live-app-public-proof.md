@@ -6,6 +6,6 @@ Expected live check:
 
 `IaaP Guard / Architecture`
 
-Live redeploy synchronization marker: numeric GitHub App ID authentication path.
+Live redeploy synchronization marker: archive Accept-header compatibility path.
 
 No architecture, rule, permission, runtime, or product behavior is changed by this file.
