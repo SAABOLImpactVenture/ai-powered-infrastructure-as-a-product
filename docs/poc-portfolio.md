@@ -34,11 +34,13 @@ The storefront:
 
 - presents curated product-level inputs;
 - emits a narrow `InfrastructureProductOrder` artifact;
-- opens a human-reviewable GitHub order path;
+- can open a human-reviewable GitHub order path when publication is intentionally enabled with an authorized integration;
 - hides Crossplane, ProviderConfig, cloud credentials, IAM JSON, Terraform/TFE, and composition internals; and
 - never becomes the provisioning control plane.
 
 Backstage is therefore a replaceable experience layer. A CLI, API, service portal, or conversational interface could submit the same product intent without changing the product-control-plane architecture.
+
+The storefront repository now also carries a bounded runtime smoke that starts an actual Backstage backend, registers the reference template in the Software Catalog, and executes `fetch:template` plus `publish:github:pull-request` through Backstage's supported dry-run path. That runtime evidence deliberately provides no real GitHub write credential and creates no real order PR.
 
 ### `crossplane-multicloud-seed-poc`
 
@@ -94,14 +96,16 @@ Owns the thesis, architecture, product operating model, decisions, frozen eviden
 1. **Credential-free control-plane integration** — passed and retained as v1.
 2. **Storefront-to-product integration** — passed as historical v2.
 3. **Storefront/product accepted-domain compatibility** — corrected and passed as historical v3 across Kubernetes 1.34/1.35/1.36 at 100/100.
-4. **Workflow/bootstrap supply-chain reproducibility** — passed as current v4 across Kubernetes 1.34/1.35/1.36 at 100/100, with immutable GitHub Action revisions, pinned Python, hash-locked CI dependencies, and publisher SHA-256 verification for Kind/kubectl/Helm.
-5. **Backstage runtime smoke** — **next gate**; execute the reference template/action in an actual Backstage runtime while preserving the same authority boundary.
-6. **Product live-cloud readiness corrections** — semantic CIDR validation/containment, lifecycle-field decision, and removal of unobserved pre-scoring from the TFE comparison example before live-cloud evidence is treated as enterprise product proof.
-7. **Live AWS sandbox** — first live-cloud gate after the correction gates are satisfied.
+4. **Workflow/bootstrap supply-chain reproducibility** — passed as historical v4 across Kubernetes 1.34/1.35/1.36 at 100/100, with immutable GitHub Action revisions, pinned Python, hash-locked CI dependencies, and publisher SHA-256 verification for Kind/kubectl/Helm.
+5. **Backstage runtime smoke + repinned integration** — **passed as current v5**. An actual Backstage backend registered and dry-ran the reference template/action without a real GitHub write credential, and the resulting merged storefront revision was pinned into a fresh hardened Kubernetes 1.34/1.35/1.36 integration run that remained 100/100.
+6. **Product live-cloud readiness corrections** — **next gate**: semantic CIDR validity and containment, lifecycle-field ownership decision, and removal of unobserved pre-scoring from the TFE comparison example before live-cloud evidence is treated as enterprise product proof.
+7. **Live AWS sandbox** — first live-cloud gate after the correction gate is satisfied; use workload identity rather than static cloud credentials.
 8. **Live GCP sandbox** — after AWS is repeatable.
 9. **Live model adapter** — same tool and authority boundary as the deterministic baseline.
 10. **Residual TFE comparison** — observed evidence only for remaining justified use cases.
 11. **Production pilot** — authorization, SLOs, recovery, support, and lifecycle evidence.
+
+The v5 runtime proof is intentionally narrower than a production Backstage deployment: the GitHub publication action ran in dry-run mode, no browser/UI journey was executed, and the generated Backstage dependency graph is not claimed immutable across future runs.
 
 See [POC Baseline Lineage](poc-baselines/README.md) for the frozen evidence history.
 
