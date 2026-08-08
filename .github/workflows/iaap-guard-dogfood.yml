@@ -1,0 +1,36 @@
+name: IaaP Guard Dogfood
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  iaap-guard:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Run pinned IaaP Guard
+        id: guard
+        uses: SAABOLImpactVenture/iaap-guard@d1930703e1812b66f2f994c77df56d409483aae8
+        with:
+          fail-on-failure: 'false'
+          output: artifacts/phase-9/iaap-guard.json
+      - name: Record dogfood result
+        env:
+          GUARD_CONCLUSION: ${{ steps.guard.outputs.conclusion }}
+          GUARD_SCORE: ${{ steps.guard.outputs.score }}
+          GUARD_FINDINGS: ${{ steps.guard.outputs.findings }}
+        run: |
+          echo "IaaP Guard conclusion=${GUARD_CONCLUSION} score=${GUARD_SCORE:-N/A} findings=${GUARD_FINDINGS}"
+          test -s artifacts/phase-9/iaap-guard.json
+      - uses: actions/upload-artifact@v6
+        with:
+          name: iaap-guard-dogfood
+          path: artifacts/phase-9/iaap-guard.json
+          if-no-files-found: error
