@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="700" viewBox="0 0 1600 700" role="img" aria-labelledby="title desc">
+<title id="title">Evidence-first Infrastructure-as-a-Product chain</title>
+<desc id="desc">A continuous chain from requirement through change, deterministic validation, human approval, reconciliation, status and evidence, with a three-version Kubernetes acceptance matrix.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07111f"/><stop offset="1" stop-color="#111827"/></linearGradient>
+  <filter id="s"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-opacity="0.3"/></filter>
+  <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#7dd3fc"/></marker>
+  <style>.t{font:800 40px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}.sub{font:600 17px Inter,Segoe UI,Arial,sans-serif;fill:#cbd5e1}.h{font:800 18px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}.b{font:600 14px Inter,Segoe UI,Arial,sans-serif;fill:#dbeafe}.score{font:800 30px Inter,Segoe UI,Arial,sans-serif;fill:#86efac}.mono{font:700 14px ui-monospace,SFMono-Regular,Consolas,monospace;fill:#e2e8f0}</style>
+</defs>
+<rect width="1600" height="700" rx="32" fill="url(#bg)"/>
+<text x="72" y="72" class="t">Portable by evidence, not by assertion.</text>
+<text x="72" y="108" class="sub">The claim is only as strong as the reproducible chain behind it.</text>
+
+<g transform="translate(72,170)">
+  <g filter="url(#s)"><rect width="180" height="96" rx="22" fill="#162033" stroke="#64748b"/><text x="90" y="41" text-anchor="middle" class="h">Requirement</text><text x="90" y="67" text-anchor="middle" class="b">product intent</text></g>
+  <g transform="translate(210)" filter="url(#s)"><rect width="180" height="96" rx="22" fill="#0d2438" stroke="#38bdf8"/><text x="90" y="41" text-anchor="middle" class="h">Change</text><text x="90" y="67" text-anchor="middle" class="b">reviewable diff</text></g>
+  <g transform="translate(420)" filter="url(#s)"><rect width="180" height="96" rx="22" fill="#33240d" stroke="#f59e0b"/><text x="90" y="41" text-anchor="middle" class="h">Validation</text><text x="90" y="67" text-anchor="middle" class="b">policy + tests</text></g>
+  <g transform="translate(630)" filter="url(#s)"><rect width="180" height="96" rx="22" fill="#3b2010" stroke="#fb923c"/><text x="90" y="41" text-anchor="middle" class="h">Approval</text><text x="90" y="67" text-anchor="middle" class="b">human authority</text></g>
+  <g transform="translate(840)" filter="url(#s)"><rect width="180" height="96" rx="22" fill="#10294b" stroke="#3b82f6"/><text x="90" y="41" text-anchor="middle" class="h">Reconcile</text><text x="90" y="67" text-anchor="middle" class="b">desired state</text></g>
+  <g transform="translate(1050)" filter="url(#s)"><rect width="180" height="96" rx="22" fill="#10341f" stroke="#22c55e"/><text x="90" y="41" text-anchor="middle" class="h">Status</text><text x="90" y="67" text-anchor="middle" class="b">observed state</text></g>
+  <g transform="translate(1260)" filter="url(#s)"><rect width="180" height="96" rx="22" fill="#35132d" stroke="#ec4899"/><text x="90" y="41" text-anchor="middle" class="h">Evidence</text><text x="90" y="67" text-anchor="middle" class="b">reproducible proof</text></g>
+  <g stroke="#7dd3fc" stroke-width="3" marker-end="url(#a)"><path d="M180 48 H204"/><path d="M390 48 H414"/><path d="M600 48 H624"/><path d="M810 48 H834"/><path d="M1020 48 H1044"/><path d="M1230 48 H1254"/></g>
+</g>
+
+<g transform="translate(72,350)" filter="url(#s)">
+  <rect width="910" height="250" rx="28" fill="#0b1f2d" stroke="#334155"/>
+  <text x="32" y="46" class="h">Credential-free acceptance matrix</text>
+  <text x="32" y="74" class="b">Frozen baseline — same product contract, same authority boundaries, three Kubernetes versions</text>
+  <g transform="translate(32,105)">
+    <rect width="260" height="100" rx="20" fill="#102c22" stroke="#22c55e"/><text x="24" y="35" class="mono">Kubernetes 1.34</text><text x="24" y="76" class="score">100 / 100</text>
+    <g transform="translate(290)"><rect width="260" height="100" rx="20" fill="#102c22" stroke="#22c55e"/><text x="24" y="35" class="mono">Kubernetes 1.35</text><text x="24" y="76" class="score">100 / 100</text></g>
+    <g transform="translate(580)"><rect width="260" height="100" rx="20" fill="#102c22" stroke="#22c55e"/><text x="24" y="35" class="mono">Kubernetes 1.36</text><text x="24" y="76" class="score">100 / 100</text></g>
+  </g>
+</g>
+
+<g transform="translate(1020,350)" filter="url(#s)">
+  <rect width="508" height="250" rx="28" fill="#18152d" stroke="#8b5cf6"/>
+  <text x="30" y="46" class="h">Evidence means more than green CI</text>
+  <text x="30" y="82" class="b">• authority-boundary negative tests</text>
+  <text x="30" y="112" class="b">• prompt-injection containment</text>
+  <text x="30" y="142" class="b">• deterministic unsafe-request rejection</text>
+  <text x="30" y="172" class="b">• Ready reconciliation evidence</text>
+  <text x="30" y="202" class="b">• teardown + zero-orphan checks</text>
+  <text x="30" y="230" class="b">• pinned upstreams and reproducible scorecards</text>
+</g>
+</svg>
