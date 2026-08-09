@@ -1,0 +1,34 @@
+{
+  "phase": 10,
+  "artifact": "security-boundary",
+  "status": "PASS",
+  "authority": {
+    "githubApp": ["observe supported PR/check events", "read repository/PR content", "publish IaaP Guard Check Runs"],
+    "deterministicCore": ["classify repository artifacts", "evaluate versioned rules", "produce architecture/evidence verdict"],
+    "human": ["approve", "merge"],
+    "crossplane": ["reconcile infrastructure product desired state"],
+    "cloudNativeControls": ["enforce ultimate cloud authorization boundary"]
+  },
+  "explicitlyAbsent": [
+    "repository write authority",
+    "pull request creation authority",
+    "merge authority",
+    "workflow administration",
+    "branch/ruleset administration",
+    "cloud credentials",
+    "Kubernetes credentials",
+    "Terraform/TFE credentials or state access",
+    "AI-generated verdict authority",
+    "provisioning or reconciliation authority",
+    "auto-remediation",
+    "persistent customer database"
+  ],
+  "repositoryCodeExecution": false,
+  "patRequired": false,
+  "secretStorage": "AWS Secrets Manager for GitHub App private key and webhook secret; secret values are not committed",
+  "snapshotGuards": {
+    "maxArchiveBytes": 25000000,
+    "maxArchiveMembers": 20000,
+    "maxExtractedBytes": 100000000
+  }
+}
