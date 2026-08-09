@@ -1,0 +1,14 @@
+{
+  "phase": 10,
+  "artifact": "private-repo-beta",
+  "status": "PASS",
+  "repository": "SAABOLImpactVenture/iaap-guard",
+  "visibility": "internal",
+  "pullNumber": 9,
+  "revision": "c942bb762cc37a2cfc76e5715f586e889d043bb3",
+  "checkName": "IaaP Guard / Architecture",
+  "observedConclusion": "success",
+  "evidence": "PR UI showed four successful checks: three repository Actions checks plus the installed IaaP Guard App Check",
+  "distributionLearning": "The installed App evaluates the internal repository without a cross-repository Action PAT or copied Guard source.",
+  "merged": false
+}
