@@ -1,0 +1,14 @@
+{
+  "phase": 10,
+  "artifact": "public-repo-beta",
+  "status": "PASS",
+  "repository": "SAABOLImpactVenture/ai-powered-infrastructure-as-a-product",
+  "visibility": "public",
+  "pullNumber": 107,
+  "revision": "41b4235ccec35737623798ababa10eb9eaf4e34e",
+  "checkName": "IaaP Guard / Architecture",
+  "observedConclusion": "success",
+  "evidence": "PR UI showed five successful checks: four normal repository checks plus the installed IaaP Guard App Check",
+  "distributionLearning": "The GitHub App removes the internal-Action/public-caller limitation without making iaap-guard public and without a PAT.",
+  "merged": false
+}
