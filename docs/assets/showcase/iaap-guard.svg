@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="650" viewBox="0 0 1600 650" role="img" aria-labelledby="title desc">
+  <title id="title">IaaP Guard GitHub-native architecture check</title>
+  <desc id="desc">A pull request passes through deterministic IaaP Guard rules and produces a GitHub architecture check with product, authority, control-plane, governance and evidence findings.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#07111f"/><stop offset="1" stop-color="#111827"/></linearGradient>
+    <linearGradient id="shield" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#22c55e"/><stop offset="1" stop-color="#06b6d4"/></linearGradient>
+    <filter id="s"><feDropShadow dx="0" dy="12" stdDeviation="16" flood-opacity="0.32"/></filter>
+    <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#7dd3fc"/></marker>
+    <style>
+      .t{font:800 42px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}.st{font:600 19px Inter,Segoe UI,Arial,sans-serif;fill:#cbd5e1}
+      .h{font:800 22px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}.b{font:600 15px Inter,Segoe UI,Arial,sans-serif;fill:#dbeafe}
+      .m{font:700 15px ui-monospace,SFMono-Regular,Consolas,monospace;fill:#e2e8f0}.ok{font:800 17px Inter,Segoe UI,Arial,sans-serif;fill:#86efac}
+      .warn{font:800 17px Inter,Segoe UI,Arial,sans-serif;fill:#fcd34d}
+    </style>
+  </defs>
+  <rect width="1600" height="650" rx="32" fill="url(#bg)"/>
+  <text x="72" y="72" class="t">IaaP Guard</text>
+  <text x="72" y="108" class="st">GitHub-native architecture &amp; evidence guard — deterministic by default</text>
+
+  <g transform="translate(72,180)" filter="url(#s)">
+    <rect width="310" height="300" rx="28" fill="#0f1f35" stroke="#64748b"/>
+    <text x="30" y="48" class="h">Pull Request</text>
+    <text x="30" y="82" class="b">changed product contract</text>
+    <text x="30" y="108" class="b">storefront definition</text>
+    <text x="30" y="134" class="b">AI authority config</text>
+    <text x="30" y="160" class="b">control-plane implementation</text>
+    <rect x="30" y="202" width="250" height="58" rx="14" fill="#111827" stroke="#334155"/>
+    <text x="48" y="237" class="m">+ infrastructure change</text>
+  </g>
+
+  <g transform="translate(500,170)" filter="url(#s)">
+    <path d="M150 18 L268 62 V172 C268 238 220 294 150 324 C80 294 32 238 32 172 V62 Z" fill="url(#shield)"/>
+    <path d="M150 58 L225 87 V169 C225 214 196 252 150 275 C104 252 75 214 75 169 V87 Z" fill="#062b28" opacity="0.42"/>
+    <path d="M112 168 l27 27 58-70" fill="none" stroke="#f8fafc" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="150" y="356" text-anchor="middle" class="h">Deterministic IaaP Rules</text>
+  </g>
+
+  <g transform="translate(900,164)" filter="url(#s)">
+    <rect width="630" height="340" rx="28" fill="#0b1f2d" stroke="#22c55e" stroke-width="1.6"/>
+    <text x="34" y="48" class="h">IaaP Guard / Architecture</text>
+    <rect x="34" y="72" width="562" height="52" rx="14" fill="#0c2a1c"/>
+    <text x="56" y="105" class="ok">PASS</text><text x="132" y="105" class="b">Product abstraction</text>
+    <rect x="34" y="136" width="562" height="52" rx="14" fill="#0c2a1c"/>
+    <text x="56" y="169" class="ok">PASS</text><text x="132" y="169" class="b">Authority separation</text>
+    <rect x="34" y="200" width="562" height="52" rx="14" fill="#3b2a0d"/>
+    <text x="56" y="233" class="warn">WARN</text><text x="140" y="233" class="b">Evidence path incomplete</text>
+    <rect x="34" y="274" width="210" height="38" rx="19" fill="#123b27"/><text x="139" y="299" text-anchor="middle" class="ok">Score 83 / 100</text>
+    <text x="280" y="300" class="b">versioned ruleset • reproducible result</text>
+  </g>
+
+  <g stroke="#7dd3fc" stroke-width="4" fill="none" marker-end="url(#a)"><path d="M382 330 C430 330 450 330 486 330"/><path d="M810 330 C850 330 864 330 894 330"/></g>
+
+  <g transform="translate(72,545)">
+    <rect width="1458" height="54" rx="18" fill="#111827" stroke="#334155"/>
+    <text x="28" y="34" class="b">Least privilege:</text><text x="150" y="34" class="m">Metadata R • Contents R • Pull Requests R • Checks RW</text>
+    <text x="880" y="34" class="b">No provisioning • No cloud creds • No AI verdicts</text>
+  </g>
+</svg>
