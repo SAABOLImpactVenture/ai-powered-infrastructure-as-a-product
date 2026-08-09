@@ -1,0 +1,43 @@
+{
+  "phase": 10,
+  "artifact": "beta-scorecard",
+  "status": "PASS",
+  "decision": "EXIT_GATE_SATISFIED",
+  "ruleCatalogVersion": "iaap-guard/v0.1.2",
+  "scoringModelVersion": "coverage/v1",
+  "acceptanceCriteria": [
+    {"criterion": "organization-owned public GitHub App installable without Marketplace", "status": "PASS"},
+    {"criterion": "minimal documented repository permissions", "status": "PASS"},
+    {"criterion": "webhook signatures verified", "status": "PASS"},
+    {"criterion": "GitHub-issued short-lived installation tokens; no PAT", "status": "PASS"},
+    {"criterion": "repository code is not executed", "status": "PASS"},
+    {"criterion": "IaaP Guard / Architecture Check Run published", "status": "PASS"},
+    {"criterion": "PASS semantics", "status": "PASS", "evidence": ["iaap-guard#9", "ai-powered-infrastructure-as-a-product#107"]},
+    {"criterion": "WARNING maps to neutral", "status": "PASS", "evidence": "ai-powered-infrastructure-as-a-product#108 / IAP-P004"},
+    {"criterion": "FAIL maps to failure", "status": "PASS", "evidence": "iaap-guard#14 / IAP-P001 / score 83"},
+    {"criterion": "no relevant changes map to success", "status": "PASS", "evidence": "iaap-guard#12"},
+    {"criterion": "repository and immutable revision identity preserved", "status": "PASS"},
+    {"criterion": "known positive baselines remain clean", "status": "PASS"},
+    {"criterion": "controlled critical mutation produces stable failing rule", "status": "PASS", "evidence": "IAP-P001"},
+    {"criterion": "rerequest on same immutable revision is deterministic", "status": "PASS", "evidence": "failure / 83 / 1 finding reproduced on fd362ed08b7e18e674debe7a270d7706d765f576"},
+    {"criterion": "internal/private installation path demonstrated", "status": "PASS", "evidence": "iaap-guard#9"},
+    {"criterion": "public installation path demonstrated", "status": "PASS", "evidence": "ai-powered-infrastructure-as-a-product#107"},
+    {"criterion": "no customer cloud/Kubernetes/TFE/AI credentials introduced", "status": "PASS"},
+    {"criterion": "no repository write/merge/workflow/admin/remediation authority introduced", "status": "PASS"},
+    {"criterion": "operating cost and deployment complexity documented", "status": "PASS"}
+  ],
+  "liveProofs": {
+    "internalPass": {"repository": "SAABOLImpactVenture/iaap-guard", "pullNumber": 9, "revision": "c942bb762cc37a2cfc76e5715f586e889d043bb3"},
+    "publicPass": {"repository": "SAABOLImpactVenture/ai-powered-infrastructure-as-a-product", "pullNumber": 107, "revision": "41b4235ccec35737623798ababa10eb9eaf4e34e"},
+    "noRelevant": {"repository": "SAABOLImpactVenture/iaap-guard", "pullNumber": 12, "revision": "fc0c3fb4104c2c4db6cfa83233d575b54a3e6637", "conclusion": "success"},
+    "warning": {"repository": "SAABOLImpactVenture/ai-powered-infrastructure-as-a-product", "pullNumber": 108, "revision": "e02059410d712b6652a780a1783285c91d6b87da", "conclusion": "neutral", "ruleId": "IAP-P004"},
+    "fail": {"repository": "SAABOLImpactVenture/iaap-guard", "pullNumber": 14, "revision": "fd362ed08b7e18e674debe7a270d7706d765f576", "conclusion": "failure", "score": 83, "findings": 1, "ruleId": "IAP-P001"},
+    "rerequest": {"delivery": "a0138486-9388-11f1-9494-f712d383dccb", "revision": "fd362ed08b7e18e674debe7a270d7706d765f576", "conclusion": "failure", "score": 83, "findings": 1}
+  },
+  "limitations": [
+    "This beta does not prove production readiness, enterprise scale, regulatory authorization, commercial demand, live cloud provisioning, or hosted customer control-plane operation.",
+    "Exact numeric scores for the successful and neutral UI proofs were not separately transcribed into the evidence bundle; their GitHub Check conclusions and immutable revisions were observed, while the deployed ruleset/scoring versions are recorded globally.",
+    "Marketplace, billing, dashboards, persistent customer data, organization analytics, and SaaS expansion remain out of scope."
+  ],
+  "nextPhase": "PHASE 11 — First Monetization"
+}
