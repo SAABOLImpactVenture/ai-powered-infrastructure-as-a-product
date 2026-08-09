@@ -1,0 +1,23 @@
+{
+  "phase": 10,
+  "artifact": "pass-check",
+  "status": "PASS",
+  "checkName": "IaaP Guard / Architecture",
+  "ruleCatalogVersion": "iaap-guard/v0.1.2",
+  "scoringModelVersion": "coverage/v1",
+  "observations": [
+    {
+      "repository": "SAABOLImpactVenture/iaap-guard",
+      "pullNumber": 9,
+      "revision": "c942bb762cc37a2cfc76e5715f586e889d043bb3",
+      "conclusion": "success"
+    },
+    {
+      "repository": "SAABOLImpactVenture/ai-powered-infrastructure-as-a-product",
+      "pullNumber": 107,
+      "revision": "41b4235ccec35737623798ababa10eb9eaf4e34e",
+      "conclusion": "success"
+    }
+  ],
+  "note": "The live PR UI confirmed successful IaaP Guard Checks on both repository visibility classes. Exact numeric PASS score was not separately transcribed; the ruleset and scoring model are the deployed deterministic core versions."
+}
