@@ -1,0 +1,37 @@
+{
+  "phase": 10,
+  "artifact": "operating-cost",
+  "status": "PASS",
+  "region": "us-east-2",
+  "runtimeShape": {
+    "compute": "AWS Lambda, Python 3.12, 512 MB",
+    "ingress": "Lambda Function URL",
+    "secrets": "AWS Secrets Manager",
+    "deployment": "AWS SAM / CloudFormation",
+    "persistentDatabase": false,
+    "apiGateway": false
+  },
+  "pricingBasisObserved2026-08-08": {
+    "lambda": {
+      "freeTierRequestsPerMonth": 1000000,
+      "freeTierGbSecondsPerMonth": 400000,
+      "requestPricePerMillionBeyondFreeTierUsd": 0.20,
+      "x86DurationPricePerGbSecondFirstTierUsd": 0.0000166667,
+      "source": "https://aws.amazon.com/lambda/pricing/"
+    },
+    "secretsManager": {
+      "secretsStored": 2,
+      "pricePerSecretPerMonthUsd": 0.40,
+      "fixedSecretStorageEstimatePerMonthUsd": 0.80,
+      "pricePer10000ApiCallsUsd": 0.05,
+      "source": "https://aws.amazon.com/secrets-manager/pricing/"
+    }
+  },
+  "betaEstimate": {
+    "fixedMonthlyFloorBeforeLogsUsd": 0.80,
+    "lambdaAtLowBetaVolume": "expected to remain within Lambda free-tier request/compute allowances when those allowances apply to the account",
+    "variableCosts": ["Secrets Manager API calls", "CloudWatch Logs storage/ingestion", "Lambda usage above free-tier allowances", "network/data transfer if applicable"]
+  },
+  "complexity": "one stateless Lambda stack plus two managed secrets; no database, queue, API Gateway, customer runtime, hosted Crossplane, or hosted Backstage",
+  "caveat": "Planning estimate, not an AWS quote. Actual billing depends on account free-tier eligibility, traffic, duration, logging volume, and future AWS pricing."
+}
