@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="760" viewBox="0 0 1600 760" role="img" aria-labelledby="title desc">
+<title id="title">Infrastructure-as-a-Product bounded repository portfolio</title>
+<desc id="desc">A system map showing the program hub, Backstage storefront, Crossplane seed, infrastructure product, Composite AI, integration harness, and IaaP Guard as separate bounded products.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07111f"/><stop offset="1" stop-color="#111827"/></linearGradient>
+ <filter id="s"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-opacity="0.28"/></filter>
+ <style>.t{font:800 40px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}.sub{font:600 17px Inter,Segoe UI,Arial,sans-serif;fill:#cbd5e1}.h{font:800 21px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}.b{font:600 14px Inter,Segoe UI,Arial,sans-serif;fill:#dbeafe}.repo{font:700 13px ui-monospace,SFMono-Regular,Consolas,monospace;fill:#e2e8f0}.hub{font:800 26px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}</style>
+</defs>
+<rect width="1600" height="760" rx="32" fill="url(#bg)"/>
+<text x="72" y="72" class="t">One product system. Explicit bounded responsibilities.</text>
+<text x="72" y="108" class="sub">The architecture stays coherent because each repository owns one durable concern.</text>
+
+<g transform="translate(500,145)" filter="url(#s)">
+ <rect width="600" height="118" rx="28" fill="#18203a" stroke="#8b5cf6" stroke-width="2"/>
+ <text x="300" y="44" text-anchor="middle" class="hub">Program / Thesis / Evidence Front Door</text>
+ <text x="300" y="74" text-anchor="middle" class="repo">ai-powered-infrastructure-as-a-product</text>
+ <text x="300" y="98" text-anchor="middle" class="b">architecture • ADRs • governance • evidence • investment framing</text>
+</g>
+
+<g transform="translate(72,330)" filter="url(#s)">
+ <rect width="330" height="150" rx="24" fill="#0d2438" stroke="#38bdf8" stroke-width="2"/>
+ <text x="26" y="42" class="h">Developer Storefront</text>
+ <text x="26" y="70" class="repo">backstage-infrastructure-product-</text>
+ <text x="26" y="90" class="repo">storefront-poc</text>
+ <text x="26" y="122" class="b">browse • configure • order • track</text>
+</g>
+
+<g transform="translate(438,330)" filter="url(#s)">
+ <rect width="330" height="150" rx="24" fill="#10294b" stroke="#3b82f6" stroke-width="2"/>
+ <text x="26" y="42" class="h">Trusted Seed</text>
+ <text x="26" y="70" class="repo">crossplane-multicloud-seed-poc</text>
+ <text x="26" y="102" class="b">minimal bootstrap boundary</text>
+ <text x="26" y="124" class="b">no consumer product duplication</text>
+</g>
+
+<g transform="translate(804,330)" filter="url(#s)">
+ <rect width="330" height="150" rx="24" fill="#10341f" stroke="#22c55e" stroke-width="2"/>
+ <text x="26" y="42" class="h">Infrastructure Product</text>
+ <text x="26" y="70" class="repo">multicloud-foundation-product-poc</text>
+ <text x="26" y="102" class="b">stable contract + implementations</text>
+ <text x="26" y="124" class="b">CloudFoundationEnvironment</text>
+</g>
+
+<g transform="translate(1170,330)" filter="url(#s)">
+ <rect width="358" height="150" rx="24" fill="#26163f" stroke="#a855f7" stroke-width="2"/>
+ <text x="26" y="42" class="h">Bounded Intelligence</text>
+ <text x="26" y="70" class="repo">composite-ai-infrastructure-</text>
+ <text x="26" y="90" class="repo">product-poc</text>
+ <text x="26" y="122" class="b">intent • review • diagnosis • evidence</text>
+</g>
+
+<g transform="translate(250,550)" filter="url(#s)">
+ <rect width="500" height="130" rx="24" fill="#33240d" stroke="#f59e0b" stroke-width="2"/>
+ <text x="26" y="42" class="h">Integrated Acceptance &amp; Evidence</text>
+ <text x="26" y="70" class="repo">multicloud-foundation-poc-integration</text>
+ <text x="26" y="102" class="b">pinned upstreams • negative tests • reconciliation • teardown</text>
+</g>
+
+<g transform="translate(850,550)" filter="url(#s)">
+ <rect width="500" height="130" rx="24" fill="#0b2f2d" stroke="#14b8a6" stroke-width="2"/>
+ <text x="26" y="42" class="h">Architecture &amp; Evidence Guard</text>
+ <text x="26" y="70" class="repo">iaap-guard</text>
+ <text x="26" y="102" class="b">GitHub-native deterministic product-governance checks</text>
+</g>
+
+<g stroke="#64748b" stroke-width="2" opacity="0.8">
+ <path d="M800 263 V306 M237 306 H1349 M237 306 V330 M603 306 V330 M969 306 V330 M1349 306 V330"/>
+ <path d="M603 480 V520 H500 V550 M969 480 V520 H1100 V550"/>
+</g>
+<circle cx="800" cy="306" r="5" fill="#8b5cf6"/>
+</svg>

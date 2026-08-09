@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/multicloud-hero.png" alt="AI-Powered Infrastructure as a Product across multiple clouds" width="980"/>
+  <img src="docs/assets/showcase/iaap-hero.svg" alt="AI-Powered Infrastructure as a Product product-centered multi-cloud architecture" width="1100"/>
 </p>
 
 <h1 align="center">AI-Powered Infrastructure as a Product</h1>
@@ -9,6 +9,13 @@
 <p align="center"><strong>Backstage is where developers shop; Crossplane is where the product is controlled.</strong></p>
 
 <p align="center">Composite AI • Crossplane • Backstage storefront • GitHub governance • deterministic policy • multi-cloud evidence</p>
+
+<details>
+<summary><strong>Original multi-cloud reference visual</strong></summary>
+<p align="center">
+  <img src="docs/assets/multicloud-hero.png" alt="AI-Powered Infrastructure as a Product across multiple clouds" width="980"/>
+</p>
+</details>
 
 ---
 
@@ -25,6 +32,10 @@ Its central question is:
 **[Install IaaP Guard](https://github.com/apps/iaap-guard/installations/new)** · [View the GitHub App](https://github.com/apps/iaap-guard) · [Public beta guide](docs/IAAP-GUARD-PUBLIC-BETA.md) · [Give feedback](https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/issues/111)
 
 The current public beta evaluates pull requests and publishes an **`IaaP Guard / Architecture`** Check. It is deliberately narrow: deterministic architecture/evidence evaluation in GitHub, not infrastructure provisioning and not a generic IaC vulnerability scanner.
+
+<p align="center">
+  <img src="docs/assets/showcase/iaap-guard.svg" alt="IaaP Guard deterministic GitHub pull request architecture check" width="1050"/>
+</p>
 
 | Permission | Access |
 |---|---|
@@ -95,6 +106,24 @@ flowchart TB
   GCP --> STATUS
   STATUS --> AI
   STATUS --> STORE
+
+  classDef experience fill:#0D2438,stroke:#38BDF8,stroke-width:2px,color:#F8FAFC
+  classDef intent fill:#12304A,stroke:#22D3EE,stroke-width:2px,color:#F8FAFC
+  classDef intelligence fill:#2E1752,stroke:#A855F7,stroke-width:2px,color:#F8FAFC
+  classDef governance fill:#3A2A0D,stroke:#F59E0B,stroke-width:2px,color:#F8FAFC
+  classDef contract fill:#123A24,stroke:#22C55E,stroke-width:3px,color:#F8FAFC
+  classDef control fill:#102D55,stroke:#3B82F6,stroke-width:3px,color:#F8FAFC
+  classDef cloud fill:#12303A,stroke:#14B8A6,stroke-width:2px,color:#F8FAFC
+  classDef evidence fill:#3A1530,stroke:#EC4899,stroke-width:2px,color:#F8FAFC
+  class DEV,STORE,ALT experience
+  class ORDER intent
+  class AI intelligence
+  class GIT governance
+  class API contract
+  class XP control
+  class AWS,AZ,GCP cloud
+  class STATUS evidence
+  linkStyle default stroke:#7DD3FC,stroke-width:2px
 ```
 
 The architectural center is the **product contract**, not a workspace, module, portal, pipeline, or execution engine.
@@ -110,6 +139,20 @@ flowchart LR
   D --> H[Authorized people approve]
   H --> X[Crossplane reconciles]
   X --> C[Cloud-native controls enforce]
+
+  classDef experience fill:#0D2438,stroke:#38BDF8,stroke-width:2px,color:#F8FAFC
+  classDef intelligence fill:#2E1752,stroke:#A855F7,stroke-width:2px,color:#F8FAFC
+  classDef governance fill:#3A2A0D,stroke:#F59E0B,stroke-width:2px,color:#F8FAFC
+  classDef human fill:#47270F,stroke:#FB923C,stroke-width:2px,color:#F8FAFC
+  classDef control fill:#102D55,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC
+  classDef enforcement fill:#123A24,stroke:#22C55E,stroke-width:2px,color:#F8FAFC
+  class S experience
+  class A intelligence
+  class D governance
+  class H human
+  class X control
+  class C enforcement
+  linkStyle default stroke:#94A3B8,stroke-width:2px
 ```
 
 Neither the storefront nor AI receives direct cloud administrator, Kubernetes administrator, Terraform/TFE, merge, approval, or unrestricted remediation authority.
@@ -156,6 +199,20 @@ flowchart LR
   F --> M[Minimum viable multi-cloud foundation]
   M --> C[Consumer infrastructure products]
   C --> E[Evidence-led continuous evolution]
+
+  classDef seed fill:#1F2937,stroke:#94A3B8,stroke-width:2px,color:#F8FAFC
+  classDef control fill:#102D55,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC
+  classDef product fill:#123A24,stroke:#22C55E,stroke-width:2px,color:#F8FAFC
+  classDef foundation fill:#12303A,stroke:#14B8A6,stroke-width:2px,color:#F8FAFC
+  classDef consumer fill:#0D2438,stroke:#38BDF8,stroke-width:2px,color:#F8FAFC
+  classDef evidence fill:#3A1530,stroke:#EC4899,stroke-width:2px,color:#F8FAFC
+  class S seed
+  class P control
+  class F product
+  class M foundation
+  class C consumer
+  class E evidence
+  linkStyle default stroke:#7DD3FC,stroke-width:2px
 ```
 
 A minimal seed establishes only the irreducible trust boundary needed for Crossplane and governed delivery to operate. Foundation capabilities can then be established and evolved through product APIs.
@@ -173,6 +230,10 @@ A team may successfully provision a landing zone, configure Terraform Enterprise
 The risk is not Terraform, TFE, pipelines, modules, or policy-as-code themselves.
 
 > **The risk is allowing implementation machinery to become the product boundary.**
+
+<p align="center">
+  <img src="docs/assets/showcase/day1-day2.svg" alt="Day 1 tool-centric platform versus Day 2 Infrastructure-as-a-Product operating model" width="1050"/>
+</p>
 
 ### Day 1 success can hide Day 2 cost
 
@@ -257,6 +318,22 @@ flowchart LR
   POLICY --> APPROVAL
   APPROVAL --> CONTROL
   CONTROL --> CLOUD
+
+  classDef intent fill:#0D2438,stroke:#38BDF8,stroke-width:2px,color:#F8FAFC
+  classDef intelligence fill:#2E1752,stroke:#A855F7,stroke-width:2px,color:#F8FAFC
+  classDef contract fill:#123A24,stroke:#22C55E,stroke-width:3px,color:#F8FAFC
+  classDef governance fill:#3A2A0D,stroke:#F59E0B,stroke-width:2px,color:#F8FAFC
+  classDef human fill:#47270F,stroke:#FB923C,stroke-width:2px,color:#F8FAFC
+  classDef control fill:#102D55,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC
+  classDef cloud fill:#12303A,stroke:#14B8A6,stroke-width:2px,color:#F8FAFC
+  class INTENT intent
+  class AI intelligence
+  class CONTRACT contract
+  class POLICY governance
+  class APPROVAL human
+  class CONTROL control
+  class CLOUD cloud
+  linkStyle default stroke:#7DD3FC,stroke-width:2px
 ```
 
 The important change is that implementation syntax moves farther away from the consumer while product intent becomes more important.
@@ -302,6 +379,10 @@ The desired architecture makes the opposite true:
 
 This repository deliberately references bounded implementation POCs rather than duplicating them.
 
+<p align="center">
+  <img src="docs/assets/showcase/portfolio-system.svg" alt="Bounded Infrastructure-as-a-Product repository portfolio system map" width="1050"/>
+</p>
+
 | Repository | Responsibility |
 |---|---|
 | [`backstage-infrastructure-product-storefront-poc`](https://github.com/SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc) | Optional reference developer storefront: browse, configure, order, track. No provisioning authority. |
@@ -341,6 +422,24 @@ flowchart LR
   CFE --> XP[Crossplane simulated reconciliation]
   XP --> EVID[Status + evidence]
   EVID --> STORE
+
+  classDef consumer fill:#0D2438,stroke:#38BDF8,stroke-width:2px,color:#F8FAFC
+  classDef intent fill:#12304A,stroke:#22D3EE,stroke-width:2px,color:#F8FAFC
+  classDef intelligence fill:#2E1752,stroke:#A855F7,stroke-width:2px,color:#F8FAFC
+  classDef governance fill:#3A2A0D,stroke:#F59E0B,stroke-width:2px,color:#F8FAFC
+  classDef human fill:#47270F,stroke:#FB923C,stroke-width:2px,color:#F8FAFC
+  classDef contract fill:#123A24,stroke:#22C55E,stroke-width:3px,color:#F8FAFC
+  classDef control fill:#102D55,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC
+  classDef evidence fill:#3A1530,stroke:#EC4899,stroke-width:2px,color:#F8FAFC
+  class DEV,STORE consumer
+  class ORDER intent
+  class AI intelligence
+  class POLICY governance
+  class HUMAN human
+  class CFE contract
+  class XP control
+  class EVID evidence
+  linkStyle default stroke:#7DD3FC,stroke-width:2px
 ```
 
 The harness verifies that storefront and AI-rendered runtime contracts remain equivalent, implementation details do not leak into the product manifest, invalid storefront requests fail closed, and the human-approval boundary remains intact.
@@ -350,6 +449,10 @@ This closes the **consumer-experience gap** without weakening the control-plane 
 ---
 
 ## Evidence already established
+
+<p align="center">
+  <img src="docs/assets/showcase/evidence-chain.svg" alt="Evidence-first chain from requirement through reconciliation and reproducible evidence" width="1050"/>
+</p>
 
 The frozen credential-free baseline passed across Kubernetes **1.34, 1.35, and 1.36**, with a **100/100** acceptance score on each matrix entry. It demonstrated:
 
@@ -419,6 +522,14 @@ flowchart LR
   G3 --> G4[Live model adapter]
   G4 --> G5[Residual TFE comparison]
   G5 --> G6[Production pilot]
+
+  classDef complete fill:#123A24,stroke:#22C55E,stroke-width:2px,color:#F8FAFC
+  classDef next fill:#3A2A0D,stroke:#F59E0B,stroke-width:3px,color:#F8FAFC
+  classDef future fill:#1F2937,stroke:#64748B,stroke-width:2px,color:#CBD5E1
+  class G0,G1 complete
+  class G2 next
+  class G3,G4,G5,G6 future
+  linkStyle default stroke:#7DD3FC,stroke-width:2px
 ```
 
 The storefront-to-product flow is now implemented in the integration harness. The next **live-cloud** technical milestone remains **AWS sandbox reconciliation using workload identity**, followed by the same evidence pattern in GCP.

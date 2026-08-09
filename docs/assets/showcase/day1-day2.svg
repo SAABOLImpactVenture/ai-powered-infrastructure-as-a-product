@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="760" viewBox="0 0 1600 760" role="img" aria-labelledby="title desc">
+<title id="title">Day 1 versus Day 2 platform operating model</title>
+<desc id="desc">A side-by-side comparison of a tool-centric provisioning platform and an Infrastructure-as-a-Product model optimized for lifecycle, stable contracts and evidence.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07111f"/><stop offset="1" stop-color="#111827"/></linearGradient>
+  <linearGradient id="left" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4c1d1d"/><stop offset="1" stop-color="#2d1b1b"/></linearGradient>
+  <linearGradient id="right" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0d3b2a"/><stop offset="1" stop-color="#0b2530"/></linearGradient>
+  <filter id="s"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-opacity="0.3"/></filter>
+  <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#94a3b8"/></marker>
+  <style>.t{font:800 40px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}.k{font:800 18px Inter,Segoe UI,Arial,sans-serif;letter-spacing:2px}.h{font:800 28px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}.b{font:600 16px Inter,Segoe UI,Arial,sans-serif;fill:#cbd5e1}.n{font:800 18px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}.small{font:600 14px Inter,Segoe UI,Arial,sans-serif;fill:#cbd5e1}</style>
+</defs>
+<rect width="1600" height="760" rx="32" fill="url(#bg)"/>
+<text x="72" y="72" class="t">The Day 1 / Day 2 platform trap</text>
+<text x="72" y="108" class="b">Provisioning success is not the same thing as product success.</text>
+
+<g transform="translate(72,158)" filter="url(#s)">
+  <rect width="650" height="500" rx="30" fill="url(#left)" stroke="#ef4444" stroke-opacity="0.7"/>
+  <text x="36" y="50" class="k" fill="#fca5a5">DAY 1 — TOOL-CENTRIC START</text>
+  <text x="36" y="91" class="h">Fast provisioning. Growing coupling.</text>
+  <g transform="translate(48,140)">
+    <rect width="554" height="58" rx="14" fill="#451a1a" stroke="#7f1d1d"/><text x="277" y="36" text-anchor="middle" class="n">Repository + Terraform modules</text>
+    <path d="M277 58 V82" stroke="#94a3b8" stroke-width="3" marker-end="url(#a)"/>
+    <rect y="88" width="554" height="58" rx="14" fill="#451a1a" stroke="#7f1d1d"/><text x="277" y="124" text-anchor="middle" class="n">TFE workspaces + pipelines</text>
+    <path d="M277 146 V170" stroke="#94a3b8" stroke-width="3" marker-end="url(#a)"/>
+    <rect y="176" width="554" height="58" rx="14" fill="#451a1a" stroke="#7f1d1d"/><text x="277" y="212" text-anchor="middle" class="n">Provider-specific implementation paths</text>
+    <path d="M277 234 V258" stroke="#94a3b8" stroke-width="3" marker-end="url(#a)"/>
+    <rect y="264" width="554" height="58" rx="14" fill="#451a1a" stroke="#7f1d1d"/><text x="277" y="300" text-anchor="middle" class="n">Consumers inherit implementation concepts</text>
+  </g>
+  <text x="48" y="478" class="b">Day 2 pressure: upgrades • drift • state • exceptions • policy sprawl</text>
+</g>
+
+<g transform="translate(878,158)" filter="url(#s)">
+  <rect width="650" height="500" rx="30" fill="url(#right)" stroke="#22c55e" stroke-opacity="0.75"/>
+  <text x="36" y="50" class="k" fill="#86efac">DAY 2 — PRODUCT OPERATING MODEL</text>
+  <text x="36" y="91" class="h">Stable contract. Replaceable tooling.</text>
+  <g transform="translate(48,140)">
+    <rect width="554" height="58" rx="14" fill="#103b2a" stroke="#22c55e"/><text x="277" y="36" text-anchor="middle" class="n">Business / product intent</text>
+    <path d="M277 58 V82" stroke="#94a3b8" stroke-width="3" marker-end="url(#a)"/>
+    <rect y="88" width="554" height="58" rx="14" fill="#123c34" stroke="#06b6d4"/><text x="277" y="124" text-anchor="middle" class="n">Stable infrastructure product contract</text>
+    <path d="M277 146 V170" stroke="#94a3b8" stroke-width="3" marker-end="url(#a)"/>
+    <rect y="176" width="554" height="58" rx="14" fill="#102c4b" stroke="#3b82f6"/><text x="277" y="212" text-anchor="middle" class="n">Platform-owned reconciliation + lifecycle</text>
+    <path d="M277 234 V258" stroke="#94a3b8" stroke-width="3" marker-end="url(#a)"/>
+    <rect y="264" width="554" height="58" rx="14" fill="#33240d" stroke="#f59e0b"/><text x="277" y="300" text-anchor="middle" class="n">Deterministic governance + evidence</text>
+  </g>
+  <text x="48" y="478" class="b">Day 2 focus: outcomes • lifecycle • evidence • usability • cost</text>
+</g>
+
+<g transform="translate(612,682)">
+  <rect width="376" height="46" rx="23" fill="#111827" stroke="#8b5cf6"/>
+  <text x="188" y="29" text-anchor="middle" class="small">The product contract survives the tooling generation.</text>
+</g>
+</svg>
