@@ -1,0 +1,61 @@
+{
+  "phase": 10,
+  "artifact": "mutation-check-matrix",
+  "status": "PASS",
+  "ruleCatalogVersion": "iaap-guard/v0.1.2",
+  "scoringModelVersion": "coverage/v1",
+  "cases": [
+    {
+      "case": "clean internal installation proof",
+      "repository": "SAABOLImpactVenture/iaap-guard",
+      "pullNumber": 9,
+      "revision": "c942bb762cc37a2cfc76e5715f586e889d043bb3",
+      "expected": "success",
+      "actual": "success",
+      "result": "PASS"
+    },
+    {
+      "case": "clean public installation proof",
+      "repository": "SAABOLImpactVenture/ai-powered-infrastructure-as-a-product",
+      "pullNumber": 107,
+      "revision": "41b4235ccec35737623798ababa10eb9eaf4e34e",
+      "expected": "success",
+      "actual": "success",
+      "result": "PASS"
+    },
+    {
+      "case": "no relevant change",
+      "repository": "SAABOLImpactVenture/iaap-guard",
+      "pullNumber": 12,
+      "revision": "fc0c3fb4104c2c4db6cfa83233d575b54a3e6637",
+      "expected": "success",
+      "actual": "success",
+      "result": "PASS"
+    },
+    {
+      "case": "missing accountable owner",
+      "repository": "SAABOLImpactVenture/ai-powered-infrastructure-as-a-product",
+      "pullNumber": 108,
+      "revision": "e02059410d712b6652a780a1783285c91d6b87da",
+      "expected": "neutral/IAP-P004",
+      "actual": "neutral/IAP-P004",
+      "result": "PASS"
+    },
+    {
+      "case": "consumer exposes terraformWorkspace",
+      "repository": "SAABOLImpactVenture/iaap-guard",
+      "pullNumber": 14,
+      "revision": "fd362ed08b7e18e674debe7a270d7706d765f576",
+      "expected": "failure/IAP-P001",
+      "actual": "failure/IAP-P001",
+      "score": 83,
+      "findings": 1,
+      "result": "PASS"
+    }
+  ],
+  "testDesignLearning": [
+    "Initial semantic mutations placed beneath artifacts/ were intentionally excluded by the Guard loader and therefore were not valid live-architecture mutations.",
+    "The first IAP-P004 attempt in iaap-guard was additionally masked by an existing valid consumer contract because P004 evaluates accountable-owner coverage at repository scope.",
+    "The evidence was corrected rather than suppressing findings or changing rule semantics."
+  ]
+}
