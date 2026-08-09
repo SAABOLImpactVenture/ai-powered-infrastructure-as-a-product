@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "phase-11/acquisition-path/v1",
+  "phase": 11,
+  "status": "IMPLEMENTED_IN_PR",
+  "publicFrontDoor": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product",
+  "appPage": "https://github.com/apps/iaap-guard",
+  "directInstall": "https://github.com/apps/iaap-guard/installations/new",
+  "feedback": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/issues/111",
+  "flow": [
+    "public README / beta guide",
+    "understand product and trust boundary",
+    "install public GitHub App",
+    "select repositories",
+    "open or update pull request",
+    "receive IaaP Guard / Architecture Check",
+    "provide structured feedback",
+    "commercial validation"
+  ],
+  "constraints": {
+    "marketplaceRequired": false,
+    "billingRequired": false,
+    "customerPATRequired": false,
+    "customerInfrastructureCredentialsRequired": false,
+    "implementationRepositoryMayRemainInternal": true
+  },
+  "evidenceBasis": {
+    "phase10Issue": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/issues/106",
+    "phase10EvidenceMerge": "1f14515205a0663846fcd5a37e11bea3d2e6e2b4"
+  }
+}

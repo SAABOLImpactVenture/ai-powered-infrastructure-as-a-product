@@ -12,6 +12,33 @@
 
 ---
 
+## Get IaaP Guard
+
+**IaaP Guard** is the installable GitHub-native Infrastructure-as-a-Product architecture and evidence guard built from this program's deterministic product rules.
+
+> **IaaS is what you buy. Infrastructure-as-a-Product is what you build. IaaP Guard makes sure you keep building it that way.**
+
+Its central question is:
+
+> **Is this infrastructure actually being designed, delivered, and governed as a product?**
+
+**[Install IaaP Guard](https://github.com/apps/iaap-guard/installations/new)** · [View the GitHub App](https://github.com/apps/iaap-guard) · [Public beta guide](docs/IAAP-GUARD-PUBLIC-BETA.md) · [Give feedback](https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/issues/111)
+
+The current public beta evaluates pull requests and publishes an **`IaaP Guard / Architecture`** Check. It is deliberately narrow: deterministic architecture/evidence evaluation in GitHub, not infrastructure provisioning and not a generic IaC vulnerability scanner.
+
+| Permission | Access |
+|---|---|
+| Metadata | Read |
+| Contents | Read |
+| Pull requests | Read |
+| Checks | Read/write |
+
+The beta requires **no customer cloud, Kubernetes, Terraform/TFE, AI, or PAT credentials**. It does not execute repository code, provision infrastructure, auto-remediate findings, merge pull requests, or generate AI verdicts.
+
+GitHub Marketplace is not required to install the beta. Phase 10 proved the public App path on both public and internal/private repositories; the evidence is preserved under [`artifacts/phase-10/`](artifacts/phase-10/).
+
+---
+
 ## The modern accelerator
 
 This repository is the **thesis, architecture, governance, operating-model, and evidence front door** for a modern Infrastructure-as-a-Product (IaaP) accelerator.
