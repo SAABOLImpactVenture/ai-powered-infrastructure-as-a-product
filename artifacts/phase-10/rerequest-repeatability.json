@@ -1,0 +1,29 @@
+{
+  "phase": 10,
+  "artifact": "rerequest-repeatability",
+  "status": "PASS",
+  "event": "check_run.rerequested",
+  "delivery": "a0138486-9388-11f1-9494-f712d383dccb",
+  "httpResponse": 200,
+  "repository": "SAABOLImpactVenture/iaap-guard",
+  "pullNumber": 14,
+  "revision": "fd362ed08b7e18e674debe7a270d7706d765f576",
+  "checkRunId": 93173406260,
+  "baseline": {
+    "conclusion": "failure",
+    "score": 83,
+    "findings": 1,
+    "ruleId": "IAP-P001"
+  },
+  "rerequest": {
+    "conclusion": "failure",
+    "score": 83,
+    "findings": 1,
+    "ruleId": "IAP-P001"
+  },
+  "ruleCatalogVersion": "iaap-guard/v0.1.2",
+  "scoringModelVersion": "coverage/v1",
+  "sameImmutableRevision": true,
+  "contradictoryDuplicateConclusion": false,
+  "result": "deterministic and idempotent enough for Phase 10 beta"
+}
