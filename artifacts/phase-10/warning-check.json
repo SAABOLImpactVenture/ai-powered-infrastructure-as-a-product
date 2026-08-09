@@ -1,0 +1,17 @@
+{
+  "phase": 10,
+  "artifact": "warning-check",
+  "status": "PASS",
+  "repository": "SAABOLImpactVenture/ai-powered-infrastructure-as-a-product",
+  "pullNumber": 108,
+  "revision": "e02059410d712b6652a780a1783285c91d6b87da",
+  "checkName": "IaaP Guard / Architecture",
+  "conclusion": "neutral",
+  "ruleId": "IAP-P004",
+  "scenario": "standalone consumer contract does not require accountable owner/team metadata",
+  "ruleCatalogVersion": "iaap-guard/v0.1.2",
+  "scoringModelVersion": "coverage/v1",
+  "uiEvidence": "PR UI showed 1 neutral and 4 successful checks",
+  "blocking": false,
+  "merged": false
+}

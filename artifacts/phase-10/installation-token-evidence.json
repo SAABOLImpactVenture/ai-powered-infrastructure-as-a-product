@@ -1,0 +1,21 @@
+{
+  "phase": 10,
+  "artifact": "installation-token-evidence",
+  "status": "PASS",
+  "authenticationModel": "GitHub App JWT -> repository-scoped short-lived installation access token",
+  "patRequired": false,
+  "requestedRepositoryPermissions": {
+    "contents": "read",
+    "pull_requests": "read",
+    "checks": "write"
+  },
+  "scope": "single repository id per token request",
+  "persistence": "token is not stored in a database or committed to repository evidence",
+  "liveProof": {
+    "repository": "SAABOLImpactVenture/iaap-guard",
+    "pullNumber": 14,
+    "revision": "fd362ed08b7e18e674debe7a270d7706d765f576",
+    "result": "GitHub API access and Check Run publication succeeded"
+  },
+  "tokenValueRecorded": false
+}

@@ -1,0 +1,19 @@
+{
+  "phase": 10,
+  "artifact": "fail-check",
+  "status": "PASS",
+  "repository": "SAABOLImpactVenture/iaap-guard",
+  "pullNumber": 14,
+  "revision": "fd362ed08b7e18e674debe7a270d7706d765f576",
+  "checkName": "IaaP Guard / Architecture",
+  "conclusion": "failure",
+  "score": 83,
+  "findings": 1,
+  "ruleId": "IAP-P001",
+  "evidencePath": "phase10-live/critical-consumer-terraform-workspace.yaml:20",
+  "finding": "consumer-facing field terraformWorkspace exposes implementation machinery",
+  "ruleCatalogVersion": "iaap-guard/v0.1.2",
+  "scoringModelVersion": "coverage/v1",
+  "blocking": true,
+  "merged": false
+}

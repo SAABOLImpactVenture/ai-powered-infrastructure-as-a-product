@@ -1,0 +1,14 @@
+{
+  "phase": 10,
+  "artifact": "app-events",
+  "status": "PASS",
+  "subscribedEvents": ["pull_request", "check_run"],
+  "handledPullRequestActions": ["opened", "synchronize", "reopened", "ready_for_review"],
+  "handledCheckRunActions": ["rerequested"],
+  "notSubscribed": ["push", "issues", "pull_request_review", "deployment", "release", "workflow_run"],
+  "liveEvidence": [
+    {"event": "pull_request.synchronize", "repository": "SAABOLImpactVenture/iaap-guard", "pullNumber": 14, "delivery": "520e5dd0-9386-11f1-8f75-08d50ea74f97"},
+    {"event": "pull_request.opened", "repository": "SAABOLImpactVenture/ai-powered-infrastructure-as-a-product", "pullNumber": 108, "delivery": "76629930-9386-11f1-8c12-e9c0e3b9359b"},
+    {"event": "check_run.rerequested", "repository": "SAABOLImpactVenture/iaap-guard", "pullNumber": 14, "delivery": "a0138486-9388-11f1-9494-f712d383dccb"}
+  ]
+}

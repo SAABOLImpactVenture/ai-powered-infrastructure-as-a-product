@@ -1,0 +1,33 @@
+{
+  "phase": 10,
+  "artifact": "app-permissions",
+  "status": "PASS",
+  "app": {
+    "id": 4529329,
+    "slug": "iaap-guard",
+    "owner": "SAABOLImpactVenture"
+  },
+  "repositoryPermissions": {
+    "metadata": "read",
+    "contents": "read",
+    "pull_requests": "read",
+    "checks": "write"
+  },
+  "checksWriteIncludesRead": true,
+  "notGranted": [
+    "actions",
+    "administration",
+    "members",
+    "issues",
+    "deployments",
+    "secrets",
+    "workflows",
+    "organization-management"
+  ],
+  "evidence": {
+    "delivery": "a0138486-9388-11f1-9494-f712d383dccb",
+    "event": "check_run.rerequested",
+    "observedAt": "2026-08-09T00:24:07Z"
+  },
+  "secretsCommitted": false
+}

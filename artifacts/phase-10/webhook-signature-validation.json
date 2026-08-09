@@ -1,0 +1,16 @@
+{
+  "phase": 10,
+  "artifact": "webhook-signature-validation",
+  "status": "PASS",
+  "algorithm": "HMAC-SHA256",
+  "header": "X-Hub-Signature-256",
+  "implementation": "verify_webhook_signature computes sha256 HMAC over the raw payload and uses hmac.compare_digest",
+  "liveEvidence": {
+    "delivery": "a0138486-9388-11f1-9494-f712d383dccb",
+    "event": "check_run.rerequested",
+    "httpResponse": 200,
+    "processed": true
+  },
+  "negativeBehavior": "missing, malformed, or non-matching signatures are rejected before GitHub event processing",
+  "secretValueRecorded": false
+}

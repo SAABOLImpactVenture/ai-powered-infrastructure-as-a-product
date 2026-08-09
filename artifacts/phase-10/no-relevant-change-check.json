@@ -1,0 +1,14 @@
+{
+  "phase": 10,
+  "artifact": "no-relevant-change-check",
+  "status": "PASS",
+  "repository": "SAABOLImpactVenture/iaap-guard",
+  "pullNumber": 12,
+  "revision": "fc0c3fb4104c2c4db6cfa83233d575b54a3e6637",
+  "checkName": "IaaP Guard / Architecture",
+  "conclusion": "success",
+  "scenario": "only changed path used unsupported .txt suffix",
+  "expectedBehavior": "explicit no-relevant-change result without repository snapshot scan",
+  "uiEvidence": "PR UI showed all four checks successful",
+  "merged": false
+}
