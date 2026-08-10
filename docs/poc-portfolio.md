@@ -12,6 +12,7 @@ flowchart TB
   PRODUCT[multicloud-foundation-product-poc\nproduct contract]
   AI[composite-ai-infrastructure-product-poc\nbounded intelligence]
   INT[multicloud-foundation-poc-integration\nacceptance + evidence]
+  OUT[platform product outcomes\nNPS • time • adoption • escape rate]
 
   HUB --> STORE
   HUB --> SEED
@@ -21,7 +22,8 @@ flowchart TB
   SEED --> INT
   PRODUCT --> INT
   AI --> INT
-  INT --> HUB
+  INT --> OUT
+  OUT --> HUB
 ```
 
 ## Responsibilities
@@ -71,11 +73,24 @@ flowchart LR
   API --> XP[Crossplane]
   XP --> STATUS[Status + evidence]
   STATUS --> STORE
+  STATUS --> OUTCOMES[Product outcome evidence]
+  OUTCOMES --> NPS[Developer NPS]
+  OUTCOMES --> TTP[Time-to-Provision]
+  OUTCOMES --> ADOPT[Internal adoption]
+  OUTCOMES --> ESCAPE[Exception / escape rate]
 ```
+
+### Platform product outcomes
+
+Product success is measured by developer outcomes in addition to engineering and runtime health. The minimum outcome set is Developer NPS, Order-to-Ready and Approval-to-Ready Time-to-Provision, Internal Adoption Rate, Repeat Consumption Rate, and Exception / Escape Rate.
+
+Infrastructure code volume is an implementation activity metric, not a product-success metric. Terraform lines of code, number of modules, pipelines, pull requests, and tickets can help manage engineering work but do not prove that the platform is useful, fast, adopted, or preferred.
+
+The detailed measurement and telemetry contract is defined in [Platform Product Outcomes](platform-product-outcomes.md).
 
 ### `ai-powered-infrastructure-as-a-product`
 
-Owns the thesis, architecture, product operating model, decisions, frozen evidence baselines, portfolio boundaries, and investment framing. It intentionally does not duplicate runtime implementation code.
+Owns the thesis, architecture, product operating model, decisions, frozen evidence baselines, portfolio boundaries, outcome measurement model, and investment framing. It intentionally does not duplicate runtime implementation code.
 
 ## Product-system mental model
 
@@ -89,6 +104,7 @@ Owns the thesis, architecture, product operating model, decisions, frozen eviden
 | Control plane | Crossplane | Reconciliation and product status. |
 | Bootstrap | `crossplane-multicloud-seed-poc` | Minimal trusted runtime required for the control plane. |
 | Acceptance | `multicloud-foundation-poc-integration` | End-to-end evidence across the bounded components. |
+| Outcomes | Cross-layer telemetry + developer feedback | Developer NPS, Time-to-Provision, adoption, repeat use, exceptions. |
 | Realization | AWS / Azure / GCP | Cloud-native services and enforcement. |
 
 ## Evidence gates
@@ -98,12 +114,13 @@ Owns the thesis, architecture, product operating model, decisions, frozen eviden
 3. **Storefront/product accepted-domain compatibility** — corrected and passed as historical v3 across Kubernetes 1.34/1.35/1.36 at 100/100.
 4. **Workflow/bootstrap supply-chain reproducibility** — passed as historical v4 across Kubernetes 1.34/1.35/1.36 at 100/100, with immutable GitHub Action revisions, pinned Python, hash-locked CI dependencies, and publisher SHA-256 verification for Kind/kubectl/Helm.
 5. **Backstage runtime smoke + repinned integration** — **passed as current v5**. An actual Backstage backend registered and dry-ran the reference template/action without a real GitHub write credential, and the resulting merged storefront revision was pinned into a fresh hardened Kubernetes 1.34/1.35/1.36 integration run that remained 100/100.
-6. **Product live-cloud readiness corrections** — **next gate**: semantic CIDR validity and containment, lifecycle-field ownership decision, and removal of unobserved pre-scoring from the TFE comparison example before live-cloud evidence is treated as enterprise product proof.
-7. **Live AWS sandbox** — first live-cloud gate after the correction gate is satisfied; use workload identity rather than static cloud credentials.
-8. **Live GCP sandbox** — after AWS is repeatable.
-9. **Live model adapter** — same tool and authority boundary as the deterministic baseline.
-10. **Residual TFE comparison** — observed evidence only for remaining justified use cases.
-11. **Production pilot** — authorization, SLOs, recovery, support, and lifecycle evidence.
+6. **Product live-cloud readiness corrections** — **passed** in integration run `31256619696` across Kubernetes 1.34/1.35/1.36 at 100/100. The product now enforces semantic RFC1918 CIDR validity/containment, platform-owned lifecycle policy, neutral observed-evidence-only TFE comparison inputs, and explicit expected admission-denial evidence.
+7. **Platform product outcome instrumentation** — **current pre-live-cloud gate**. Establish correlation/timing events and product-outcome evidence contracts before live AWS. POC timing may be labeled `poc-observed`; Developer NPS, adoption, repeat use, and real exception behavior remain `not-observed` until an actual developer population exists.
+8. **Live AWS sandbox** — first live-cloud gate after outcome instrumentation is present; use workload identity rather than static cloud credentials and capture Time-to-Provision evidence from the first live order.
+9. **Live GCP sandbox** — after AWS is repeatable.
+10. **Live model adapter** — same tool and authority boundary as the deterministic baseline.
+11. **Residual TFE comparison** — observed evidence only for remaining justified use cases.
+12. **Production pilot** — authorization, SLOs, recovery, support, lifecycle evidence, Developer NPS, adoption, and repeat-consumption evidence.
 
 The v5 runtime proof is intentionally narrower than a production Backstage deployment: the GitHub publication action ran in dry-run mode, no browser/UI journey was executed, and the generated Backstage dependency graph is not claimed immutable across future runs.
 
@@ -111,4 +128,4 @@ See [POC Baseline Lineage](poc-baselines/README.md) for the frozen evidence hist
 
 ## Boundary principle
 
-> **The storefront is where the consumer shops. The product API defines what is being bought. Crossplane controls the product lifecycle. The cloud realizes it.**
+> **The storefront is where the consumer shops. The product API defines what is being bought. Crossplane controls the product lifecycle. The cloud realizes it. Success is measured by developer outcomes, not infrastructure code volume.**
