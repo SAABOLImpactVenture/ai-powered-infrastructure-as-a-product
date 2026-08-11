@@ -33,6 +33,14 @@ Its central question is:
 
 The current public beta evaluates pull requests and publishes an **`IaaP Guard / Architecture`** Check. It is deliberately narrow: deterministic architecture/evidence evaluation in GitHub, not infrastructure provisioning and not a generic IaC vulnerability scanner.
 
+**Guard now connects architecture evidence to planning.** When a repository produces WARNING or FAIL findings, IaaP Guard can generate an evidence-traceable improvement plan with measurable Objectives and Key Results, Epics mapped to those KRs, Features, candidate User Stories and Tasks, and acceptance evidence. This lets platform teams move from architecture assessment into backlog preparation without turning Guard into a sprint-management or infrastructure-execution tool.
+
+```text
+Architecture Evidence → OKRs → Epics → Features → Candidate Stories → Candidate Tasks
+```
+
+Every proposed planning item remains traceable to the deterministic Guard rule and repository evidence that justified it. PASS/no-finding results do not invent backlog work.
+
 <p align="center">
   <img src="docs/assets/showcase/iaap-guard.svg" alt="IaaP Guard deterministic GitHub pull request architecture check" width="1050"/>
 </p>
