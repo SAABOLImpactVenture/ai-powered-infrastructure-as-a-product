@@ -1,13 +1,19 @@
 apiVersion: platform.example.org/v1alpha1
 kind: InfrastructureProductSchema
 metadata:
-  name: phase10-warning-proof
+  name: phase10-fail-proof
 spec:
   required:
     - cloud
     - region
+    - owner
   properties:
     cloud:
       type: string
     region:
       type: string
+    owner:
+      type: string
+    providerConfig:
+      type: string
+      description: Consumer intentionally selects implementation machinery for Phase 10 live FAIL validation.
