@@ -1,0 +1,13 @@
+apiVersion: platform.example.org/v1alpha1
+kind: InfrastructureProductSchema
+metadata:
+  name: phase14-review-required-proof
+spec:
+  required:
+    - cloud
+    - region
+  properties:
+    cloud:
+      type: string
+    region:
+      type: string
