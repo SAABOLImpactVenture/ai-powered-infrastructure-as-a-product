@@ -1,0 +1,9 @@
+{
+  "phase": 14,
+  "artifact": "live-proof-baseline",
+  "purpose": "Verify deployed IaaP Guard Evidence Continuity on a fresh disposable PR from current main.",
+  "expectedEvidenceContinuity": "SUPPORTED",
+  "guardMaterialChangeExpected": false,
+  "disposition": "temporary-live-proof",
+  "mergeApproved": false
+}
