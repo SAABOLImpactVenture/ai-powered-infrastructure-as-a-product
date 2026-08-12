@@ -1,0 +1,150 @@
+{
+  "phase": 12,
+  "artifact": "live-federation-acceptance",
+  "status": "PASS",
+  "phaseStatusAfterMerge": "COMPLETE",
+  "repository": "SAABOLImpactVenture/ai-powered-infrastructure-as-a-product",
+  "checkName": "IaaP Guard / Architecture",
+  "ruleCatalogVersion": "iaap-guard/v0.1.2",
+  "scoringModelVersion": "coverage/v1",
+  "product": {
+    "id": "cloud-foundation-environment",
+    "name": "Cloud Foundation Environment",
+    "manifestSchemaVersion": "iaap-product/v1",
+    "membershipManifestBlobSha": "97da09f3c7862752d84418f7a16854d8add1c145",
+    "members": [
+      {
+        "repository": "SAABOLImpactVenture/multicloud-foundation-product-poc",
+        "roles": ["product-contract", "control-plane", "governance", "implementation", "evidence"],
+        "required": true,
+        "primary": true,
+        "membershipPullRequest": 8,
+        "membershipMergeRevision": "a1b495b8327dc4ebabdeda124fccee6d25c82303"
+      },
+      {
+        "repository": "SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc",
+        "roles": ["experience"],
+        "required": true,
+        "primary": false,
+        "membershipPullRequest": 7,
+        "membershipMergeRevision": "9941b684620f75acea311ca299fa41072ba4b150"
+      }
+    ]
+  },
+  "proofPullRequest": {
+    "repository": "SAABOLImpactVenture/multicloud-foundation-product-poc",
+    "number": 9,
+    "url": "https://github.com/SAABOLImpactVenture/multicloud-foundation-product-poc/pull/9",
+    "baseRevision": "a1b495b8327dc4ebabdeda124fccee6d25c82303",
+    "closedUnmerged": true,
+    "mustNeverMerge": true
+  },
+  "proofs": [
+    {
+      "case": "trusted federation detects cross-repository incompatibility",
+      "revision": "1f9302103e33c172fb83cb7145ade95400cc2bb4",
+      "checkRunId": 94054384568,
+      "checkRunUrl": "https://github.com/SAABOLImpactVenture/multicloud-foundation-product-poc/runs/94054384568",
+      "observationCapturedAt": "2026-08-12T08:22:01Z",
+      "architectureConclusion": "PASS",
+      "architectureScore": 100,
+      "architectureFindings": 0,
+      "evidenceContinuity": "SUPPORTED",
+      "productConclusion": "FAILURE",
+      "productEvidenceScore": 96,
+      "weakestMemberScore": 100,
+      "evidenceCompleteness": "2/2 repositories",
+      "acquisition": "trusted-github-federation",
+      "relationshipEvaluation": "complete",
+      "productEvidenceRevision": "9e39e72f3f73860e3a993731af0cff3e3896dc983a7eb685a7b9321c7e0c14d2",
+      "finding": {
+        "ruleId": "IAP-C001",
+        "repository": "SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc",
+        "path": "templates/cloud-foundation-environment/template.yaml",
+        "message": "region: consumer minLength None is broader than 3; region: consumer maxLength None is broader than 32"
+      },
+      "consumerBoundaryScore": 80,
+      "improvementPlan": {
+        "objectives": 1,
+        "keyResults": 3,
+        "epics": 1,
+        "features": 1,
+        "candidateStories": 1,
+        "candidateTasks": 4
+      },
+      "checkRunMutationNote": "This Check Run was later refreshed by the GitHub App after the member remediation was merged. This artifact preserves the earlier live FAILURE observation captured before remediation; the Check Run URL itself now reflects the later reevaluation."
+    },
+    {
+      "case": "member remediation proves contract-compatible federation",
+      "repository": "SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc",
+      "pullRequest": 8,
+      "pullRequestUrl": "https://github.com/SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc/pull/8",
+      "revision": "203c241fbb5adb61972eac9ee0fd62923bbd4b9c",
+      "mergeRevision": "d6b43b252459c3623a1520bc8949d8e64b7b71d5",
+      "checkRunId": 94055751401,
+      "checkRunUrl": "https://github.com/SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc/runs/94055751401",
+      "change": "Add region minLength 3 and maxLength 32 to align the storefront with the canonical product contract.",
+      "architectureConclusion": "PASS",
+      "architectureScore": 100,
+      "architectureFindings": 0,
+      "evidenceContinuity": "SUPPORTED",
+      "productConclusion": "SUCCESS",
+      "productEvidenceScore": 100,
+      "weakestMemberScore": 100,
+      "evidenceCompleteness": "2/2 repositories",
+      "acquisition": "trusted-github-federation",
+      "relationshipEvaluation": "complete",
+      "productEvidenceRevision": "1ce6e7ec88f0e3503acfb34d8d71fe871af3a3d7b5db44e40faa3e3c43630791",
+      "productFindings": 0
+    },
+    {
+      "case": "primary-member federation revalidation after remediation",
+      "revision": "a16b7a64aab7ea1512455bcb1c28b0c16a1baddb",
+      "checkRunId": 94058101379,
+      "checkRunUrl": "https://github.com/SAABOLImpactVenture/multicloud-foundation-product-poc/runs/94058101379",
+      "architectureConclusion": "PASS",
+      "githubConclusion": "success",
+      "architectureScore": 100,
+      "architectureFindings": 0,
+      "evidenceContinuity": "SUPPORTED",
+      "productConclusion": "SUCCESS",
+      "productEvidenceScore": 100,
+      "weakestMemberScore": 100,
+      "evidenceCompleteness": "2/2 repositories",
+      "acquisition": "trusted-github-federation",
+      "relationshipEvaluation": "complete",
+      "productEvidenceRevision": "d57925df1952885c1aa7ce75e7d83c32b5371e60849de292c8519600e73abe1c",
+      "productDimensions": {
+        "Product Abstraction": 100,
+        "Consumer Boundary": 100,
+        "Experience / Authority": 100,
+        "Control-Plane Separation": "N/A",
+        "Governance": 100,
+        "Evidence Readiness": 100
+      },
+      "productFindings": 0,
+      "improvementPlanRequired": false
+    }
+  ],
+  "acceptanceCriteria": {
+    "realReciprocalDefaultBranchMembership": "PASS",
+    "liveGitHubAppAccessToAllRequiredMembers": "PASS",
+    "trustedFederationAcquiresTwoOfTwoMembers": "PASS",
+    "individualMembersCanPassWhileProductRelationshipFails": "PASS",
+    "controlledIncompatibleRelationshipProducesIapC001": "PASS",
+    "productImprovementPlanGeneratedFromLiveFinding": "PASS",
+    "targetedRemediationAppliedThroughPullRequest": "PASS",
+    "remediationProducesProductSuccess100": "PASS",
+    "primaryMemberRevalidationProducesProductSuccess100": "PASS",
+    "proofPullRequestClosedWithoutMerge": "PASS"
+  },
+  "authorityBoundary": "The Product Assessment and Product Improvement Plan are deterministic/advisory evidence and planning outputs. They do not grant provisioning authority, approve changes, assign work, execute remediation, or expand GitHub App permissions.",
+  "interpretation": [
+    "Phase 12 demonstrated a real two-repository product using reciprocal trusted default-branch membership rather than PR-local unilateral enrollment.",
+    "Both member repositories independently scored 100 while trusted federation detected a cross-repository consumer-contract incompatibility and failed the logical product at 96.",
+    "IaaP Guard generated an OKR-to-work planning response for the live IAP-C001 finding, and the smallest contract correction moved the federated product to SUCCESS 100.",
+    "The primary member then independently revalidated the remediated two-repository product at SUCCESS 100 with complete relationship evaluation and 2/2 evidence.",
+    "The disposable proof pull request was closed unmerged and must not be reopened or merged.",
+    "No AWS deployment, runtime change, rule change, scoring change, or GitHub App permission expansion was required for this live-acceptance campaign."
+  ]
+}
