@@ -1,0 +1,9 @@
+apiVersion: evidence.iaap.dev/v1
+kind: ValidationEvidence
+metadata:
+  name: phase10-iaap-guard-public-live-proof
+  owner: SAABOLImpactVenture
+spec:
+  purpose: public repository GitHub App and Check Run validation
+  disposition: temporary
+  mergeApproved: false
