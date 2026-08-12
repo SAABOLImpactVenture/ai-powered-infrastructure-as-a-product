@@ -1,0 +1,74 @@
+{
+  "phase": 14,
+  "artifact": "live-acceptance",
+  "status": "PASS",
+  "phaseStatusAfterMerge": "COMPLETE",
+  "repository": "SAABOLImpactVenture/ai-powered-infrastructure-as-a-product",
+  "checkName": "IaaP Guard / Architecture",
+  "ruleCatalogVersion": "iaap-guard/v0.1.2",
+  "scoringModelVersion": "coverage/v1",
+  "proofPullRequest": {
+    "number": 122,
+    "url": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/pull/122",
+    "baseRevision": "7ae95c9c384dfeeabb7246f07f3f2d6098a7ed18",
+    "closedUnmerged": true
+  },
+  "proofs": [
+    {
+      "case": "non-Guard-material baseline",
+      "revision": "f1d438b350e5b43cbeb5180813f2c37c50829e5f",
+      "checkRunId": 94042872292,
+      "checkRunUrl": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/runs/94042872292",
+      "architectureConclusion": "PASS",
+      "githubConclusion": "success",
+      "score": 100,
+      "findings": 0,
+      "evidenceContinuity": "SUPPORTED",
+      "guardMateriality": "no_guard_material_change_detected",
+      "disposition": "no_additional_guard_review",
+      "ruleStateTransitions": 0,
+      "findingsIntroduced": 0,
+      "findingsResolved": 0,
+      "evidenceDigest": "sha256:a52cc8babb3eae7eb64122b84b2262fe97970072805d83f5e1db5937f68f517a"
+    },
+    {
+      "case": "controlled Guard-material change",
+      "revision": "2fb81a670277966593f3fcbb5c6871fbfd2aca32",
+      "previousRevision": "f1d438b350e5b43cbeb5180813f2c37c50829e5f",
+      "checkRunId": 94043620836,
+      "checkRunUrl": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/runs/94043620836",
+      "architectureConclusion": "WARNING",
+      "githubConclusion": "neutral",
+      "score": 67,
+      "findings": 1,
+      "ruleId": "IAP-P004",
+      "evidenceContinuity": "REVIEW REQUIRED",
+      "guardMateriality": "guard_material_change_detected",
+      "disposition": "human_review_required",
+      "ruleStateTransitions": 4,
+      "findingsIntroduced": 1,
+      "findingsResolved": 0,
+      "evidenceDigest": "sha256:f4d65f0f6dbd4b8306b2b07c74c172bd858fe7c44d8a55b94ed4a79012d5358b"
+    }
+  ],
+  "acceptanceCriteria": {
+    "deployedRuntimePublishesEvidenceContinuity": "PASS",
+    "nonMaterialChangeProducesSupported": "PASS",
+    "guardMaterialChangeProducesReviewRequired": "PASS",
+    "samePullRequestUsesTrustedGitHubBaseRevision": "PASS",
+    "repositoryCheckConclusionSemanticsRemainUnchanged": "PASS",
+    "proofPullRequestClosedWithoutMerge": "PASS"
+  },
+  "rerequest": {
+    "required": false,
+    "performed": false,
+    "reason": "Optional for Phase 14 acceptance; immutable revision and Check Run evidence are already captured."
+  },
+  "authorityBoundary": "Evidence Continuity is advisory and does not determine legal, institutional, deployment, exception, risk-acceptance, or disposition authority.",
+  "interpretation": [
+    "The deployed GitHub App runtime produced the Phase 14 Evidence Continuity contract on a fresh pull request from current main.",
+    "The same pull request demonstrated the required transition from SUPPORTED to REVIEW REQUIRED after a controlled Guard-material change.",
+    "The proof pull request was closed unmerged and must not be reopened or merged.",
+    "No AWS deployment, runtime change, rule change, scoring change, permission change, or architecture change was required for this live-acceptance campaign."
+  ]
+}
