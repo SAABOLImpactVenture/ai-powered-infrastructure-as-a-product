@@ -1,0 +1,13 @@
+apiVersion: platform.example.org/v1alpha1
+kind: InfrastructureProductSchema
+metadata:
+  name: phase10-warning-proof
+spec:
+  required:
+    - cloud
+    - region
+  properties:
+    cloud:
+      type: string
+    region:
+      type: string
