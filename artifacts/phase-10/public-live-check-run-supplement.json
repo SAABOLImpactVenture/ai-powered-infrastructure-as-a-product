@@ -1,0 +1,64 @@
+{
+  "phase": 10,
+  "artifact": "public-live-check-run-supplement",
+  "status": "PASS",
+  "relationshipToCloseout": "SUPPLEMENTAL_POST_CLOSEOUT_EVIDENCE",
+  "repository": "SAABOLImpactVenture/ai-powered-infrastructure-as-a-product",
+  "visibility": "public",
+  "checkName": "IaaP Guard / Architecture",
+  "ruleCatalogVersion": "iaap-guard/v0.1.2",
+  "scoringModelVersion": "coverage/v1",
+  "preservesExistingCloseout": true,
+  "proofs": [
+    {
+      "case": "public PASS",
+      "pullNumber": 119,
+      "pullRequestUrl": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/pull/119",
+      "revision": "e924fec8853d0e195d751b1e7daca8b8c23a4f37",
+      "checkRunId": 93974771626,
+      "checkRunUrl": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/runs/93974771626",
+      "conclusion": "success",
+      "score": 100,
+      "findings": 0
+    },
+    {
+      "case": "public WARNING",
+      "pullNumber": 120,
+      "pullRequestUrl": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/pull/120",
+      "revision": "908a2b10f9ad21c4570f416a126f1b005db6bfa5",
+      "checkRunId": 93977570220,
+      "checkRunUrl": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/runs/93977570220",
+      "conclusion": "neutral",
+      "score": 67,
+      "findings": 1,
+      "ruleId": "IAP-P004"
+    },
+    {
+      "case": "same-PR transition from WARNING to FAIL",
+      "pullNumber": 120,
+      "pullRequestUrl": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/pull/120",
+      "revision": "ecbae53fc4e66f7283b5d29868ef772927299c14",
+      "previousRevision": "908a2b10f9ad21c4570f416a126f1b005db6bfa5",
+      "checkRunId": 93979708307,
+      "checkRunUrl": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/runs/93979708307",
+      "conclusion": "failure",
+      "score": 83,
+      "findings": 1,
+      "ruleId": "IAP-P001",
+      "evidence": "consumer-facing field 'providerConfig' exposes implementation machinery"
+    }
+  ],
+  "existingEvidenceReferences": {
+    "phase10Closeout": "artifacts/phase-10/beta-scorecard.json",
+    "originalPublicPass": "artifacts/phase-10/pass-check.json",
+    "originalWarning": "artifacts/phase-10/warning-check.json",
+    "originalFail": "artifacts/phase-10/fail-check.json",
+    "internalPass": "artifacts/phase-10/private-repo-beta.json",
+    "internalRerequest": "artifacts/phase-10/rerequest-repeatability.json"
+  },
+  "interpretation": [
+    "The newer proofs supplement rather than replace the merged Phase 10 exit-gate evidence.",
+    "PR 120 demonstrates deterministic conclusion changes across two immutable revisions of the same pull request.",
+    "No runtime, rule, scoring, architecture, permission, or deployment change is asserted by this artifact."
+  ]
+}
