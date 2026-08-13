@@ -14,6 +14,18 @@
     "liveAcceptanceObserved": false,
     "note": "Do not mark Phase 15 COMPLETE until the merged Phase 15 runtime is deployed and the three live acceptance states are captured."
   },
+  "preDeploymentBaseline": {
+    "repository": "SAABOLImpactVenture/multicloud-foundation-product-poc",
+    "pullRequest": 10,
+    "revision": "f9c23ced889a2073ff50c918f8a45642066222c9",
+    "checkRunId": 94437303595,
+    "architectureConclusion": "PASS",
+    "githubConclusion": "success",
+    "evidenceContinuity": "SUPPORTED",
+    "productAssessment": "SUCCESS",
+    "productReadinessRendered": false,
+    "interpretation": "This check proves the currently deployed runtime predates the Phase 15 Product Readiness rendering. It is a deployment baseline only and must not be counted as Phase 15 live acceptance evidence."
+  },
   "product": {
     "id": "cloud-foundation-environment",
     "primaryRepository": "SAABOLImpactVenture/multicloud-foundation-product-poc",
