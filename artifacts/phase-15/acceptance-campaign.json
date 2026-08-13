@@ -39,6 +39,14 @@
       "mergeBeforeHealthyCase": false,
       "expectedDiagnostic": "IAP-RDY106",
       "purpose": "Changes only the trusted product name so the related default-branch membership signature becomes non-reciprocal after deliberate merge."
+    },
+    "recovery": {
+      "repository": "SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc",
+      "branch": "phase-15-readiness-recovery",
+      "headRevision": "9a6ce95652c4398e8af3a88e5304b3d7d970372d",
+      "restoredManifestBlobSha": "97da09f3c7862752d84418f7a16854d8add1c145",
+      "pullRequestCreated": false,
+      "purpose": "Pre-staged exact manifest restoration so the controlled mismatch can be reverted immediately after BLOCKED evidence is retained."
     }
   },
   "acceptanceSequence": [
@@ -63,7 +71,7 @@
     {
       "case": "recovery",
       "precondition": "BLOCKED evidence retained.",
-      "action": "Restore the original reciprocal member manifest, then rerun the trigger PR.",
+      "action": "Open the pre-staged recovery branch against main, merge the exact manifest restoration, then rerun the trigger PR.",
       "expectedReadiness": "READY",
       "expectedProductAssessment": "proceeds",
       "evidenceCaptured": false
@@ -75,7 +83,8 @@
     "noCloudResourceChange": true,
     "noPermissionExpansion": true,
     "noDestructiveExperiment": true,
-    "blockerMustBeImmediatelyRevertedAfterEvidence": true
+    "blockerMustBeImmediatelyRevertedAfterEvidence": true,
+    "recoveryBranchPreStaged": true
   },
   "completionGate": {
     "deploymentEvidence": false,
