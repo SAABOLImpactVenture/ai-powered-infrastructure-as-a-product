@@ -1,0 +1,88 @@
+{
+  "phase": 15,
+  "artifact": "acceptance-campaign",
+  "status": "PREPARED",
+  "phaseStatus": "IN_REVIEW",
+  "implementation": {
+    "repository": "SAABOLImpactVenture/iaap-guard",
+    "pullRequest": 25,
+    "mergeCommit": "321698dc9b77c8624ee4c45aae23c70f61f1c98b"
+  },
+  "runtime": {
+    "deploymentRequired": true,
+    "deploymentObserved": false,
+    "liveAcceptanceObserved": false,
+    "note": "Do not mark Phase 15 COMPLETE until the merged Phase 15 runtime is deployed and the three live acceptance states are captured."
+  },
+  "product": {
+    "id": "cloud-foundation-environment",
+    "primaryRepository": "SAABOLImpactVenture/multicloud-foundation-product-poc",
+    "requiredMemberRepository": "SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc",
+    "healthyManifestBlobSha": "97da09f3c7862752d84418f7a16854d8add1c145"
+  },
+  "preparedPullRequests": {
+    "trigger": {
+      "repository": "SAABOLImpactVenture/multicloud-foundation-product-poc",
+      "number": 10,
+      "branch": "phase-15-live-readiness-trigger",
+      "headRevision": "f9c23ced889a2073ff50c918f8a45642066222c9",
+      "draft": true,
+      "mergeDuringAcceptance": false,
+      "purpose": "Documentation-only IaaP-relevant PR event used to observe Product Readiness without changing the product contract."
+    },
+    "controlledBlocker": {
+      "repository": "SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc",
+      "number": 9,
+      "branch": "phase-15-controlled-readiness-blocker",
+      "headRevision": "ba1033f104936bfc37e4b5e6c781e5a71f7101c9",
+      "draft": true,
+      "mergeBeforeHealthyCase": false,
+      "expectedDiagnostic": "IAP-RDY106",
+      "purpose": "Changes only the trusted product name so the related default-branch membership signature becomes non-reciprocal after deliberate merge."
+    }
+  },
+  "acceptanceSequence": [
+    {
+      "case": "healthy",
+      "precondition": "Phase 15 runtime deployed; both default-branch product manifests remain reciprocal.",
+      "action": "Run the trigger PR through IaaP Guard.",
+      "expectedReadiness": "READY",
+      "expectedProductAssessment": "proceeds",
+      "evidenceCaptured": false
+    },
+    {
+      "case": "controlled-required-member-blocker",
+      "precondition": "Healthy READY evidence already retained.",
+      "action": "Merge the controlled blocker PR, then rerun the trigger PR.",
+      "expectedReadiness": "BLOCKED",
+      "expectedDiagnostic": "IAP-RDY106",
+      "expectedRemediation": "Restore the identical iaap-product/v1 declaration on the member default branch.",
+      "expectedProductAssessment": "suppressed from rendering while readiness is BLOCKED",
+      "evidenceCaptured": false
+    },
+    {
+      "case": "recovery",
+      "precondition": "BLOCKED evidence retained.",
+      "action": "Restore the original reciprocal member manifest, then rerun the trigger PR.",
+      "expectedReadiness": "READY",
+      "expectedProductAssessment": "proceeds",
+      "evidenceCaptured": false
+    }
+  ],
+  "safety": {
+    "architectureCheckConclusionRemainsAuthoritative": true,
+    "noInfrastructureImplementationChange": true,
+    "noCloudResourceChange": true,
+    "noPermissionExpansion": true,
+    "noDestructiveExperiment": true,
+    "blockerMustBeImmediatelyRevertedAfterEvidence": true
+  },
+  "completionGate": {
+    "deploymentEvidence": false,
+    "healthyReadyEvidence": false,
+    "blockedEvidence": false,
+    "recoveryReadyEvidence": false,
+    "retainedLiveAcceptanceArtifact": false,
+    "phaseCanBeMarkedComplete": false
+  }
+}
