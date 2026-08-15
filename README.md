@@ -29,9 +29,9 @@ Its central question is:
 
 > **Is this infrastructure actually being designed, delivered, and governed as a product?**
 
-**[Install IaaP Guard](https://github.com/apps/iaap-guard/installations/new)** · [View the GitHub App](https://github.com/apps/iaap-guard) · [Public beta guide](docs/IAAP-GUARD-PUBLIC-BETA.md) · [Give feedback](https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/issues/111)
+**[Install IaaP Guard](https://github.com/apps/iaap-guard/installations/new)** · [View the GitHub App](https://github.com/apps/iaap-guard) · [V1 guide](docs/IAAP-GUARD.md) · [Release v1.0.0](https://github.com/SAABOLImpactVenture/iaap-guard/releases/tag/v1.0.0)
 
-The current public beta evaluates pull requests and publishes an **`IaaP Guard / Architecture`** Check. It is deliberately narrow: deterministic architecture/evidence evaluation in GitHub, not infrastructure provisioning and not a generic IaC vulnerability scanner.
+The supported V1 release evaluates pull requests and publishes an **`IaaP Guard / Architecture`** Check. It is deliberately narrow: deterministic architecture/evidence evaluation in GitHub, not infrastructure provisioning and not a generic IaC vulnerability scanner.
 
 **Guard now connects architecture evidence to planning.** When a repository produces WARNING or FAIL findings, IaaP Guard can generate an evidence-traceable improvement plan with measurable Objectives and Key Results, Epics mapped to those KRs, Features, candidate User Stories and Tasks, and acceptance evidence. This lets platform teams move from architecture assessment into backlog preparation without turning Guard into a sprint-management or infrastructure-execution tool.
 
@@ -52,9 +52,9 @@ Every proposed planning item remains traceable to the deterministic Guard rule a
 | Pull requests | Read |
 | Checks | Read/write |
 
-The beta requires **no customer cloud, Kubernetes, Terraform/TFE, AI, or PAT credentials**. It does not execute repository code, provision infrastructure, auto-remediate findings, merge pull requests, or generate AI verdicts.
+IaaP Guard requires **no customer cloud, Kubernetes, Terraform/TFE, AI, or PAT credentials**. It does not execute repository code, provision infrastructure, auto-remediate findings, merge pull requests, or generate AI verdicts.
 
-GitHub Marketplace is not required to install the beta. Phase 10 proved the public App path on both public and internal/private repositories; the evidence is preserved under [`artifacts/phase-10/`](artifacts/phase-10/).
+GitHub Marketplace is not required to install V1. IaaP Guard completed its bounded product roadmap through external-adoption validation and the supported `v1.0.0` release. Guard commercialization is not an open workstream in this repository; future monetization belongs to the separate Forge product. The retained Guard evidence and support policies live in the [`iaap-guard`](https://github.com/SAABOLImpactVenture/iaap-guard) repository.
 
 ---
 
