@@ -156,7 +156,7 @@ IaaP Guard intentionally remains outside the infrastructure provisioning authori
 
 ## Related documents
 
-- [IaaP Guard Public Beta](IAAP-GUARD-PUBLIC-BETA.md)
+- [IaaP Guard Public Beta](IAAP-GUARD.md)
 - [IaaP Guard Privacy Policy](IAAP-GUARD-PRIVACY.md)
 - [Phase 10 security-boundary evidence](https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/blob/main/artifacts/phase-10/security-boundary.json)
 - [Phase 10 app-permissions evidence](https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/blob/main/artifacts/phase-10/app-permissions.json)
