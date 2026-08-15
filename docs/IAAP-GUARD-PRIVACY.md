@@ -132,4 +132,4 @@ A future Marketplace listing, paid plan, analytics capability, persistent custom
 
 This Privacy Policy does not claim that IaaP Guard is production-certified, FedRAMP authorized, compliance-certified, or suitable for every regulated workload. The public beta proves GitHub-native installability and deterministic pull-request assessment within the documented least-privilege boundary.
 
-For product behavior and installation details, see [IaaP Guard Public Beta](IAAP-GUARD-PUBLIC-BETA.md).
+For product behavior and installation details, see [IaaP Guard Public Beta](IAAP-GUARD.md).
