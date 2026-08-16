@@ -58,6 +58,16 @@ GitHub Marketplace is not required to install V1. IaaP Guard completed its bound
 
 ---
 
+## Build with IaaP Forge
+
+**IaaP Forge** is the monetizable implementation product that consumes frozen Guard evidence and turns approved intent into stable infrastructure-product proposals, bounded Composite AI advice, GitHub-governed change, and Crossplane lifecycle artifacts.
+
+[View IaaP Forge](https://github.com/SAABOLImpactVenture/iaap-forge) · [Guard-to-Forge transition](docs/FORGE-TRANSITION.md) · [Pinned reconciliation evidence](artifacts/phase-20/forge-reconciliation.json)
+
+Forge credential-free Phases 11–18 are proven at revision `313eb6ac1bf957e23d0d1a600569b7f1d6590e95`. Phase 19 is `PREPARED_BLOCKED`: Forge has not used live cloud, model, TFE, paid-service, or production credentials.
+
+---
+
 ## The modern accelerator
 
 This repository is the **thesis, architecture, governance, operating-model, and evidence front door** for a modern Infrastructure-as-a-Product (IaaP) accelerator.
@@ -398,7 +408,8 @@ This repository deliberately references bounded implementation POCs rather than 
 | [`multicloud-foundation-product-poc`](https://github.com/SAABOLImpactVenture/multicloud-foundation-product-poc) | Stable `CloudFoundationEnvironment` product API and cloud implementations. |
 | [`composite-ai-infrastructure-product-poc`](https://github.com/SAABOLImpactVenture/composite-ai-infrastructure-product-poc) | Bounded request, review, operations, and evidence agents. |
 | [`multicloud-foundation-poc-integration`](https://github.com/SAABOLImpactVenture/multicloud-foundation-poc-integration) | Credential-free integrated acceptance and evidence harness, including the storefront handoff. |
-| **This repository** | Thesis, architecture, decisions, operating model, evidence baseline, and investment framing. |
+| [`iaap-forge`](https://github.com/SAABOLImpactVenture/iaap-forge) | Monetizable Forge product: Guard consumption, native bounded Composite AI, stable product contracts, GitHub governance, Crossplane lifecycle, evidence, outcomes, and offline entitlement. |
+| **This repository** | Thesis, architecture, decisions, operating model, evidence baseline, investment framing, and proven-revision reconciliation. |
 
 See [POC Portfolio](docs/poc-portfolio.md).
 
@@ -525,22 +536,23 @@ See [TFE Investment Evaluation](docs/TFE-INVESTMENT.md).
 ```mermaid
 flowchart LR
   G0[Credential-free control-plane proof] --> G1[Storefront-to-product proof]
-  G1 --> G2[Live AWS sandbox]
-  G2 --> G3[Live GCP sandbox]
-  G3 --> G4[Live model adapter]
-  G4 --> G5[Residual TFE comparison]
-  G5 --> G6[Production pilot]
+  G1 --> G2[Forge credential-free V1+]
+  G2 --> G3[Live AWS sandbox]
+  G3 --> G4[Live Azure + GCP sandboxes]
+  G4 --> G5[Live model adapter]
+  G5 --> G6[Residual TFE comparison]
+  G6 --> G7[Production pilot]
 
   classDef complete fill:#123A24,stroke:#22C55E,stroke-width:2px,color:#F8FAFC
   classDef next fill:#3A2A0D,stroke:#F59E0B,stroke-width:3px,color:#F8FAFC
   classDef future fill:#1F2937,stroke:#64748B,stroke-width:2px,color:#CBD5E1
-  class G0,G1 complete
-  class G2 next
-  class G3,G4,G5,G6 future
+  class G0,G1,G2 complete
+  class G3 next
+  class G4,G5,G6,G7 future
   linkStyle default stroke:#7DD3FC,stroke-width:2px
 ```
 
-The storefront-to-product flow is now implemented in the integration harness. The next **live-cloud** technical milestone remains **AWS sandbox reconciliation using workload identity**, followed by the same evidence pattern in GCP.
+The storefront-to-product flow and Forge credential-free successor phases are now implemented. The next **live-cloud** technical milestone remains **AWS sandbox reconciliation using workload identity**, followed by Azure and GCP. All are blocked pending credentials, cost approval, non-production confirmation, deployment authorization, third-party consent, and evidence-retention approval.
 
 ---
 
