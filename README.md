@@ -19,6 +19,26 @@
 
 ---
 
+## Infrastructure is experienced as a product
+
+Application developers should order a finished infrastructure product—not assemble the raw cloud resources used to build it. Backstage is the storefront: developers choose a standard product with a stable contract, while Forge, Guard, GitHub governance, Crossplane, and the cloud providers handle the governed lifecycle behind that contract.
+
+<p align="center">
+  <img src="docs/assets/showcase/iaap-drive-thru-product-model.webp" alt="Infrastructure-as-a-Product drive-through model: developers order outcomes from Backstage while Forge, Guard, Crossplane, and cloud providers manage the product lifecycle" width="1100"/>
+</p>
+
+<p align="center"><em>Developers order the outcome—not the ingredients.</em></p>
+
+Platform value is therefore measured at the consumer boundary. Lines of infrastructure code, modules built, and tickets closed are engineering activity; developers care about time to provision, product health, time to diagnose, time to restore, adoption, exception rate, and their overall experience.
+
+<p align="center">
+  <img src="docs/assets/showcase/iaap-developer-outcomes.webp" alt="Infrastructure-as-a-Product outcome model contrasting engineering activity with provisioning speed, health, diagnosis, restoration, adoption, and developer experience" width="1100"/>
+</p>
+
+<p align="center"><em>Measure the developer experience—not the activity behind it.</em></p>
+
+---
+
 ## Get IaaP Guard
 
 **IaaP Guard** is the installable GitHub-native Infrastructure-as-a-Product architecture and evidence guard built from this program's deterministic product rules.
