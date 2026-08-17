@@ -13,7 +13,7 @@ The credential-free Forge implementation is pinned here at [`313eb6ac1bf957e23d0
 - Five additional proposal-only infrastructure products.
 - Deterministic supply-chain and OSCAL interoperability.
 - Guard reassessment with Developer NPS, time-to-provision, adoption, exception, and operating-effort metrics.
-- Offline commercial entitlement and paid-evaluation enforcement.
+- Offline entitlement and evaluation controls.
 - Prepared, fail-closed live-sandbox preflight.
 
 ```mermaid
@@ -40,4 +40,4 @@ flowchart TD
 
 Forge Phase 19 is `PREPARED_BLOCKED`. No AWS, Azure, GCP, model-adapter, or TFE live evidence has been produced by Forge. Credentials, costs, non-production confirmation, deployment authorization, third-party consent, and evidence-retention approval are required before scheduling those runs.
 
-Commercial entitlement is technically implemented, but pricing, license/EULA, tax, payment activation, production signing-key custody, and Marketplace decisions remain external gates. No revenue, certification, assessment conclusion, ATO, or production readiness is claimed.
+Forge business, distribution, and licensing strategy is outside the scope of this public architecture repository. No certification, assessment conclusion, ATO, or production readiness is claimed.

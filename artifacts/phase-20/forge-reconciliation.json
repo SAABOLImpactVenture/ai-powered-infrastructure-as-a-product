@@ -24,7 +24,7 @@
     "humanApprovalRequired": true,
     "productionAuthorized": false,
     "liveCloudEvidence": false,
-    "commercialActivation": false
+    "publicArchitectureOnly": true
   },
   "sourceEvidence": "https://github.com/SAABOLImpactVenture/iaap-forge/tree/313eb6ac1bf957e23d0d1a600569b7f1d6590e95/evidence"
 }

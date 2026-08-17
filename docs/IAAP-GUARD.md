@@ -25,7 +25,7 @@ It does not require customer cloud, Kubernetes, Terraform/TFE, AI, or PAT creden
 
 Guard may supply deterministic findings, readiness, coverage, continuity, product-assessment, and evidence outputs to Forge as an input. Forge must preserve Guard's frozen schemas and authority boundary: Guard evidence can inform a proposal or block an unsafe transition, but it cannot grant infrastructure execution or approval authority.
 
-Forge is the next product workstream. Its Crossplane and bounded Composite AI capabilities, product delivery, packaging, and monetization are intentionally separate from Guard.
+Forge is the next product workstream. Its Crossplane and bounded Composite AI capabilities remain separate from Guard and preserve Guard's frozen authority boundary.
 
 ## Historical evidence
 
