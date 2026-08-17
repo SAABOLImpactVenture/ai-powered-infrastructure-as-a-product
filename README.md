@@ -64,7 +64,7 @@ GitHub Marketplace is not required to install V1. IaaP Guard completed its bound
 
 [View IaaP Forge](https://github.com/SAABOLImpactVenture/iaap-forge) · [Guard-to-Forge transition](docs/FORGE-TRANSITION.md) · [Pinned reconciliation evidence](artifacts/phase-20/forge-reconciliation.json)
 
-Forge credential-free Phases 11–18 are proven at revision `313eb6ac1bf957e23d0d1a600569b7f1d6590e95`. Phase 19 is `PREPARED_BLOCKED`: Forge has not used live cloud, model, TFE, paid-service, or production credentials.
+Forge credential-free Phases 11–18 are proven at revision `1ecf0b76e3cfdb8bf0017651567ee7fb59fa9cd8`. Phase 19 is `PREPARED_BLOCKED`: Forge has not used live cloud, model, TFE, paid-service, or production credentials.
 
 ---
 
