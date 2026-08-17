@@ -2,7 +2,7 @@
 
 IaaP Guard V1 remains frozen at its supported boundary. Forge consumes Guard evidence but never rewrites it or treats it as authorization.
 
-The credential-free Forge implementation is pinned here at [`313eb6ac1bf957e23d0d1a600569b7f1d6590e95`](https://github.com/SAABOLImpactVenture/iaap-forge/commit/313eb6ac1bf957e23d0d1a600569b7f1d6590e95).
+The credential-free Forge implementation is pinned here at [`1ecf0b76e3cfdb8bf0017651567ee7fb59fa9cd8`](https://github.com/SAABOLImpactVenture/iaap-forge/commit/1ecf0b76e3cfdb8bf0017651567ee7fb59fa9cd8).
 
 ## Proven capability
 
@@ -10,6 +10,7 @@ The credential-free Forge implementation is pinned here at [`313eb6ac1bf957e23d0
 - Native four-role bounded Composite AI runtime.
 - Stable API, CLI, and optional Backstage submission surfaces.
 - Fail-closed Crossplane lifecycle and workload-identity contracts.
+- A guarded, namespaced Crossplane v2 infrastructure-product API that consumes frozen Guard evidence and remains inert until governed approval.
 - Five additional proposal-only infrastructure products.
 - Deterministic supply-chain and OSCAL interoperability.
 - Guard reassessment with Developer NPS, time-to-provision, adoption, exception, and operating-effort metrics.
