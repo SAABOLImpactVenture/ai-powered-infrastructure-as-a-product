@@ -54,13 +54,13 @@ Every proposed planning item remains traceable to the deterministic Guard rule a
 
 IaaP Guard requires **no customer cloud, Kubernetes, Terraform/TFE, AI, or PAT credentials**. It does not execute repository code, provision infrastructure, auto-remediate findings, merge pull requests, or generate AI verdicts.
 
-GitHub Marketplace is not required to install V1. IaaP Guard completed its bounded product roadmap through external-adoption validation and the supported `v1.0.0` release. Guard commercialization is not an open workstream in this repository; future monetization belongs to the separate Forge product. The retained Guard evidence and support policies live in the [`iaap-guard`](https://github.com/SAABOLImpactVenture/iaap-guard) repository.
+GitHub Marketplace is not required to install V1. IaaP Guard completed its bounded product roadmap through external-adoption validation and the supported `v1.0.0` release. Future Forge development remains separate from Guard. The retained Guard evidence and support policies live in the [`iaap-guard`](https://github.com/SAABOLImpactVenture/iaap-guard) repository.
 
 ---
 
 ## Build with IaaP Forge
 
-**IaaP Forge** is the monetizable implementation product that consumes frozen Guard evidence and turns approved intent into stable infrastructure-product proposals, bounded Composite AI advice, GitHub-governed change, and Crossplane lifecycle artifacts.
+**IaaP Forge** consumes frozen Guard evidence and turns approved intent into stable infrastructure-product proposals, bounded Composite AI advice, GitHub-governed change, and Crossplane lifecycle artifacts.
 
 [View IaaP Forge](https://github.com/SAABOLImpactVenture/iaap-forge) · [Guard-to-Forge transition](docs/FORGE-TRANSITION.md) · [Pinned reconciliation evidence](artifacts/phase-20/forge-reconciliation.json)
 
@@ -408,7 +408,7 @@ This repository deliberately references bounded implementation POCs rather than 
 | [`multicloud-foundation-product-poc`](https://github.com/SAABOLImpactVenture/multicloud-foundation-product-poc) | Stable `CloudFoundationEnvironment` product API and cloud implementations. |
 | [`composite-ai-infrastructure-product-poc`](https://github.com/SAABOLImpactVenture/composite-ai-infrastructure-product-poc) | Bounded request, review, operations, and evidence agents. |
 | [`multicloud-foundation-poc-integration`](https://github.com/SAABOLImpactVenture/multicloud-foundation-poc-integration) | Credential-free integrated acceptance and evidence harness, including the storefront handoff. |
-| [`iaap-forge`](https://github.com/SAABOLImpactVenture/iaap-forge) | Monetizable Forge product: Guard consumption, native bounded Composite AI, stable product contracts, GitHub governance, Crossplane lifecycle, evidence, outcomes, and offline entitlement. |
+| [`iaap-forge`](https://github.com/SAABOLImpactVenture/iaap-forge) | Guard consumption, native bounded Composite AI, stable product contracts, GitHub governance, Crossplane lifecycle, evidence, and outcomes. |
 | **This repository** | Thesis, architecture, decisions, operating model, evidence baseline, investment framing, and proven-revision reconciliation. |
 
 See [POC Portfolio](docs/poc-portfolio.md).
