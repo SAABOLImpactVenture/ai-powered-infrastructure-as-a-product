@@ -84,7 +84,7 @@ GitHub Marketplace is not required to install V1. IaaP Guard completed its bound
 
 [View IaaP Forge](https://github.com/SAABOLImpactVenture/iaap-forge) · [Guard-to-Forge transition](docs/FORGE-TRANSITION.md) · [Pinned reconciliation evidence](artifacts/phase-20/forge-reconciliation.json)
 
-Forge credential-free Phases 11–18 are proven at revision `1ecf0b76e3cfdb8bf0017651567ee7fb59fa9cd8`. Phase 19 is `PREPARED_BLOCKED`: Forge has not used live cloud, model, TFE, paid-service, or production credentials.
+Forge credential-free Phases 11–18 are proven at revision `1ecf0b76e3cfdb8bf0017651567ee7fb59fa9cd8`. Phase 19 now has retained **PASS** evidence for bounded AWS, Azure, and GCP non-production reconciliation and verified teardown at Forge revision [`a913cd708893e88800b942840ca32d91cebdb3b1`](https://github.com/SAABOLImpactVenture/iaap-forge/commit/a913cd708893e88800b942840ca32d91cebdb3b1). The model-adapter and residual TFE targets remain `PREPARED_BLOCKED`; no production deployment is authorized.
 
 ---
 
@@ -566,13 +566,13 @@ flowchart LR
   classDef complete fill:#123A24,stroke:#22C55E,stroke-width:2px,color:#F8FAFC
   classDef next fill:#3A2A0D,stroke:#F59E0B,stroke-width:3px,color:#F8FAFC
   classDef future fill:#1F2937,stroke:#64748B,stroke-width:2px,color:#CBD5E1
-  class G0,G1,G2 complete
-  class G3 next
-  class G4,G5,G6,G7 future
+  class G0,G1,G2,G3,G4 complete
+  class G5 next
+  class G6,G7 future
   linkStyle default stroke:#7DD3FC,stroke-width:2px
 ```
 
-The storefront-to-product flow and Forge credential-free successor phases are now implemented. The next **live-cloud** technical milestone remains **AWS sandbox reconciliation using workload identity**, followed by Azure and GCP. All are blocked pending credentials, cost approval, non-production confirmation, deployment authorization, third-party consent, and evidence-retention approval.
+The storefront-to-product flow, Forge credential-free successor phases, and bounded AWS, Azure, and GCP live-cloud validations are complete with retained evidence and verified teardown. The next locked Phase 19 target is the **live model adapter**, followed by the residual TFE comparison. Each remains separately blocked pending its applicable credentials, processing or third-party consent, cost approval, non-production confirmation, deployment authorization, and evidence-retention approval.
 
 ---
 
