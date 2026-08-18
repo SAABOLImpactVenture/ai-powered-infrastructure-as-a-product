@@ -37,8 +37,10 @@ flowchart TD
   class E evidence
 ```
 
-## Explicit blockers
+## Live evidence and explicit blockers
 
-Forge Phase 19 is `PREPARED_BLOCKED`. No AWS, Azure, GCP, model-adapter, or TFE live evidence has been produced by Forge. Credentials, costs, non-production confirmation, deployment authorization, third-party consent, and evidence-retention approval are required before scheduling those runs.
+Forge Phase 19 has retained **PASS** evidence for bounded AWS, Azure, and GCP non-production workload-identity reconciliation and verified teardown. The accepted evidence revision is [`a913cd708893e88800b942840ca32d91cebdb3b1`](https://github.com/SAABOLImpactVenture/iaap-forge/commit/a913cd708893e88800b942840ca32d91cebdb3b1).
+
+Phase 19 remains open because the model-adapter and residual TFE targets are `PREPARED_BLOCKED`. Their credentials, processing or third-party consent, costs, non-production confirmation, deployment authorization, and evidence-retention approval are separate gates and are not satisfied by the cloud validations.
 
 Forge business, distribution, and licensing strategy is outside the scope of this public architecture repository. No certification, assessment conclusion, ATO, or production readiness is claimed.
