@@ -413,25 +413,87 @@ The desired architecture makes the opposite true:
 
 ---
 
-## POC portfolio
+## Repository portfolio
 
-This repository deliberately references bounded implementation POCs rather than duplicating them.
+This repository is the public front door for a deliberately separated product system. The inventory below includes every repository that currently implements, operates, demonstrates, or retains acceptance evidence for this Infrastructure-as-a-Product program. Unrelated SAABOL Impact Venture repositories are outside this portfolio.
 
-<p align="center">
-  <img src="docs/assets/showcase/portfolio-system.svg" alt="Bounded Infrastructure-as-a-Product repository portfolio system map" width="1050"/>
-</p>
+```mermaid
+flowchart TB
+  FRONT["ai-powered-infrastructure-as-a-product<br/>Public thesis and evidence front door"]
 
-| Repository | Responsibility |
-|---|---|
-| [`backstage-infrastructure-product-storefront-poc`](https://github.com/SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc) | Optional reference developer storefront: browse, configure, order, track. No provisioning authority. |
-| [`crossplane-multicloud-seed-poc`](https://github.com/SAABOLImpactVenture/crossplane-multicloud-seed-poc) | Minimal trusted Crossplane seed. |
-| [`multicloud-foundation-product-poc`](https://github.com/SAABOLImpactVenture/multicloud-foundation-product-poc) | Stable `CloudFoundationEnvironment` product API and cloud implementations. |
-| [`composite-ai-infrastructure-product-poc`](https://github.com/SAABOLImpactVenture/composite-ai-infrastructure-product-poc) | Bounded request, review, operations, and evidence agents. |
-| [`multicloud-foundation-poc-integration`](https://github.com/SAABOLImpactVenture/multicloud-foundation-poc-integration) | Credential-free integrated acceptance and evidence harness, including the storefront handoff. |
-| [`iaap-forge`](https://github.com/SAABOLImpactVenture/iaap-forge) | Guard consumption, native bounded Composite AI, stable product contracts, GitHub governance, Crossplane lifecycle, evidence, and outcomes. |
-| **This repository** | Thesis, architecture, decisions, operating model, evidence baseline, investment framing, and proven-revision reconciliation. |
+  subgraph PRODUCTS["Supported product repositories"]
+    GUARD["iaap-guard<br/>Public contracts, guidance, and assurance"]
+    CORE["iaap-guard-core<br/>Private Guard engine and hosted runtime"]
+    FORGE["iaap-forge<br/>Internal product-building and lifecycle system"]
+  end
 
-See [POC Portfolio](docs/poc-portfolio.md).
+  subgraph POCS["Bounded reference POCs"]
+    STORE["backstage-infrastructure-product-storefront-poc"]
+    SEED["crossplane-multicloud-seed-poc"]
+    FOUNDATION["multicloud-foundation-product-poc"]
+    COMPOSITE["composite-ai-infrastructure-product-poc"]
+    INTEGRATION["multicloud-foundation-poc-integration"]
+  end
+
+  subgraph RETAINED["Retained validation"]
+    ADOPTER["iaap-guard-adopter-validation<br/>Archived clean-adopter proof"]
+  end
+
+  FRONT --> GUARD
+  FRONT --> FORGE
+  GUARD --> CORE
+  FORGE --> STORE
+  FORGE --> SEED
+  FORGE --> FOUNDATION
+  FORGE --> COMPOSITE
+  STORE --> INTEGRATION
+  SEED --> INTEGRATION
+  FOUNDATION --> INTEGRATION
+  COMPOSITE --> INTEGRATION
+  ADOPTER -. validates .-> GUARD
+
+  classDef front fill:#0D2438,stroke:#38BDF8,stroke-width:3px,color:#F8FAFC
+  classDef public fill:#123A24,stroke:#22C55E,stroke-width:2px,color:#F8FAFC
+  classDef private fill:#2E1752,stroke:#A855F7,stroke-width:2px,color:#F8FAFC
+  classDef internal fill:#102D55,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC
+  classDef poc fill:#3A2A0D,stroke:#F59E0B,stroke-width:2px,color:#F8FAFC
+  classDef archived fill:#1F2937,stroke:#94A3B8,stroke-width:2px,color:#CBD5E1
+
+  class FRONT front
+  class GUARD public
+  class CORE private
+  class FORGE internal
+  class STORE,SEED,FOUNDATION,COMPOSITE,INTEGRATION poc
+  class ADOPTER archived
+  linkStyle default stroke:#7DD3FC,stroke-width:2px
+```
+
+### Supported product repositories
+
+| Repository | Visibility / status | Responsibility |
+|---|---|---|
+| **This repository** | Public · active | Thesis, architecture, decisions, operating model, evidence baseline, investment framing, and proven-revision reconciliation. |
+| [`iaap-guard`](https://github.com/SAABOLImpactVenture/iaap-guard) | Public · active | IaaP Guard product, adoption, interface, schema, support, security, and sanitized assurance surface. The former public Action is retired. |
+| [`iaap-guard-core`](https://github.com/SAABOLImpactVenture/iaap-guard-core) | Private · active | Protected deterministic engine, rules, GitHub App runtime, deployment assets, internal fixtures, tests, and operational evidence. The link is visible only to authorized collaborators. |
+| [`iaap-forge`](https://github.com/SAABOLImpactVenture/iaap-forge) | Internal · active | Guard consumption, bounded Composite AI, stable product contracts, GitHub governance, Crossplane lifecycle, evidence, and product outcomes. |
+
+### Bounded reference POCs
+
+| Repository | Visibility / status | Responsibility |
+|---|---|---|
+| [`backstage-infrastructure-product-storefront-poc`](https://github.com/SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc) | Internal · active | Optional developer storefront for browse, configure, order, and track. It has no provisioning authority. |
+| [`crossplane-multicloud-seed-poc`](https://github.com/SAABOLImpactVenture/crossplane-multicloud-seed-poc) | Internal · active | Minimal trusted Crossplane seed and control-plane bootstrap boundary. |
+| [`multicloud-foundation-product-poc`](https://github.com/SAABOLImpactVenture/multicloud-foundation-product-poc) | Internal · active | Stable `CloudFoundationEnvironment` product API and cloud-specific implementations. |
+| [`composite-ai-infrastructure-product-poc`](https://github.com/SAABOLImpactVenture/composite-ai-infrastructure-product-poc) | Internal · active | Bounded request, review, operations, and evidence agents without autonomous execution authority. |
+| [`multicloud-foundation-poc-integration`](https://github.com/SAABOLImpactVenture/multicloud-foundation-poc-integration) | Internal · active | Credential-free integrated acceptance and evidence harness, including the storefront handoff. |
+
+### Retained validation repository
+
+| Repository | Visibility / status | Responsibility |
+|---|---|---|
+| [`iaap-guard-adopter-validation`](https://github.com/SAABOLImpactVenture/iaap-guard-adopter-validation) | Public · archived | Retained clean-adopter validation evidence. It is not a supported runtime, distribution, or active development repository. |
+
+See [POC Portfolio](docs/poc-portfolio.md) for the implementation boundaries and pinned evidence relationships.
 
 ### Product-system shorthand
 
