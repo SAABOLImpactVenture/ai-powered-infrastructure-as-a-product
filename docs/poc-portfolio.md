@@ -6,25 +6,58 @@ The program separates responsibilities into bounded repositories so each archite
 
 ```mermaid
 flowchart TB
-  HUB[ai-powered-infrastructure-as-a-product\nthesis • architecture • evidence]
-  STORE[backstage-infrastructure-product-storefront-poc\nconsumer storefront]
-  SEED[crossplane-multicloud-seed-poc\nminimal trusted seed]
-  PRODUCT[multicloud-foundation-product-poc\nproduct contract]
-  AI[composite-ai-infrastructure-product-poc\nbounded intelligence]
-  INT[multicloud-foundation-poc-integration\nacceptance + evidence]
-  OUT[platform product outcomes\nNPS • time • adoption • escape rate]
+  HUB["ai-powered-infrastructure-as-a-product<br/>thesis • architecture • evidence"]
+  GUARD["iaap-guard<br/>public product surface"]
+  CORE["iaap-guard-core<br/>private hosted runtime"]
+  FORGE["iaap-forge<br/>product-building system"]
+  STORE["backstage-infrastructure-product-storefront-poc"]
+  SEED["crossplane-multicloud-seed-poc"]
+  PRODUCT["multicloud-foundation-product-poc"]
+  AI["composite-ai-infrastructure-product-poc"]
+  INT["multicloud-foundation-poc-integration"]
+  ADOPTER["iaap-guard-adopter-validation<br/>archived proof"]
+  OUT["platform product outcomes<br/>NPS • time • adoption • escape rate"]
 
-  HUB --> STORE
-  HUB --> SEED
-  HUB --> PRODUCT
-  HUB --> AI
+  HUB --> GUARD
+  HUB --> FORGE
+  GUARD --> CORE
+  FORGE --> STORE
+  FORGE --> SEED
+  FORGE --> PRODUCT
+  FORGE --> AI
   STORE --> INT
   SEED --> INT
   PRODUCT --> INT
   AI --> INT
+  ADOPTER -. validates .-> GUARD
   INT --> OUT
   OUT --> HUB
+
+  classDef front fill:#0D2438,stroke:#38BDF8,stroke-width:3px,color:#F8FAFC
+  classDef public fill:#123A24,stroke:#22C55E,stroke-width:2px,color:#F8FAFC
+  classDef private fill:#2E1752,stroke:#A855F7,stroke-width:2px,color:#F8FAFC
+  classDef internal fill:#102D55,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC
+  classDef poc fill:#3A2A0D,stroke:#F59E0B,stroke-width:2px,color:#F8FAFC
+  classDef archived fill:#1F2937,stroke:#94A3B8,stroke-width:2px,color:#CBD5E1
+  classDef outcome fill:#3A1530,stroke:#EC4899,stroke-width:2px,color:#F8FAFC
+
+  class HUB front
+  class GUARD public
+  class CORE private
+  class FORGE internal
+  class STORE,SEED,PRODUCT,AI,INT poc
+  class ADOPTER archived
+  class OUT outcome
+  linkStyle default stroke:#7DD3FC,stroke-width:2px
 ```
+
+## Product repositories around the POCs
+
+- [`iaap-guard`](https://github.com/SAABOLImpactVenture/iaap-guard) is the active public product, adoption, contract, support, security, and sanitized assurance surface.
+- [`iaap-guard-core`](https://github.com/SAABOLImpactVenture/iaap-guard-core) is the protected private engine, hosted GitHub App runtime, deployment, internal test, and operational-evidence repository.
+- [`iaap-forge`](https://github.com/SAABOLImpactVenture/iaap-forge) consumes bounded Guard evidence and owns the active product-building, Composite AI, GitHub governance, Crossplane lifecycle, and outcome system.
+- [`iaap-guard-adopter-validation`](https://github.com/SAABOLImpactVenture/iaap-guard-adopter-validation) is archived clean-adopter proof, not an active runtime or supported distribution.
+- [`ai-powered-infrastructure-as-a-product`](https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product) remains the public thesis, architecture, evidence, and portfolio front door.
 
 ## Responsibilities
 
@@ -97,6 +130,9 @@ Owns the thesis, architecture, product operating model, decisions, frozen eviden
 | Layer | Reference implementation | Responsibility |
 |---|---|---|
 | Program | `ai-powered-infrastructure-as-a-product` | Thesis, architecture, evidence, decisions, roadmap framing. |
+| Guard product | `iaap-guard` | Public product, contracts, adoption, support, security, and assurance. |
+| Guard implementation | `iaap-guard-core` | Private deterministic engine, hosted runtime, deployment, and regression evidence. |
+| Product builder | `iaap-forge` | Guard consumption, bounded Composite AI, governed proposals, Crossplane lifecycle, and outcomes. |
 | Experience | `backstage-infrastructure-product-storefront-poc` | Browse, configure, order, track. |
 | Intelligence | `composite-ai-infrastructure-product-poc` | Interpret, propose, review, explain, diagnose, evidence. |
 | Governance | GitHub + deterministic policy + people | Change, tests, approval, traceability. |
@@ -104,6 +140,7 @@ Owns the thesis, architecture, product operating model, decisions, frozen eviden
 | Control plane | Crossplane | Reconciliation and product status. |
 | Bootstrap | `crossplane-multicloud-seed-poc` | Minimal trusted runtime required for the control plane. |
 | Acceptance | `multicloud-foundation-poc-integration` | End-to-end evidence across the bounded components. |
+| Retained validation | `iaap-guard-adopter-validation` | Archived clean-adopter proof for Guard. |
 | Outcomes | Cross-layer telemetry + developer feedback | Developer NPS, Time-to-Provision, adoption, repeat use, exceptions. |
 | Realization | AWS / Azure / GCP | Cloud-native services and enforcement. |
 
