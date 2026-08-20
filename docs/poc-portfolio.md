@@ -152,12 +152,13 @@ Owns the thesis, architecture, product operating model, decisions, frozen eviden
 4. **Workflow/bootstrap supply-chain reproducibility** — passed as historical v4 across Kubernetes 1.34/1.35/1.36 at 100/100, with immutable GitHub Action revisions, pinned Python, hash-locked CI dependencies, and publisher SHA-256 verification for Kind/kubectl/Helm.
 5. **Backstage runtime smoke + repinned integration** — **passed as current v5**. An actual Backstage backend registered and dry-ran the reference template/action without a real GitHub write credential, and the resulting merged storefront revision was pinned into a fresh hardened Kubernetes 1.34/1.35/1.36 integration run that remained 100/100.
 6. **Product live-cloud readiness corrections** — **passed** in integration run `31256619696` across Kubernetes 1.34/1.35/1.36 at 100/100. The product now enforces semantic RFC1918 CIDR validity/containment, platform-owned lifecycle policy, neutral observed-evidence-only TFE comparison inputs, and explicit expected admission-denial evidence.
-7. **Platform product outcome instrumentation** — **current pre-live-cloud gate**. Establish correlation/timing events and product-outcome evidence contracts before live AWS. POC timing may be labeled `poc-observed`; Developer NPS, adoption, repeat use, and real exception behavior remain `not-observed` until an actual developer population exists.
-8. **Live AWS sandbox** — first live-cloud gate after outcome instrumentation is present; use workload identity rather than static cloud credentials and capture Time-to-Provision evidence from the first live order.
-9. **Live GCP sandbox** — after AWS is repeatable.
-10. **Live model adapter** — same tool and authority boundary as the deterministic baseline.
-11. **Residual TFE comparison** — observed evidence only for remaining justified use cases.
-12. **Production pilot** — authorization, SLOs, recovery, support, lifecycle evidence, Developer NPS, adoption, and repeat-consumption evidence.
+7. **Platform product outcome instrumentation** — **passed for the bounded pre-production evidence contract**. POC timing may be labeled `poc-observed`; Developer NPS, adoption, repeat use, and real exception behavior remain `not-observed` until an actual developer population exists.
+8. **Live AWS sandbox** — **passed** with workload identity, retained sanitized evidence, and verified teardown.
+9. **Live Azure and GCP sandboxes** — **passed** with workload identity, retained sanitized evidence, and verified teardown.
+10. **Live model adapter** — **passed** on Vertex AI in `us-east4` using synthetic fixtures only and a fixed model-usage ceiling.
+11. **HCP Terraform Free remote-run proxy** — **proxy passed** with a zero-resource fixture, protected VCS status, sanitized evidence, workspace deletion, and token revocation. Terraform Enterprise was not accessed or validated.
+12. **Phase 20 architecture reconciliation** — **complete** at pinned Forge revision `6fb587cb3f521e99c33039c61090fe8b738836cc`, preserving the frozen Guard boundary and public sanitized claims.
+13. **Production pilot** — future and unauthorized; requires separate authorization, SLOs, recovery, support, lifecycle evidence, Developer NPS, adoption, and repeat-consumption evidence.
 
 The v5 runtime proof is intentionally narrower than a production Backstage deployment: the GitHub publication action ran in dry-run mode, no browser/UI journey was executed, and the generated Backstage dependency graph is not claimed immutable across future runs.
 
