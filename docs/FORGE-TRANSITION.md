@@ -2,7 +2,7 @@
 
 IaaP Guard V1 remains frozen at its supported boundary. Forge consumes Guard evidence but never rewrites it or treats it as authorization.
 
-The credential-free Forge implementation is pinned here at [`1ecf0b76e3cfdb8bf0017651567ee7fb59fa9cd8`](https://github.com/SAABOLImpactVenture/iaap-forge/commit/1ecf0b76e3cfdb8bf0017651567ee7fb59fa9cd8).
+The accepted Forge implementation and retained Phase 19 evidence are pinned here at [`6fb587cb3f521e99c33039c61090fe8b738836cc`](https://github.com/SAABOLImpactVenture/iaap-forge/commit/6fb587cb3f521e99c33039c61090fe8b738836cc).
 
 ## Proven capability
 
@@ -16,6 +16,9 @@ The credential-free Forge implementation is pinned here at [`1ecf0b76e3cfdb8bf00
 - Guard reassessment with Developer NPS, time-to-provision, adoption, exception, and operating-effort metrics.
 - Offline entitlement and evaluation controls.
 - Prepared, fail-closed live-sandbox preflight.
+- Bounded AWS, Azure, and GCP non-production workload-identity reconciliation with verified teardown.
+- Synthetic-only Vertex AI model-adapter validation under a fixed usage ceiling.
+- HCP Terraform Free remote-run proxy validation with no infrastructure resources, sanitized evidence, and verified workspace/token teardown.
 
 ```mermaid
 flowchart TD
@@ -39,8 +42,8 @@ flowchart TD
 
 ## Live evidence and explicit blockers
 
-Forge Phase 19 has retained **PASS** evidence for bounded AWS, Azure, and GCP non-production workload-identity reconciliation and verified teardown. The accepted evidence revision is [`a913cd708893e88800b942840ca32d91cebdb3b1`](https://github.com/SAABOLImpactVenture/iaap-forge/commit/a913cd708893e88800b942840ca32d91cebdb3b1).
+Forge Phase 19 is complete with retained **PASS** evidence for bounded AWS, Azure, and GCP non-production workload-identity reconciliation and verified teardown. The same accepted revision records a synthetic-only Vertex AI model-adapter **PASS** and an HCP Terraform Free remote-run `PROXY_PASS`: [`6fb587cb3f521e99c33039c61090fe8b738836cc`](https://github.com/SAABOLImpactVenture/iaap-forge/commit/6fb587cb3f521e99c33039c61090fe8b738836cc).
 
-Phase 19 remains open because the model-adapter and residual TFE targets are `PREPARED_BLOCKED`. Their credentials, processing or third-party consent, costs, non-production confirmation, deployment authorization, and evidence-retention approval are separate gates and are not satisfied by the cloud validations.
+The HCP Terraform result is deliberately narrow. It validates a zero-resource remote-run proxy on HCP Terraform Free; Terraform Enterprise was not deployed, accessed, licensed, or validated. The evidence does not make TFE a dependency of the demonstrated product path.
 
-Forge business, distribution, and licensing strategy is outside the scope of this public architecture repository. No certification, assessment conclusion, ATO, or production readiness is claimed.
+Forge business, distribution, and licensing strategy is outside the scope of this public architecture repository. Production remains unauthorized. No certification, assessment conclusion, ATO, or production readiness is claimed.
