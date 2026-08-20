@@ -84,7 +84,7 @@ GitHub Marketplace is not required to install V1. IaaP Guard completed its bound
 
 [View IaaP Forge](https://github.com/SAABOLImpactVenture/iaap-forge) · [Guard-to-Forge transition](docs/FORGE-TRANSITION.md) · [Pinned reconciliation evidence](artifacts/phase-20/forge-reconciliation.json)
 
-Forge credential-free Phases 11–18 are proven at revision `1ecf0b76e3cfdb8bf0017651567ee7fb59fa9cd8`. Phase 19 now has retained **PASS** evidence for bounded AWS, Azure, and GCP non-production reconciliation and verified teardown at Forge revision [`a913cd708893e88800b942840ca32d91cebdb3b1`](https://github.com/SAABOLImpactVenture/iaap-forge/commit/a913cd708893e88800b942840ca32d91cebdb3b1). The model-adapter and residual TFE targets remain `PREPARED_BLOCKED`; no production deployment is authorized.
+Forge Phases 11–19 are accepted at immutable revision [`6fb587cb3f521e99c33039c61090fe8b738836cc`](https://github.com/SAABOLImpactVenture/iaap-forge/commit/6fb587cb3f521e99c33039c61090fe8b738836cc). Phase 19 retained bounded non-production **PASS** evidence for AWS, Azure, and GCP workload-identity reconciliation, Vertex AI model-adapter validation with synthetic fixtures, and an HCP Terraform Free remote-run proxy, with sanitized evidence and verified teardown. The proxy does **not** validate Terraform Enterprise; no production deployment, certification, assessment conclusion, or ATO is authorized or claimed.
 
 ---
 
@@ -568,7 +568,7 @@ The frozen credential-free baseline passed across Kubernetes **1.34, 1.35, and 1
 
 The integration harness has since been extended to include the independent Backstage storefront as a pinned upstream and requires a `storefront-order-handoff` acceptance control.
 
-That proves **TFE is not mandatory for the demonstrated product path**. It does not yet prove live cloud provisioning or production readiness.
+That proves **TFE is not mandatory for the demonstrated product path**. Forge has additionally demonstrated bounded non-production cloud reconciliation and teardown across AWS, Azure, and GCP, plus a synthetic-only Vertex AI adapter and an HCP Terraform Free remote-run proxy. These results do not validate Terraform Enterprise, production readiness, certification, an assessment conclusion, or an ATO.
 
 See [Credential-Free Baseline](docs/poc-baselines/2026-08-07-credential-free-multicloud-foundation.md), [POC Portfolio](docs/poc-portfolio.md), and [ADR-0004](adr/ADR-0004-tfe-optional-for-multicloud-foundation.md).
 
@@ -621,20 +621,19 @@ flowchart LR
   G1 --> G2[Forge credential-free V1+]
   G2 --> G3[Live AWS sandbox]
   G3 --> G4[Live Azure + GCP sandboxes]
-  G4 --> G5[Live model adapter]
-  G5 --> G6[Residual TFE comparison]
-  G6 --> G7[Production pilot]
+  G4 --> G5[Vertex AI synthetic adapter]
+  G5 --> G6[HCP Terraform Free proxy]
+  G6 --> G7[Phase 20 architecture reconciliation]
+  G7 --> G8[Production pilot]
 
   classDef complete fill:#123A24,stroke:#22C55E,stroke-width:2px,color:#F8FAFC
-  classDef next fill:#3A2A0D,stroke:#F59E0B,stroke-width:3px,color:#F8FAFC
   classDef future fill:#1F2937,stroke:#64748B,stroke-width:2px,color:#CBD5E1
-  class G0,G1,G2,G3,G4 complete
-  class G5 next
-  class G6,G7 future
+  class G0,G1,G2,G3,G4,G5,G6,G7 complete
+  class G8 future
   linkStyle default stroke:#7DD3FC,stroke-width:2px
 ```
 
-The storefront-to-product flow, Forge credential-free successor phases, and bounded AWS, Azure, and GCP live-cloud validations are complete with retained evidence and verified teardown. The next locked Phase 19 target is the **live model adapter**, followed by the residual TFE comparison. Each remains separately blocked pending its applicable credentials, processing or third-party consent, cost approval, non-production confirmation, deployment authorization, and evidence-retention approval.
+The storefront-to-product flow, Forge credential-free successor phases, bounded AWS/Azure/GCP live-cloud validations, Vertex AI synthetic model-adapter validation, HCP Terraform Free proxy comparison, and this Phase 20 public architecture reconciliation are complete with retained sanitized evidence and verified teardown. Terraform Enterprise remains unvalidated and is not required for the demonstrated product path. A production pilot remains a future gate requiring separate authority, cost, security, support, recovery, SLO, and evidence approvals.
 
 ---
 
