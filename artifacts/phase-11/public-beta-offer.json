@@ -1,43 +1,20 @@
 {
-  "schemaVersion": "phase-11/public-beta-offer/v1",
+  "schemaVersion": "phase-11/public-beta-offer/sanitized-v2",
   "phase": 11,
   "product": "IaaP Guard",
-  "status": "PUBLIC_BETA",
-  "positioning": "GitHub-native Infrastructure-as-a-Product architecture and evidence guard",
-  "question": "Is this infrastructure actually being designed, delivered, and governed as a product?",
-  "currentOffer": {
-    "price": "free beta",
-    "distribution": "public GitHub App",
-    "marketplace": false,
-    "checkName": "IaaP Guard / Architecture",
-    "ruleset": "iaap-guard/v0.1.2",
-    "scoring": "coverage/v1"
-  },
+  "status": "SUPERSEDED",
+  "historicalPurpose": "Retains the fact that a public beta acquisition experiment occurred without carrying forward obsolete pricing or private commercial hypotheses into the current supported public surface.",
+  "supportedDistribution": "hosted GitHub App",
   "trustBoundary": {
-    "permissions": {
-      "metadata": "read",
-      "contents": "read",
-      "pullRequests": "read",
-      "checks": "read/write"
-    },
-    "noCloudCredentials": true,
-    "noKubernetesCredentials": true,
-    "noTerraformOrTFECredentials": true,
-    "noCustomerPAT": true,
-    "noRepositoryCodeExecution": true,
-    "noProvisioning": true,
-    "noAutoRemediation": true,
-    "noMergeAuthority": true,
-    "noAIVerdicts": true
+    "metadata": "read",
+    "contents": "read",
+    "pullRequests": "read",
+    "checks": "read/write",
+    "customerCloudCredentialsRequired": false,
+    "repositoryCodeExecution": false,
+    "provisioningAuthority": false,
+    "mergeAuthority": false
   },
-  "commercialHypotheses": [
-    "expanded deterministic rule and evidence packs",
-    "organization-level portfolio reporting",
-    "governance integrations",
-    "regulated-enterprise packaging",
-    "support",
-    "fixed-fee architecture/readiness assessment"
-  ],
-  "commercialCommitments": [],
-  "feedback": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/issues/111"
+  "currentStatus": "IaaP Guard V1 is the supported bounded product; historical beta pricing and commercial hypotheses are intentionally not part of the current public artifact.",
+  "historyNotice": "The original Phase 11 artifact remains available in Git history for provenance."
 }
