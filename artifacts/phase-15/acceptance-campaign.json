@@ -1,152 +1,47 @@
 {
+  "schemaVersion": "phase-15/acceptance-campaign/sanitized-v2",
   "phase": 15,
   "artifact": "acceptance-campaign",
   "status": "COMPLETE",
-  "phaseStatus": "COMPLETE",
-  "implementation": {
-    "repository": "SAABOLImpactVenture/iaap-guard",
-    "pullRequest": 25,
-    "mergeCommit": "321698dc9b77c8624ee4c45aae23c70f61f1c98b"
-  },
-  "runtime": {
-    "deploymentRequired": true,
-    "deploymentObserved": true,
-    "liveAcceptanceObserved": true,
-    "deployment": {
-      "workflow": "Deploy IaaP Guard beta (AWS OIDC)",
-      "workflowRunId": 31741722527,
-      "jobId": 94586485205,
-      "deployedCommit": "3ec8eebbcab3452a1550e0b00d17f990e256355c",
-      "stack": "iaap-guard-beta",
-      "region": "us-east-2",
-      "stackStatus": "UPDATE_COMPLETE",
-      "function": "iaap-guard-beta-GuardFunction-DLc3SyHNja3I",
-      "functionState": "Active",
-      "lambdaLastUpdateStatus": "Successful",
-      "changeSetScope": {
-        "action": "Modify",
-        "logicalResourceId": "GuardFunction",
-        "resourceType": "AWS::Lambda::Function",
-        "replacement": false
-      },
-      "credentialPath": "GitHub Actions OIDC -> IaaPGuardDeploymentRole",
-      "result": "successful"
-    }
-  },
-  "preDeploymentBaseline": {
-    "repository": "SAABOLImpactVenture/multicloud-foundation-product-poc",
-    "pullRequest": 10,
-    "revision": "f9c23ced889a2073ff50c918f8a45642066222c9",
-    "checkRunId": 94437303595,
-    "architectureConclusion": "PASS",
-    "githubConclusion": "success",
-    "evidenceContinuity": "SUPPORTED",
-    "productAssessment": "SUCCESS",
-    "productReadinessRendered": false,
-    "interpretation": "This observation was captured before Phase 15 deployment and is retained only as a deployment baseline."
-  },
-  "product": {
-    "id": "cloud-foundation-environment",
-    "primaryRepository": "SAABOLImpactVenture/multicloud-foundation-product-poc",
-    "requiredMemberRepository": "SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc",
-    "healthyManifestBlobSha": "97da09f3c7862752d84418f7a16854d8add1c145"
-  },
+  "deploymentObserved": true,
+  "liveAcceptanceObserved": true,
   "acceptanceEvidence": {
-    "checkRunUpdateModel": "The Architecture Check is updated in place for the same PR head and external_id. The observations below freeze each accepted state before the next controlled transition overwrote the rendered Check output.",
     "healthyReady": {
-      "case": "A",
-      "repository": "SAABOLImpactVenture/multicloud-foundation-product-poc",
-      "pullRequest": 10,
-      "revision": "f9c23ced889a2073ff50c918f8a45642066222c9",
-      "checkRunId": 94437303595,
-      "completedAt": "2026-08-13T20:52:15Z",
       "architectureConclusion": "PASS",
-      "githubConclusion": "success",
       "evidenceContinuity": "SUPPORTED",
       "productReadiness": "READY",
-      "requiredRepositoriesReady": "2/2",
-      "productAssessmentRendered": true,
       "productAssessment": "SUCCESS",
       "productScore": 100,
-      "productEvidence": "2/2",
-      "productEvidenceRevision": "37e9155a46798226fbef4546402bfa463dcd40e66226ab27bbec0cc74edf448a",
       "accepted": true
     },
     "controlledBlocker": {
-      "case": "B",
-      "blockerPullRequest": {
-        "repository": "SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc",
-        "number": 9,
-        "headRevision": "ba1033f104936bfc37e4b5e6c781e5a71f7101c9",
-        "mergeCommit": "02b4c62584ab31779a262ab9510b5ca2716139db",
-        "change": "Only product.name was changed to create a structurally valid but non-reciprocal trusted membership signature."
-      },
-      "repository": "SAABOLImpactVenture/multicloud-foundation-product-poc",
-      "pullRequest": 10,
-      "revision": "f9c23ced889a2073ff50c918f8a45642066222c9",
-      "checkRunId": 94437303595,
-      "completedAt": "2026-08-13T21:39:29Z",
       "architectureConclusion": "PASS",
-      "githubConclusion": "success",
       "evidenceContinuity": "SUPPORTED",
       "productReadiness": "BLOCKED",
-      "requiredRepositoriesReady": "1/2",
-      "blockingDiagnostics": [
-        "IAP-RDY106",
-        "IAP-RDY109",
-        "IAP-RDY110"
-      ],
       "primaryDiagnostic": "IAP-RDY106",
-      "observed": "SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc default-branch identity or membership signature does not match the trigger declaration.",
-      "remediation": "Merge the identical iaap-product/v1 declaration into the member default branch.",
       "productAssessmentRendered": false,
       "permissionExpansionRequired": false,
       "accepted": true
     },
     "recoveryReady": {
-      "case": "C",
-      "recoveryPullRequest": {
-        "repository": "SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc",
-        "number": 10,
-        "headRevision": "9a6ce95652c4398e8af3a88e5304b3d7d970372d",
-        "mergeCommit": "c2ad51f1ad3a37fdf3641ffa172b0c2a91a25d20",
-        "restoredManifestBlobSha": "97da09f3c7862752d84418f7a16854d8add1c145"
-      },
-      "repository": "SAABOLImpactVenture/multicloud-foundation-product-poc",
-      "pullRequest": 10,
-      "revision": "f9c23ced889a2073ff50c918f8a45642066222c9",
-      "checkRunId": 94437303595,
-      "completedAt": "2026-08-13T21:42:03Z",
       "architectureConclusion": "PASS",
-      "githubConclusion": "success",
       "evidenceContinuity": "SUPPORTED",
       "productReadiness": "READY",
-      "requiredRepositoriesReady": "2/2",
-      "memberEvidenceRevision": "c2ad51f1ad3a37fdf3641ffa172b0c2a91a25d20",
-      "productAssessmentRendered": true,
       "productAssessment": "SUCCESS",
       "productScore": 100,
-      "productEvidence": "2/2",
-      "productEvidenceRevision": "efd32e689875410e3bad7de88b84559a45447aa2c203cc0aae64351dd002886d",
       "accepted": true
     }
   },
   "safety": {
     "architectureCheckConclusionRemainedAuthoritative": true,
     "evidenceContinuityPreserved": true,
-    "noInfrastructureImplementationChangeDuringAcceptance": true,
     "noCloudResourceChangeDuringAcceptance": true,
     "noGitHubPermissionExpansion": true,
     "noDestructiveExperiment": true,
-    "controlledMismatchImmediatelyReverted": true,
-    "healthyManifestRestoredExactly": true
+    "controlledMismatchRecovered": true
   },
-  "completionGate": {
-    "deploymentEvidence": true,
-    "healthyReadyEvidence": true,
-    "blockedEvidence": true,
-    "recoveryReadyEvidence": true,
-    "retainedLiveAcceptanceArtifact": true,
-    "phaseCanBeMarkedComplete": true
+  "publicBoundary": {
+    "statement": "This current public artifact records only the bounded acceptance outcome. Raw deployment identifiers, IAM details, workflow/job identifiers, repository revisions, physical resource names, and other implementation-level operational details are intentionally omitted.",
+    "historyNotice": "The original retained artifact remains available in Git history for provenance."
   }
 }
