@@ -38,6 +38,73 @@ nav:
   - Home: index.md
   - Thesis: THESIS.md
   - Product Control Plane: architecture/product-control-plane.md
+  - Bootstrap and Foundation Readiness:
+      - Overview: bootstrap-foundation-readiness/README.md
+      - Architecture:
+          - Bootstrap Reference Architecture: bootstrap-foundation-readiness/architecture/bootstrap-reference-architecture.md
+          - Authority and Trust Boundaries: bootstrap-foundation-readiness/architecture/authority-and-trust-boundaries.md
+          - Customer-Hosted Deployment: bootstrap-foundation-readiness/architecture/customer-hosted-deployment.md
+          - Progression and Decisions: bootstrap-foundation-readiness/architecture/progression-and-decision-model.md
+      - Prerequisites:
+          - Assessment: bootstrap-foundation-readiness/prerequisites/assessment-prerequisites.md
+          - Bootstrap Runtime: bootstrap-foundation-readiness/prerequisites/bootstrap-runtime-prerequisites.md
+          - Read-Only Discovery: bootstrap-foundation-readiness/prerequisites/discovery-prerequisites.md
+          - Provisioning: bootstrap-foundation-readiness/prerequisites/provisioning-prerequisites.md
+          - Production Pilot: bootstrap-foundation-readiness/prerequisites/production-pilot-prerequisites.md
+      - Foundation Domains:
+          - Governance and Ownership: bootstrap-foundation-readiness/foundation-domains/governance-and-ownership.md
+          - Resource Hierarchy: bootstrap-foundation-readiness/foundation-domains/resource-hierarchy.md
+          - Identity and Access: bootstrap-foundation-readiness/foundation-domains/identity-and-access.md
+          - Workload Identity: bootstrap-foundation-readiness/foundation-domains/workload-identity.md
+          - Networking and Connectivity: bootstrap-foundation-readiness/foundation-domains/networking-and-connectivity.md
+          - DNS Responsibilities: bootstrap-foundation-readiness/foundation-domains/dns-responsibilities.md
+          - Ingress and Egress: bootstrap-foundation-readiness/foundation-domains/ingress-and-egress.md
+          - Logging and Monitoring: bootstrap-foundation-readiness/foundation-domains/logging-and-monitoring.md
+          - Security-Event Integration: bootstrap-foundation-readiness/foundation-domains/security-event-integration.md
+          - Encryption and Key Management: bootstrap-foundation-readiness/foundation-domains/encryption-and-key-management.md
+          - Secrets Management: bootstrap-foundation-readiness/foundation-domains/secrets-management.md
+          - Delivery and Change Governance: bootstrap-foundation-readiness/foundation-domains/delivery-and-change-governance.md
+          - Infrastructure-Product Contracts: bootstrap-foundation-readiness/foundation-domains/infrastructure-product-contracts.md
+          - Operations and Support: bootstrap-foundation-readiness/foundation-domains/operations-and-support.md
+          - Backup, Recovery, and Continuity: bootstrap-foundation-readiness/foundation-domains/backup-recovery-and-continuity.md
+          - Cost Ownership and FinOps: bootstrap-foundation-readiness/foundation-domains/cost-ownership-and-finops.md
+          - Evidence and Traceability: bootstrap-foundation-readiness/foundation-domains/evidence-and-traceability.md
+          - Data Classification: bootstrap-foundation-readiness/foundation-domains/data-classification.md
+          - AI Governance: bootstrap-foundation-readiness/foundation-domains/ai-governance.md
+      - Composite AI:
+          - Advisory Operating Model: bootstrap-foundation-readiness/composite-ai/advisory-operating-model.md
+          - Approved Inputs and Proposals: bootstrap-foundation-readiness/composite-ai/approved-inputs-and-proposals.md
+          - Authority, Provenance, and Review: bootstrap-foundation-readiness/composite-ai/authority-provenance-and-human-review.md
+      - Readiness Gates:
+          - Gate 0 — Intake: bootstrap-foundation-readiness/readiness-gates/gate-0-intake.md
+          - Gate 1 — Assessment: bootstrap-foundation-readiness/readiness-gates/gate-1-assessment.md
+          - Gate 2 — Simulation: bootstrap-foundation-readiness/readiness-gates/gate-2-simulation.md
+          - Gate 3 — Read-Only Discovery: bootstrap-foundation-readiness/readiness-gates/gate-3-read-only-discovery.md
+          - Gate 4 — Live Sandbox: bootstrap-foundation-readiness/readiness-gates/gate-4-live-sandbox.md
+          - Gate 5 — Pilot: bootstrap-foundation-readiness/readiness-gates/gate-5-pilot.md
+          - Gate 6 — Production Consideration: bootstrap-foundation-readiness/readiness-gates/gate-6-production-consideration.md
+      - Decisions:
+          - Foundation Readiness Decisions: bootstrap-foundation-readiness/decisions/foundation-readiness-decisions.md
+          - Exceptions and Expiration: bootstrap-foundation-readiness/decisions/exceptions-and-expiration.md
+          - Human Review and Risk Acceptance: bootstrap-foundation-readiness/decisions/human-review-and-risk-acceptance.md
+      - Evidence:
+          - Evidence Requirements: bootstrap-foundation-readiness/evidence/evidence-requirements.md
+          - Evidence Integrity: bootstrap-foundation-readiness/evidence/evidence-integrity.md
+          - Retention, Traceability, and Export: bootstrap-foundation-readiness/evidence/retention-traceability-and-export.md
+          - Reference Evidence Map: bootstrap-foundation-readiness/evidence/reference-evidence-map.md
+      - Provider Guidance:
+          - Provider-Neutral Contract: bootstrap-foundation-readiness/providers/provider-neutral-contract.md
+          - AWS Profile: bootstrap-foundation-readiness/providers/aws-foundation-profile.md
+          - Azure Profile: bootstrap-foundation-readiness/providers/azure-foundation-profile.md
+          - GCP Profile: bootstrap-foundation-readiness/providers/gcp-foundation-profile.md
+      - Public Schema Targets:
+          - Customer Bootstrap Profile: bootstrap-foundation-readiness/schemas/customer-bootstrap-profile.md
+          - Foundation Readiness Assessment: bootstrap-foundation-readiness/schemas/foundation-readiness-assessment.md
+          - Cloud Foundation Environment: bootstrap-foundation-readiness/schemas/cloud-foundation-environment.md
+      - Responsibility Matrices:
+          - Bootstrap RACI: bootstrap-foundation-readiness/responsibility-matrices/bootstrap-raci.md
+          - Foundation-Domain Owners: bootstrap-foundation-readiness/responsibility-matrices/foundation-domain-owners.md
+          - Provider and Partner Boundaries: bootstrap-foundation-readiness/responsibility-matrices/provider-partner-boundaries.md
   - Operating Model: OPERATING-MODEL.md
   - POC Portfolio: poc-portfolio.md
   - Evidence Baseline: poc-baselines/2026-08-07-credential-free-multicloud-foundation.md
