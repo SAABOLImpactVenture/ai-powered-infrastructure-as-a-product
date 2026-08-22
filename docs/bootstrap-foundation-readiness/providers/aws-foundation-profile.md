@@ -13,7 +13,7 @@ Bind the provider-neutral contract to one exact, customer-approved AWS nonproduc
 The bounded POC includes templates for:
 
 - one VPC and private subnet;
-- one IAM role whose trust policy intentionally denies assumption until reviewed evolution;
+- one IAM role whose trust policy intentionally denies assumption until its trust relationship is explicitly reviewed and approved;
 - one S3 bucket plus public-access blocking;
 - ownership and cost metadata;
 - approved development regions; and

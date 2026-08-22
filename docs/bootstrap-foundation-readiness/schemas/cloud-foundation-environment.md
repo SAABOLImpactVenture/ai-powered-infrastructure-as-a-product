@@ -22,6 +22,8 @@ The POC intentionally does not guarantee production SLOs, enterprise routing, DN
 
 The durable consumer request should express the product outcome and approved profile. Platform-owned implementation details—provider resources, raw CIDRs, deletion policy, ProviderConfigs, Terraform/TFE constructs, state, and pipelines—stay behind the product boundary.
 
+In the illustrative target below, `CloudFoundationEnvironmentRequest` denotes a desired-state request, while the POC `CloudFoundationEnvironment` is the existing executable proof. The illustrative name neither renames nor supersedes that XRD; any future split between request and realized-environment resources requires a separately reviewed, versioned contract.
+
 ## Illustrative product request
 
 **Illustrative, non-executable YAML — not the POC XRD and not a Guard V1 or Forge V1 schema:**
