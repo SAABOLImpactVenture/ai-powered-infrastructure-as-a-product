@@ -257,6 +257,11 @@ A minimal seed establishes only the irreducible trust boundary needed for Crossp
 
 The storefront can expose those products as they mature without becoming part of their implementation.
 
+The [IaaP Bootstrap and Foundation Readiness](docs/bootstrap-foundation-readiness/README.md)
+package defines the customer decisions, detailed prerequisites, Composite AI
+advisory boundary, readiness gates, evidence, and provider guidance needed to
+move safely from assessment through a separately authorized cloud pilot.
+
 ---
 
 ## The Day 1 / Day 2 platform trap

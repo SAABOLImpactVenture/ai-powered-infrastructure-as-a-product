@@ -95,9 +95,20 @@ Because the experience layer is replaceable, the product contract survives a fut
 
 A cloud organization/tenant relationship, billing, initial administration, approved management environment, audit path, and source repository may exist before Crossplane can operate.
 
+The [IaaP Bootstrap and Foundation Readiness](../bootstrap-foundation-readiness/README.md)
+package expands these external prerequisites into customer decisions,
+stage-specific evidence, and explicit readiness outcomes. Repository assessment
+remains available without cloud credentials or this runtime.
+
 ### Layer 1 — minimal trusted seed
 
 The seed installs Crossplane, establishes its namespace/security boundary, package/version controls, identity path, and basic auditability. The seed remains deliberately small and independently governed.
+
+The technical seed is only one subset of the broader
+[customer bootstrap](../bootstrap-foundation-readiness/architecture/bootstrap-reference-architecture.md),
+which also covers the customer-controlled hosting, authority, data custody,
+operations, recovery, and integration decisions required by the requested
+stage.
 
 ### Layer 2 — foundation products
 
