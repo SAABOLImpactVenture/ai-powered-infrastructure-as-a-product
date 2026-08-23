@@ -275,6 +275,7 @@ handoff.
 - [Customer bootstrap profile](schemas/customer-bootstrap-profile.md) — Versioned target contract for deployment mode, stage, identity, evidence, AI, discovery, provisioning, and review.
 - [Foundation readiness assessment](schemas/foundation-readiness-assessment.md) — Target representation for findings, requirements, decisions, conditions, ownership, and evidence.
 - [Cloud foundation environment](schemas/cloud-foundation-environment.md) — Stable product-facing request example and its implementation-independent boundary.
+- [Foundation target](schemas/foundation-target.md) — Separately versioned attach-existing and vend-new target product, provider-native adapter boundary, lifecycle, and typed environment reference.
 
 These are public architecture schema targets. They are not asserted as shipped
 Guard V1 or Forge V1 schemas.
