@@ -101,6 +101,7 @@ nav:
           - Customer Bootstrap Profile: bootstrap-foundation-readiness/schemas/customer-bootstrap-profile.md
           - Foundation Readiness Assessment: bootstrap-foundation-readiness/schemas/foundation-readiness-assessment.md
           - Cloud Foundation Environment: bootstrap-foundation-readiness/schemas/cloud-foundation-environment.md
+          - Foundation Target: bootstrap-foundation-readiness/schemas/foundation-target.md
       - Responsibility Matrices:
           - Bootstrap RACI: bootstrap-foundation-readiness/responsibility-matrices/bootstrap-raci.md
           - Foundation-Domain Owners: bootstrap-foundation-readiness/responsibility-matrices/foundation-domain-owners.md
