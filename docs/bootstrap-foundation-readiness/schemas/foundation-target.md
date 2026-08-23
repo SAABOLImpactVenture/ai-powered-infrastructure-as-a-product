@@ -2,7 +2,7 @@
 
 **Requirement ID:** `BFR-SCH-004`
 
-> **Status:** Approved separately versioned architecture contract. Protected Forge successor increments implement credential-free schemas, simulations, reconciliation, and an inert executor protocol at [`b8e1c4a`](https://github.com/SAABOLImpactVenture/iaap-forge/tree/b8e1c4a981b425b4723cf2125abe83c6884934de); credentialed provider fulfillment remains unimplemented and unauthorized. This contract is not a Guard V1, Forge V1, or Console V1 schema and does not change the existing `CloudFoundationEnvironment` POC contract.
+> **Status:** Approved separately versioned architecture contract and sanitized public capability reference. Protected Forge successor increments implement credential-free schemas, simulations, reconciliation, and an inert executor protocol; credentialed provider fulfillment remains unimplemented and unauthorized. This contract is not a Guard V1, Forge V1, or Console V1 schema and does not change the existing `CloudFoundationEnvironment` POC contract.
 
 ## Product boundary
 
