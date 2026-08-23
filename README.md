@@ -268,11 +268,11 @@ Cloud-native vending is represented by the separately versioned [`FoundationTarg
 
 - `attach-existing` binds a reviewed existing AWS account, Azure subscription, or Google Cloud project.
 - `vend-new` creates a governed provider-native fulfillment request for a new target.
-- A formal immutable `FoundationTarget` reference is passed to the successor `CloudFoundationEnvironment` contract.
+- A formal typed `FoundationTarget` reference is passed to the successor `CloudFoundationEnvironment` contract.
 - Lifecycle, drift, retry, retirement review, and sanitized evidence remain explicit.
 - AWS Organizations/Control Tower, Azure Resource Manager/subscription aliases, Google Cloud Resource Manager, Crossplane/Upbound, and HCP Terraform/TFE remain replaceable execution integrations.
 
-The architecture and Forge successor contracts, provider-adapter simulations, synthetic reconciliation, and authenticated external-executor handoff protocol are implemented under `CONTINUE_VALIDATION`. The actual credentialed customer-hosted executor that performs provider mutations is not implemented or authorized. Frozen Guard V1, Forge V1, and Console V1 contracts remain unchanged.
+The public package remains the architecture contract. Separately protected Forge successor increments implement [the v1alpha1 contract](https://github.com/SAABOLImpactVenture/iaap-forge/blob/b8e1c4a981b425b4723cf2125abe83c6884934de/docs/FOUNDATION-TARGET.md), [credential-free adapter simulations](https://github.com/SAABOLImpactVenture/iaap-forge/blob/b8e1c4a981b425b4723cf2125abe83c6884934de/docs/FOUNDATION-ADAPTER-SIMULATIONS.md), [synthetic reconciliation](https://github.com/SAABOLImpactVenture/iaap-forge/blob/b8e1c4a981b425b4723cf2125abe83c6884934de/docs/FOUNDATION-EXECUTION.md), and an [inert external-executor protocol](https://github.com/SAABOLImpactVenture/iaap-forge/blob/b8e1c4a981b425b4723cf2125abe83c6884934de/docs/FOUNDATION-EXECUTOR-PROTOCOL.md). These are synthetic, nonproduction validation artifacts compatible with the `CONTINUE_VALIDATION` evidence disposition; that disposition grants no execution or production authority. The credentialed customer-hosted executor that performs provider mutations is not implemented or authorized. Frozen Guard V1, Forge V1, and Console V1 contracts remain unchanged.
 
 ---
 
