@@ -262,6 +262,18 @@ package defines the customer decisions, detailed prerequisites, Composite AI
 advisory boundary, readiness gates, evidence, and provider guidance needed to
 move safely from assessment through a separately authorized cloud pilot.
 
+### Cloud-native foundation target and vending
+
+Cloud-native vending is represented by the separately versioned [`FoundationTarget`](docs/bootstrap-foundation-readiness/schemas/foundation-target.md) successor product rather than being hidden inside `CloudFoundationEnvironment` or a provider tool.
+
+- `attach-existing` binds a reviewed existing AWS account, Azure subscription, or Google Cloud project.
+- `vend-new` creates a governed provider-native fulfillment request for a new target.
+- A formal typed `FoundationTarget` reference is passed to the successor `CloudFoundationEnvironment` contract.
+- Lifecycle, drift, retry, retirement review, and sanitized evidence remain explicit.
+- AWS Organizations/Control Tower, Azure Resource Manager/subscription aliases, Google Cloud Resource Manager, Crossplane/Upbound, and HCP Terraform/TFE remain replaceable execution integrations.
+
+The public [`FoundationTarget` architecture contract](docs/bootstrap-foundation-readiness/schemas/foundation-target.md) is the sanitized capability and implementation-status reference. Separately protected Forge successor increments implement the v1alpha1 contract, credential-free adapter simulations, synthetic reconciliation, and an inert external-executor protocol. These remain synthetic, nonproduction validation artifacts compatible with the `CONTINUE_VALIDATION` evidence disposition; that disposition grants no execution or production authority. The credentialed customer-hosted executor that performs provider mutations is not implemented or authorized. Frozen Guard V1, Forge V1, and Console V1 contracts remain unchanged.
+
 ---
 
 ## The Day 1 / Day 2 platform trap

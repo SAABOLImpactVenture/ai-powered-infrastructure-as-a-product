@@ -2,7 +2,7 @@
 
 **Requirement ID:** `BFR-SCH-004`
 
-> **Status:** Separately versioned architecture target for the missing cloud-native vending and attachment layer. This contract is not a Guard V1, Forge V1, or Console V1 schema and does not change the existing `CloudFoundationEnvironment` POC contract.
+> **Status:** Approved separately versioned architecture contract and sanitized public capability reference. Protected Forge successor increments implement credential-free schemas, simulations, reconciliation, and an inert executor protocol; credentialed provider fulfillment remains unimplemented and unauthorized. This contract is not a Guard V1, Forge V1, or Console V1 schema and does not change the existing `CloudFoundationEnvironment` POC contract.
 
 ## Product boundary
 
@@ -41,7 +41,7 @@ For `attach-existing`, the request additionally supplies an opaque, provider-sco
 
 ## Formal environment reference
 
-A separately versioned successor to the current request target may add one required reference:
+The protected Forge `CloudFoundationEnvironment v1alpha2` successor implements one required typed reference; this public example remains illustrative and name-addressed:
 
 ```yaml
 spec:
@@ -149,15 +149,18 @@ flowchart LR
   class B,D,P blocked
 ```
 
-## Implementation sequence
+## Implementation status
 
-1. Accept this public architecture contract.
-2. Complete the in-progress protected Forge hardening baseline.
-3. Add a new Forge successor contract and credential-free deterministic simulator.
-4. Add provider-native adapter interfaces and synthetic fixtures.
-5. Add the typed `foundationTargetRef` to a separately versioned `CloudFoundationEnvironment` successor.
-6. Prove attach-existing and vend-new negative/positive behavior offline.
-7. Consider separately authorized provider sandboxes only after credential, cost, and third-party gates are satisfied.
+Completed in protected, synthetic-only Forge successor increments:
+
+1. Public architecture contract accepted.
+2. Forge hardening baseline completed.
+3. Separately versioned `FoundationTarget v1alpha1` schema and deterministic simulator added.
+4. Credential-free provider-native adapter interfaces and synthetic fixtures added.
+5. Typed `foundationTargetRef` required by `CloudFoundationEnvironment v1alpha2`.
+6. Offline positive, negative, lifecycle, drift, retry, retirement, and executor-protocol behavior validated.
+
+Deferred: a credentialed customer-hosted executor and any provider sandbox, pilot, or production operation. Those require separate credential, permission, cost, third-party, data, and deployment authorization.
 
 ## Related requirements
 

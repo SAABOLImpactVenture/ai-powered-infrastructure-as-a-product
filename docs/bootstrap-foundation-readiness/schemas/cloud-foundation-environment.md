@@ -51,9 +51,9 @@ spec:
 
 ## Foundation target reference
 
-Cloud-native account, subscription, or project vending is a separate product concern. A future, separately versioned successor contract must replace the illustrative free-form `foundationAttachmentRef` with a required typed `foundationTargetRef` to a compatible, `Ready` [`FoundationTarget`](foundation-target.md).
+Cloud-native account, subscription, or project vending is a separate product concern. A separately versioned protected successor now implements a required typed `foundationTargetRef` to a compatible, `Ready` [`FoundationTarget`](foundation-target.md). The illustrative request on this public page and the existing executable POC XRD remain unchanged.
 
-That successor may use either `attach-existing` or `vend-new` target mode. The reference does not grant creation or deletion authority and does not change the existing POC XRD or frozen Forge V1 contract.
+That successor supports targets requested through either `attach-existing` or `vend-new` mode. The reference does not grant creation or deletion authority and does not change the existing POC XRD or frozen Forge V1 contract.
 
 ## Platform-owned resolution
 
@@ -88,7 +88,7 @@ The customer and platform must define create, update, rollback, drift, import, r
 
 ## POC traceability boundary
 
-The credential-free baseline proves simulated product acceptance, reconciliation, negative admission, and teardown for the frozen POC contract. Live AWS/GCP semantic equivalence and the expanded customer foundation attachments on this page remain unproven targets.
+The credential-free baseline proves simulated product acceptance, reconciliation, negative admission, and teardown for the frozen POC contract. Separately protected successor validation proves only synthetic `FoundationTarget` reference semantics. Live AWS, Azure, and GCP semantic equivalence and expanded customer foundation attachments remain unproven targets.
 
 ## Related requirements
 
