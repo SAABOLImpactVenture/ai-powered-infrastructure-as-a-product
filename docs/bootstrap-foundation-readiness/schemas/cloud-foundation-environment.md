@@ -88,7 +88,7 @@ The customer and platform must define create, update, rollback, drift, import, r
 
 ## POC traceability boundary
 
-The credential-free baseline proves simulated product acceptance, reconciliation, negative admission, and teardown for the frozen POC contract. Live AWS/GCP semantic equivalence and the expanded customer foundation attachments on this page remain unproven targets.
+The credential-free baseline proves simulated product acceptance, reconciliation, negative admission, and teardown for the frozen POC contract. Separately protected successor validation proves only synthetic `FoundationTarget` reference semantics. Live AWS, Azure, and GCP semantic equivalence and expanded customer foundation attachments remain unproven targets.
 
 ## Related requirements
 
