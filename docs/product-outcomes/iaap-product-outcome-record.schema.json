@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://saabolimpactventure.github.io/ai-powered-infrastructure-as-a-product/schemas/iaap-product-outcome-record-v1alpha1.json",
+  "title": "IaaPProductOutcomeRecord v1alpha1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "instrumentation", "observations"],
+  "properties": {
+    "apiVersion": {"const": "iaap.saabol.io/v1alpha1"},
+    "kind": {"const": "IaaPProductOutcomeRecord"},
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recordId", "productId", "productVersion", "observedPeriod"],
+      "properties": {
+        "recordId": {"type": "string", "minLength": 1},
+        "productId": {"type": "string", "minLength": 1},
+        "productVersion": {"type": "string", "minLength": 1},
+        "productType": {"type": ["string", "null"]},
+        "consumerId": {"type": ["string", "null"]},
+        "provider": {"type": ["string", "null"], "enum": ["aws", "azure", "gcp", "other", null]},
+        "targetRef": {"type": ["string", "null"]},
+        "observedPeriod": {
+          "type": "object",
+          "required": ["start", "end"],
+          "properties": {
+            "start": {"type": "string", "format": "date-time"},
+            "end": {"type": "string", "format": "date-time"}
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "instrumentation": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/instrumentationState"}
+    },
+    "observations": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lifecycle": {"$ref": "#/$defs/lifecycle"},
+        "adoption": {"$ref": "#/$defs/adoption"},
+        "policy": {"$ref": "#/$defs/policy"},
+        "reconciliation": {"$ref": "#/$defs/reconciliation"},
+        "evidence": {"$ref": "#/$defs/evidence"},
+        "cost": {"$ref": "#/$defs/cost"},
+        "experience": {"$ref": "#/$defs/experience"}
+      }
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidenceRef"},
+      "uniqueItems": true
+    }
+  },
+  "$defs": {
+    "instrumentationState": {
+      "type": "string",
+      "enum": ["OBSERVED", "PARTIAL", "SYNTHETIC", "NOT_INSTRUMENTED", "NOT_APPLICABLE"]
+    },
+    "nullableNonNegativeInteger": {"type": ["integer", "null"], "minimum": 0},
+    "nullableNonNegativeNumber": {"type": ["number", "null"], "minimum": 0},
+    "timestampObservation": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["value", "source"],
+      "properties": {
+        "value": {"type": "string", "format": "date-time"},
+        "source": {"type": "string", "minLength": 1},
+        "evidenceRef": {"type": ["string", "null"]}
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "demandSubmittedAt": {"$ref": "#/$defs/timestampObservation"},
+        "demandApprovedAt": {"$ref": "#/$defs/timestampObservation"},
+        "orderCreatedAt": {"$ref": "#/$defs/timestampObservation"},
+        "policyCompletedAt": {"$ref": "#/$defs/timestampObservation"},
+        "humanApprovedAt": {"$ref": "#/$defs/timestampObservation"},
+        "reconciliationStartedAt": {"$ref": "#/$defs/timestampObservation"},
+        "readyAt": {"$ref": "#/$defs/timestampObservation"},
+        "upgradeAttempts": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "upgradeSuccesses": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "rollbacks": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "teardownAttempts": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "cleanTeardowns": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "teardownsWithOrphans": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "activeProducts": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "supportedVersionProducts": {"$ref": "#/$defs/nullableNonNegativeInteger"}
+      }
+    },
+    "adoption": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "eligibleConsumers": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "adoptingConsumers": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "totalProductOrders": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "ordersUsingExistingContract": {"$ref": "#/$defs/nullableNonNegativeInteger"}
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "totalEvaluations": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "rejectedEvaluations": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "totalProductRequests": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "exceptions": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "rejectionReasons": {
+          "type": "object",
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "reconciliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "attempts": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "failures": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "recoveryAttempts": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "recoverySuccesses": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "recoverySeconds": {
+          "type": "array",
+          "items": {"type": "number", "minimum": 0}
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "required": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "present": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "missing": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "expired": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "invalid": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "brokenLineage": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "notApplicable": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "traceabilityComplete": {"type": ["boolean", "null"]}
+      }
+    },
+    "cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "currency": {"type": ["string", "null"], "pattern": "^[A-Z]{3}$"},
+        "infrastructure": {"$ref": "#/$defs/costObservation"},
+        "platform": {"$ref": "#/$defs/costObservation"},
+        "licensing": {"$ref": "#/$defs/costObservation"},
+        "operationsLabor": {"$ref": "#/$defs/costObservation"},
+        "supportLabor": {"$ref": "#/$defs/costObservation"},
+        "exceptionRemediation": {"$ref": "#/$defs/costObservation"}
+      }
+    },
+    "costObservation": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["amount", "basis", "source"],
+      "properties": {
+        "amount": {"type": "number", "minimum": 0},
+        "basis": {"type": "string", "enum": ["OBSERVED", "ALLOCATED", "ESTIMATED"]},
+        "source": {"type": "string", "minLength": 1}
+      }
+    },
+    "experience": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "npsResponses": {"type": "array", "items": {"type": "integer", "minimum": 0, "maximum": 10}},
+        "completedOrders": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "abandonedOrders": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "selfServiceCompletions": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "humanInterventions": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "supportCases": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "repeatSupportCases": {"$ref": "#/$defs/nullableNonNegativeInteger"},
+        "supportResolutionSeconds": {"type": "array", "items": {"type": "number", "minimum": 0}}
+      }
+    },
+    "evidenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "uri", "source"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "uri": {"type": "string", "minLength": 1},
+        "source": {"type": "string", "minLength": 1},
+        "digest": {"type": ["string", "null"]}
+      }
+    }
+  }
+}
