@@ -36,6 +36,13 @@ extra_javascript:
 
 nav:
   - Home: index.md
+  - Executive Overview:
+      - Decision Brief: executive/EXECUTIVE-DECISION-BRIEF.md
+      - Executive Decision Deck: executive/EXECUTIVE-DECK.md
+      - Suite Overview: executive/SUITE-OVERVIEW.md
+      - Business Value and Outcomes: executive/BUSINESS-VALUE.md
+      - Adoption Model: executive/ADOPTION-MODEL.md
+      - Executive FAQ: executive/EXECUTIVE-FAQ.md
   - Thesis: THESIS.md
   - Product Control Plane: architecture/product-control-plane.md
   - Bootstrap and Foundation Readiness:
