@@ -1,0 +1,104 @@
+{
+  "apiVersion": "iaap.saabol.io/v1alpha1",
+  "kind": "IaaPProductOutcomeRecord",
+  "metadata": {
+    "recordId": "example-product-2026-08",
+    "productId": "cloud-foundation-environment",
+    "productVersion": "v1alpha2",
+    "productType": "foundation",
+    "consumerId": "example-team",
+    "provider": "aws",
+    "targetRef": "foundation-target/example-target",
+    "observedPeriod": {
+      "start": "2026-08-01T00:00:00Z",
+      "end": "2026-08-31T23:59:59Z"
+    }
+  },
+  "instrumentation": {
+    "approvedToReady": "PARTIAL",
+    "adoption": "OBSERVED",
+    "reuse": "NOT_INSTRUMENTED",
+    "policy": "PARTIAL",
+    "reconciliation": "SYNTHETIC",
+    "evidence": "OBSERVED",
+    "lifecycle": "PARTIAL",
+    "costToServe": "NOT_INSTRUMENTED",
+    "consumerExperience": "OBSERVED",
+    "supportDemand": "NOT_INSTRUMENTED"
+  },
+  "observations": {
+    "lifecycle": {
+      "demandApprovedAt": {
+        "value": "2026-08-10T13:00:00Z",
+        "source": "approved-intake",
+        "evidenceRef": "approval-001"
+      },
+      "readyAt": null,
+      "upgradeAttempts": null,
+      "upgradeSuccesses": null,
+      "rollbacks": null,
+      "teardownAttempts": 1,
+      "cleanTeardowns": 1,
+      "teardownsWithOrphans": 0,
+      "activeProducts": null,
+      "supportedVersionProducts": null
+    },
+    "adoption": {
+      "eligibleConsumers": 10,
+      "adoptingConsumers": 4,
+      "totalProductOrders": 6,
+      "ordersUsingExistingContract": null
+    },
+    "policy": {
+      "totalEvaluations": 6,
+      "rejectedEvaluations": null,
+      "totalProductRequests": 6,
+      "exceptions": 1,
+      "rejectionReasons": {}
+    },
+    "reconciliation": {
+      "attempts": 3,
+      "failures": 1,
+      "recoveryAttempts": 1,
+      "recoverySuccesses": 1,
+      "recoverySeconds": [42]
+    },
+    "evidence": {
+      "required": 8,
+      "present": 7,
+      "missing": 1,
+      "expired": 0,
+      "invalid": 0,
+      "brokenLineage": 0,
+      "notApplicable": 0,
+      "traceabilityComplete": false
+    },
+    "cost": {
+      "currency": "USD",
+      "infrastructure": null,
+      "platform": null,
+      "licensing": null,
+      "operationsLabor": null,
+      "supportLabor": null,
+      "exceptionRemediation": null
+    },
+    "experience": {
+      "npsResponses": [8, 9, 7],
+      "completedOrders": 6,
+      "abandonedOrders": 1,
+      "selfServiceCompletions": 5,
+      "humanInterventions": 1,
+      "supportCases": null,
+      "repeatSupportCases": null,
+      "supportResolutionSeconds": []
+    }
+  },
+  "evidenceRefs": [
+    {
+      "id": "approval-001",
+      "uri": "evidence://example/approval-001",
+      "source": "approved-intake",
+      "digest": null
+    }
+  ]
+}
