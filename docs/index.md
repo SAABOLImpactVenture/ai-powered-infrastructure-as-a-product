@@ -36,6 +36,7 @@ Earlier Terraform, TFE, Azure Arc, Backstage, and legacy execution-MCP implement
 
 - [Thesis](THESIS.md)
 - [Operating Model](OPERATING-MODEL.md)
+- [Product Outcome Telemetry](product-outcomes/README.md)
 - [Product-Control-Plane Architecture](architecture/product-control-plane.md)
 - [IaaP Bootstrap and Foundation Readiness](bootstrap-foundation-readiness/README.md)
 - [Interoperability](INTEROPERABILITY.md)
@@ -43,6 +44,7 @@ Earlier Terraform, TFE, Azure Arc, Backstage, and legacy execution-MCP implement
 ### For architects and engineers
 
 - [Product-Control-Plane Architecture](architecture/product-control-plane.md)
+- [Product Outcome Telemetry](product-outcomes/README.md)
 - [IaaP Bootstrap and Foundation Readiness](bootstrap-foundation-readiness/README.md)
 - [POC Portfolio](poc-portfolio.md)
 - [Credential-Free Evidence Baseline](poc-baselines/2026-08-07-credential-free-multicloud-foundation.md)
