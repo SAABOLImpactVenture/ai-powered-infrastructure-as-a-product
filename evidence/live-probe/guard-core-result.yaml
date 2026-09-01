@@ -1,33 +1,13 @@
-fixture:
-  context: consumer-contract
-  expected:
-    ruleId: IAP-P004
-    result: WARNING
----
-apiVersion: apiextensions.crossplane.io/v2
-kind: CompositeResourceDefinition
-metadata:
-  name: guard-live-probes.platform.example.org
-spec:
-  group: platform.example.org
-  names:
-    kind: GuardLiveProbe
-    plural: guardliveprobes
-  versions:
-    - name: v1alpha1
-      served: true
-      referenceable: true
-      schema:
-        openAPIV3Schema:
-          type: object
-          properties:
-            spec:
-              type: object
-              required: [cloud, region, costCenter]
-              properties:
-                cloud:
-                  type: string
-                region:
-                  type: string
-                costCenter:
-                  type: string
+{
+  "fixture": {
+    "context": "ai-authority",
+    "expected": {
+      "ruleId": "IAP-A002",
+      "result": "FAIL"
+    }
+  },
+  "proposalMode": true,
+  "requireHumanApproval": false,
+  "allowSelfApproval": true,
+  "allowMergeOwnProposal": true
+}
