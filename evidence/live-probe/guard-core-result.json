@@ -1,0 +1,13 @@
+{
+  "fixture": {
+    "context": "ai-authority",
+    "expected": {
+      "ruleId": "IAP-A002",
+      "result": "FAIL"
+    }
+  },
+  "proposalMode": true,
+  "requireHumanApproval": false,
+  "allowSelfApproval": true,
+  "allowMergeOwnProposal": true
+}
