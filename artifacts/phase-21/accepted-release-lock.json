@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "accepted-release-chain/v1",
+  "fixture": "synthetic",
+  "decision": "CONTINUE_VALIDATION",
+  "upstreams": {
+    "guard": {
+      "repository": "SAABOLImpactVenture/iaap-guard",
+      "release": "v1.0.2",
+      "commit": "03587c5c806fc659ad7b54e60069a30d08ddb184"
+    },
+    "guardCore": {
+      "repository": "SAABOLImpactVenture/iaap-guard-core",
+      "acceptedRevision": "f8daf68d295006822fdf4c0dc3823dd9264e82a5",
+      "commit": "f8daf68d295006822fdf4c0dc3823dd9264e82a5"
+    },
+    "console": {
+      "repository": "SAABOLImpactVenture/iaap-console",
+      "release": "v0.1.1",
+      "commit": "3f51d38563a988f9b3923be3c326a5dcdb9c60e4"
+    },
+    "forge": {
+      "repository": "SAABOLImpactVenture/iaap-forge",
+      "release": "v1.3.1",
+      "commit": "c3b873d87d6c864c49bd8057582b68205cf0a32f"
+    }
+  },
+  "verification": {
+    "repository": "SAABOLImpactVenture/multicloud-foundation-poc-integration",
+    "commit": "7a5f4fa484e09b3605e81da5fec3550fd521fb9c",
+    "runId": 33576400709,
+    "result": "PASS",
+    "artifact": {
+      "id": 9826780382,
+      "name": "guard-console-forge-journey",
+      "digest": "sha256:9640a78691bcfc445b45ca9dc12981955d80013aea609b1bd17136ecf37a788d"
+    }
+  },
+  "authority": {
+    "approve": false,
+    "merge": false,
+    "apply": false,
+    "execute": false,
+    "provision": false,
+    "grantPolicy": false,
+    "grantProduction": false,
+    "grantPrivileges": false
+  }
+}
