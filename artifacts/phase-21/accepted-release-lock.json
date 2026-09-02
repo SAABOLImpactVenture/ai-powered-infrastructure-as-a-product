@@ -12,6 +12,18 @@
     "Console",
     "Forge"
   ],
+  "vanguardGate6": {
+    "baselinePath": "artifacts/phase-22/vanguard-gate6-baseline.json",
+    "baselineDigest": "sha256:a8e03e2993f235720e7087eadf3084f333773201845ddfdb0eebdb4c9af5a85f",
+    "releaseTag": "gate-6-bounded-pass-2026-09-02",
+    "closureSha": "f96961c47f6866dd12025eca8afc43b376163520",
+    "acceptanceStatus": "PASSED_FOR_BOUNDED_SYNTHETIC_PROOF",
+    "owns": [
+      "authority",
+      "custody",
+      "continuous assurance"
+    ]
+  },
   "verification": {
     "result": "PASS",
     "artifactDigest": "sha256:9640a78691bcfc445b45ca9dc12981955d80013aea609b1bd17136ecf37a788d",
