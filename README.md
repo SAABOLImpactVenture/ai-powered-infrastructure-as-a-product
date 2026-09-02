@@ -88,7 +88,7 @@ Forge Phases 11–19 are accepted at immutable revision [`6fb587cb3f521e99c33039
 
 ### Accepted synthetic release chain
 
-The current synthetic compatibility lock is [`artifacts/phase-21/accepted-release-lock.json`](artifacts/phase-21/accepted-release-lock.json): Guard `v1.0.2` → Guard Core `f8daf68` → Console `v0.1.1` → Forge `v1.3.1`. The exact chain passed the trusted-`main` journey at integration revision [`7a5f4fa`](https://github.com/SAABOLImpactVenture/multicloud-foundation-poc-integration/commit/7a5f4fa484e09b3605e81da5fec3550fd521fb9c) in [run 33576400709](https://github.com/SAABOLImpactVenture/multicloud-foundation-poc-integration/actions/runs/33576400709). This remains synthetic-only, nonproduction, non-authoritative, and `CONTINUE_VALIDATION`.
+The current sanitized compatibility lock is [`artifacts/phase-21/accepted-release-lock.json`](artifacts/phase-21/accepted-release-lock.json). Public Guard `v1.0.2` passed the bounded Guard → Console → Forge synthetic journey against accepted private component revisions. The retained proof records actual Guard-produced planning evidence, verified Console import, cross-language selection parity, verified Forge product binding, and an inert rendered product. This remains synthetic-only, nonproduction, non-authoritative, and `CONTINUE_VALIDATION`.
 
 ---
 
