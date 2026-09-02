@@ -49,7 +49,7 @@ Its central question is:
 
 > **Is this infrastructure actually being designed, delivered, and governed as a product?**
 
-**[Install IaaP Guard](https://github.com/apps/iaap-guard/installations/new)** · [View the GitHub App](https://github.com/apps/iaap-guard) · [V1 guide](docs/IAAP-GUARD.md) · [Release v1.0.0](https://github.com/SAABOLImpactVenture/iaap-guard/releases/tag/v1.0.0)
+**[Install IaaP Guard](https://github.com/apps/iaap-guard/installations/new)** · [View the GitHub App](https://github.com/apps/iaap-guard) · [V1 guide](docs/IAAP-GUARD.md) · [Release v1.0.2](https://github.com/SAABOLImpactVenture/iaap-guard/releases/tag/v1.0.2)
 
 The supported V1 release evaluates pull requests and publishes an **`IaaP Guard / Architecture`** Check. It is deliberately narrow: deterministic architecture/evidence evaluation in GitHub, not infrastructure provisioning and not a generic IaC vulnerability scanner.
 
@@ -74,7 +74,7 @@ Every proposed planning item remains traceable to the deterministic Guard rule a
 
 IaaP Guard requires **no customer cloud, Kubernetes, Terraform/TFE, AI, or PAT credentials**. It does not execute repository code, provision infrastructure, auto-remediate findings, merge pull requests, or generate AI verdicts.
 
-GitHub Marketplace is not required to install V1. IaaP Guard completed its bounded product roadmap through external-adoption validation and the supported `v1.0.0` release. Future Forge development remains separate from Guard. The retained Guard evidence and support policies live in the [`iaap-guard`](https://github.com/SAABOLImpactVenture/iaap-guard) repository.
+GitHub Marketplace is not required to install V1. IaaP Guard completed its bounded product roadmap through external-adoption validation and the supported `v1.0.2` release. Future Forge development remains separate from Guard. The retained Guard evidence and support policies live in the [`iaap-guard`](https://github.com/SAABOLImpactVenture/iaap-guard) repository.
 
 ---
 
@@ -85,6 +85,10 @@ GitHub Marketplace is not required to install V1. IaaP Guard completed its bound
 [View IaaP Forge](https://github.com/SAABOLImpactVenture/iaap-forge) · [Guard-to-Forge transition](docs/FORGE-TRANSITION.md) · [Pinned reconciliation evidence](artifacts/phase-20/forge-reconciliation.json)
 
 Forge Phases 11–19 are accepted at immutable revision [`6fb587cb3f521e99c33039c61090fe8b738836cc`](https://github.com/SAABOLImpactVenture/iaap-forge/commit/6fb587cb3f521e99c33039c61090fe8b738836cc). Phase 19 retained bounded non-production **PASS** evidence for AWS, Azure, and GCP workload-identity reconciliation, Vertex AI model-adapter validation with synthetic fixtures, and an HCP Terraform Free remote-run proxy, with sanitized evidence and verified teardown. The proxy does **not** validate Terraform Enterprise; no production deployment, certification, assessment conclusion, or ATO is authorized or claimed.
+
+### Accepted synthetic release chain
+
+The current synthetic compatibility lock is [`artifacts/phase-21/accepted-release-lock.json`](artifacts/phase-21/accepted-release-lock.json): Guard `v1.0.2` → Guard Core `f8daf68` → Console `v0.1.1` → Forge `v1.3.1`. The exact chain passed the trusted-`main` journey at integration revision [`7a5f4fa`](https://github.com/SAABOLImpactVenture/multicloud-foundation-poc-integration/commit/7a5f4fa484e09b3605e81da5fec3550fd521fb9c) in [run 33576400709](https://github.com/SAABOLImpactVenture/multicloud-foundation-poc-integration/actions/runs/33576400709). This remains synthetic-only, nonproduction, non-authoritative, and `CONTINUE_VALIDATION`.
 
 ---
 
