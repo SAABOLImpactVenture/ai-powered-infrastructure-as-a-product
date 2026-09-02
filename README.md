@@ -88,7 +88,7 @@ Forge Phases 11–19 are accepted at immutable revision [`6fb587cb3f521e99c33039
 
 ### Accepted synthetic release chain
 
-The current sanitized compatibility lock is [`artifacts/phase-21/accepted-release-lock.json`](artifacts/phase-21/accepted-release-lock.json). Public Guard `v1.0.2` passed the bounded Guard → Console → Forge synthetic journey against accepted private component revisions. The retained proof records actual Guard-produced planning evidence, verified Console import, cross-language selection parity, verified Forge product binding, and an inert rendered product. This remains synthetic-only, nonproduction, non-authoritative, and `CONTINUE_VALIDATION`.
+The current sanitized compatibility lock is [`artifacts/phase-21/accepted-release-lock.json`](artifacts/phase-21/accepted-release-lock.json). Public Guard `v1.0.2` passed the bounded Guard → Console → Forge synthetic journey against accepted private component revisions. The retained proof records actual Guard-produced planning evidence, verified Console import, cross-language selection parity, verified Forge product binding, and an inert rendered product. The portfolio map now also pins the sanitized Vanguard Gate 6 prerelease `gate-6-bounded-pass-2026-09-02` to closure SHA `f96961c47f6866dd12025eca8afc43b376163520` with status `PASSED_FOR_BOUNDED_SYNTHETIC_PROOF`. Vanguard owns authority, custody, and continuous assurance; Guard, Console, Forge, and Storefront responsibilities are unchanged. This reconciliation remains synthetic-only and `CONTINUE_VALIDATION`; it authorizes no pilot, live data, or production action.
 
 ---
 
@@ -684,3 +684,4 @@ The bounded implementation repositories contain the runtime and experience code.
 ## License
 
 Apache License 2.0. See [LICENSE](LICENSE).
+

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "vanguard-gate6-public-baseline/v1",
+  "fixture": "synthetic",
+  "release": {
+    "repository": "SAABOLImpactVenture/vanguard-suite",
+    "tag": "gate-6-bounded-pass-2026-09-02",
+    "closureSha": "f96961c47f6866dd12025eca8afc43b376163520",
+    "prerelease": true,
+    "acceptanceStatus": "PASSED_FOR_BOUNDED_SYNTHETIC_PROOF"
+  },
+  "ownership": {
+    "guard": "deterministic architecture and evidence evaluation",
+    "console": "verified evidence import, selection, and customer-hosted experience",
+    "forge": "governed infrastructure-product proposal and lifecycle binding",
+    "storefront": "optional reference consumer experience",
+    "vanguard": [
+      "authority",
+      "custody",
+      "continuous assurance"
+    ]
+  },
+  "claimBoundaries": {
+    "syntheticOnly": true,
+    "pilotAuthorized": false,
+    "liveDataAuthorized": false,
+    "productionAuthority": false
+  }
+}
