@@ -7,7 +7,8 @@ The program separates responsibilities into bounded repositories so each archite
 ```mermaid
 flowchart TB
   HUB["ai-powered-infrastructure-as-a-product<br/>thesis • architecture • evidence"]
-  GUARD["iaap-guard<br/>public product surface"]\n  VANGUARD["vanguard-suite<br/>authority • custody • continuous assurance"]
+  GUARD["iaap-guard<br/>public product surface"]
+  VANGUARD["vanguard-suite<br/>authority • custody • continuous assurance"]
   CORE["iaap-guard-core<br/>private hosted runtime"]
   FORGE["iaap-forge<br/>product-building system"]
   STORE["backstage-infrastructure-product-storefront-poc"]
@@ -42,7 +43,8 @@ flowchart TB
   classDef outcome fill:#3A1530,stroke:#EC4899,stroke-width:2px,color:#F8FAFC
 
   class HUB front
-  class GUARD public\n  class VANGUARD private
+  class GUARD public
+  class VANGUARD private
   class CORE private
   class FORGE internal
   class STORE,SEED,PRODUCT,AI,INT poc
@@ -55,7 +57,8 @@ flowchart TB
 
 - [`iaap-guard`](https://github.com/SAABOLImpactVenture/iaap-guard) is the active public product, adoption, contract, support, security, and sanitized assurance surface.
 - [`iaap-guard-core`](https://github.com/SAABOLImpactVenture/iaap-guard-core) is the protected private engine, hosted GitHub App runtime, deployment, internal test, and operational-evidence repository.
-- [`iaap-forge`](https://github.com/SAABOLImpactVenture/iaap-forge) consumes bounded Guard evidence and owns the active product-building, Composite AI, GitHub governance, Crossplane lifecycle, and outcome system.\n- [`vanguard-suite`](https://github.com/SAABOLImpactVenture/vanguard-suite) owns bounded authority, protected-data custody, and continuous assurance. Its sanitized Gate 6 prerelease is pinned at `gate-6-bounded-pass-2026-09-02` / `f96961c47f6866dd12025eca8afc43b376163520`; the acceptance is only `PASSED_FOR_BOUNDED_SYNTHETIC_PROOF`.
+- [`iaap-forge`](https://github.com/SAABOLImpactVenture/iaap-forge) consumes bounded Guard evidence and owns the active product-building, Composite AI, GitHub governance, Crossplane lifecycle, and outcome system.
+- [`vanguard-suite`](https://github.com/SAABOLImpactVenture/vanguard-suite) owns bounded authority, protected-data custody, and continuous assurance. Its sanitized Gate 6 prerelease is pinned at `gate-6-bounded-pass-2026-09-02` / `f96961c47f6866dd12025eca8afc43b376163520`; the acceptance is only `PASSED_FOR_BOUNDED_SYNTHETIC_PROOF`.
 - [`iaap-guard-adopter-validation`](https://github.com/SAABOLImpactVenture/iaap-guard-adopter-validation) is archived clean-adopter proof, not an active runtime or supported distribution.
 - [`ai-powered-infrastructure-as-a-product`](https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product) remains the public thesis, architecture, evidence, and portfolio front door.
 
@@ -138,7 +141,8 @@ Owns the thesis, architecture, product operating model, decisions, frozen eviden
 | Program | `ai-powered-infrastructure-as-a-product` | Thesis, architecture, evidence, decisions, roadmap framing. |
 | Guard product | `iaap-guard` | Public product, contracts, adoption, support, security, and assurance. |
 | Guard implementation | `iaap-guard-core` | Private deterministic engine, hosted runtime, deployment, and regression evidence. |
-| Product builder | `iaap-forge` | Guard consumption, bounded Composite AI, governed proposals, Crossplane lifecycle, and outcomes. |\n| Assurance authority | `vanguard-suite` | Authority, protected-data custody, and continuous assurance within explicitly accepted bounds. |
+| Product builder | `iaap-forge` | Guard consumption, bounded Composite AI, governed proposals, Crossplane lifecycle, and outcomes. |
+| Assurance authority | `vanguard-suite` | Authority, protected-data custody, and continuous assurance within explicitly accepted bounds. |
 | Experience | `backstage-infrastructure-product-storefront-poc` | Browse, configure, order, track. |
 | Intelligence | `composite-ai-infrastructure-product-poc` | Interpret, propose, review, explain, diagnose, evidence. |
 | Governance | GitHub + deterministic policy + people | Change, tests, approval, traceability. |
@@ -164,7 +168,8 @@ Owns the thesis, architecture, product operating model, decisions, frozen eviden
 10. **Live model adapter** — **passed** on Vertex AI in `us-east4` using synthetic fixtures only and a fixed model-usage ceiling.
 11. **HCP Terraform Free remote-run proxy** — **proxy passed** with a zero-resource fixture, protected VCS status, sanitized evidence, workspace deletion, and token revocation. Terraform Enterprise was not accessed or validated.
 12. **Phase 20 architecture reconciliation** — **complete** at pinned Forge revision `6fb587cb3f521e99c33039c61090fe8b738836cc`, preserving the frozen Guard boundary and public sanitized claims.
-13. **Vanguard Gate 6 portfolio custody** — **passed only for the bounded synthetic proof** at prerelease `gate-6-bounded-pass-2026-09-02` and closure SHA `f96961c47f6866dd12025eca8afc43b376163520`. The public map pins the sanitized record by digest and preserves Vanguard ownership of authority, custody, and continuous assurance without changing Guard, Console, Forge, or Storefront responsibilities.\n14. **Production pilot** — future and unauthorized; requires separate authorization, SLOs, recovery, support, lifecycle evidence, Developer NPS, adoption, and repeat-consumption evidence.
+13. **Vanguard Gate 6 portfolio custody** — **passed only for the bounded synthetic proof** at prerelease `gate-6-bounded-pass-2026-09-02` and closure SHA `f96961c47f6866dd12025eca8afc43b376163520`. The public map pins the sanitized record by digest and preserves Vanguard ownership of authority, custody, and continuous assurance without changing Guard, Console, Forge, or Storefront responsibilities.
+14. **Production pilot** — future and unauthorized; requires separate authorization, SLOs, recovery, support, lifecycle evidence, Developer NPS, adoption, and repeat-consumption evidence.
 
 The v5 runtime proof is intentionally narrower than a production Backstage deployment: the GitHub publication action ran in dry-run mode, no browser/UI journey was executed, and the generated Backstage dependency graph is not claimed immutable across future runs.
 
@@ -173,4 +178,3 @@ See [POC Baseline Lineage](poc-baselines/README.md) for the frozen evidence hist
 ## Boundary principle
 
 > **The storefront is where the consumer shops. The product API defines what is being bought. Crossplane controls the product lifecycle. The cloud realizes it. Success is measured by developer outcomes, not infrastructure code volume.**
-
