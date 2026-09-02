@@ -10,7 +10,7 @@ IaaP Guard is the completed, bounded GitHub-native architecture and evidence pro
 - **Direct install:** https://github.com/apps/iaap-guard/installations/new
 - **Product repository:** https://github.com/SAABOLImpactVenture/iaap-guard
 - **Support policy:** https://github.com/SAABOLImpactVenture/iaap-guard/blob/v1.0.2/docs/SUPPORT.md
-- **Upgrade and rollback:** https://github.com/SAABOLImpactVenture/iaap-guard/blob/v1.0.2/docs/UPGRADING.md
+- **Upgrade and rollback:** https://github.com/SAABOLImpactVenture/iaap-guard/blob/v1.0.0/docs/UPGRADING.md
 - **Known limits:** https://github.com/SAABOLImpactVenture/iaap-guard/blob/v1.0.2/docs/KNOWN-LIMITS.md
 - **Frozen V1 contract:** https://github.com/SAABOLImpactVenture/iaap-guard/blob/v1.0.2/docs/V1-CONTRACT-FREEZE.md
 - **Final validation:** https://github.com/SAABOLImpactVenture/iaap-guard/blob/v1.0.2/docs/PHASE-18-VALIDATION.md
