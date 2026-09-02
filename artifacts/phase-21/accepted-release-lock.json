@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "accepted-release-chain-public/v1",
+  "fixture": "synthetic",
+  "decision": "CONTINUE_VALIDATION",
+  "publicContract": {
+    "repository": "SAABOLImpactVenture/iaap-guard",
+    "release": "v1.0.2",
+    "commit": "03587c5c806fc659ad7b54e60069a30d08ddb184"
+  },
+  "acceptedPrivateChain": [
+    "Guard Core",
+    "Console",
+    "Forge"
+  ],
+  "verification": {
+    "result": "PASS",
+    "artifactDigest": "sha256:9640a78691bcfc445b45ca9dc12981955d80013aea609b1bd17136ecf37a788d",
+    "assertions": {
+      "guardPlanningEvidence": "ACTUAL_PRODUCER_VERIFIED",
+      "consoleImport": "VERIFIED",
+      "crossLanguageSelectionParity": true,
+      "forgeProductBinding": "VERIFIED",
+      "renderedProductAuthority": "INERT_NO_APPLY"
+    }
+  },
+  "authority": {
+    "approve": false,
+    "merge": false,
+    "apply": false,
+    "execute": false,
+    "provision": false,
+    "grantPolicy": false,
+    "grantProduction": false,
+    "grantPrivileges": false
+  }
+}
