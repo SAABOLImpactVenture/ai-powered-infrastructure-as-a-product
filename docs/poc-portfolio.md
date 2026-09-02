@@ -20,6 +20,7 @@ flowchart TB
   OUT["platform product outcomes<br/>NPS • time • adoption • escape rate"]
 
   HUB --> GUARD
+  HUB --> VANGUARD
   HUB --> FORGE
   GUARD --> CORE
   FORGE --> STORE
