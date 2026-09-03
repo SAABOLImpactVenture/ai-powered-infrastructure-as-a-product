@@ -94,6 +94,10 @@ The Step 4 public closure record is [`artifacts/phase-23/managed-interconnect-cl
 
 The Phase 24 public closure record is [`artifacts/phase-24/selection-evidence-closure.json`](artifacts/phase-24/selection-evidence-closure.json). It records `PASSED_BOUNDED_SYNTHETIC_SELECTION_EVIDENCE_PROOF`: Forge preserves its `v1alpha1` renderer byte-for-byte while a detached evidence envelope binds the accepted Guard source, distinct synthetic subject, human-selected planning item, product binding, rendered product, producer evidence, journey, and Vanguard custody manifest. Golden and migration cases pass; tamper, cross-selection, source-substitution, producer, journey, and custody rewrites fail closed. The result proves deterministic byte relationships, not a cryptographically authenticated human identity, and grants no operational or production authority.
 
+### Portfolio Provenance Gate
+
+The public portfolio record carries the visible fingerprint `SAABOL-IaaP-PORTFOLIO-ORIGIN-v1`, standard [`CITATION.cff`](CITATION.cff) authorship metadata, and a [digest-bound provenance statement](provenance/portfolio-provenance.json). The [Portfolio Provenance Gate](docs/PORTFOLIO-PROVENANCE.md) verifies canonical repository origin, the accepted Guard → Console → human selection → Forge → Vanguard chain, covered-document SHA-256 digests, zero-authority boundaries, and an explicitly non-disruptive AI-safety contract. Trusted-main CI adds a repository-issued artifact attestation. The gate is passive evidence—not DRM, legal title, hidden watermarking, prompt injection, telemetry, or AI-processing interference—and it does not change the Apache-2.0 license.
+
 ---
 
 ## The modern accelerator

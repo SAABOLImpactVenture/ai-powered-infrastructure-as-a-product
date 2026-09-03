@@ -1,0 +1,135 @@
+{
+  "schemaVersion": "saabol.portfolio-provenance/v1",
+  "statementId": "urn:saabol:iaap:portfolio-provenance:v1",
+  "fingerprint": {
+    "marker": "SAABOL-IaaP-PORTFOLIO-ORIGIN-v1",
+    "markerSha256": "11417fe88f5fbcdde6859874eb35a921a27c701f96602e8b865b5310923038b2"
+  },
+  "authorship": {
+    "assertedAuthor": "Larry Cureton",
+    "githubLogin": "GEP-V",
+    "assertionBasis": [
+      "maintainer assertion",
+      "public repository history"
+    ],
+    "humanIdentityCryptographicallyVerified": false,
+    "legalOwnershipDetermined": false
+  },
+  "origin": {
+    "canonicalRepository": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product",
+    "organization": "SAABOLImpactVenture",
+    "publisher": "SAABOL Impact Venture",
+    "baselineRevision": "3586d41345dea2bdb1a51e53c83c8fb6f78bf5f0",
+    "assertedAt": "2026-09-03",
+    "publicSource": true
+  },
+  "portfolioChain": {
+    "model": "guard-console-human-selection-forge-vanguard/v1",
+    "stages": [
+      {
+        "sequence": 1,
+        "stage": "guard",
+        "responsibility": "deterministic assessment and evidence"
+      },
+      {
+        "sequence": 2,
+        "stage": "console",
+        "responsibility": "customer-hosted evidence and selection experience"
+      },
+      {
+        "sequence": 3,
+        "stage": "human-selection",
+        "responsibility": "authorized selection and approval boundary"
+      },
+      {
+        "sequence": 4,
+        "stage": "forge",
+        "responsibility": "governed product-building lifecycle"
+      },
+      {
+        "sequence": 5,
+        "stage": "vanguard",
+        "responsibility": "authority, custody, and continuous assurance"
+      }
+    ]
+  },
+  "claims": {
+    "scope": "authorship and canonical origin of this public portfolio record and its digest-bound artifacts",
+    "license": {
+      "spdx": "Apache-2.0",
+      "changedByStatement": false
+    },
+    "aiSafety": {
+      "hiddenUnicodeMarkers": false,
+      "modelDisruptionIntent": false,
+      "promptInjectionContent": false,
+      "runtimeInterference": false,
+      "telemetryOrPhoneHome": false,
+      "trainingDataPoisoningIntent": false
+    },
+    "authority": {
+      "cloudAccessAdded": false,
+      "credentialsAdded": false,
+      "liveDataAuthorized": false,
+      "pilotAuthorized": false,
+      "productionAuthorized": false,
+      "repositoryWriteAuthorityAdded": false,
+      "spendingAuthorized": false
+    }
+  },
+  "coveredArtifacts": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "124f0f17ed34a8e73b71598e747d1f158826c8c1324c08779a14aa1b709cf3d8"
+    },
+    {
+      "path": "CITATION.cff",
+      "sha256": "1baa50b26319cd1595ea491da2a4ecd9df56c7fe3e0a4dbef071ca5e9747a2f7"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "1c7efbaf80207d7f20f90710334a66bc9370656cb345889b2181adae6f5710a4"
+    },
+    {
+      "path": "Makefile",
+      "sha256": "95ba915117a1bfd7a75400eaaa10c4e038604f3049db30a72e49ee7988a19e2c"
+    },
+    {
+      "path": "README.md",
+      "sha256": "cb0133464b2a9bc6e1417ca0bd284de8591a889138bb126f2650ce508870b8a7"
+    },
+    {
+      "path": "docs/PORTFOLIO-PROVENANCE.md",
+      "sha256": "85d1c6f9cb423e75a7e25c0481727818ec8315d44602517421783591cd2378c4"
+    },
+    {
+      "path": "docs/PUBLICATION-BOUNDARY.md",
+      "sha256": "d0692d1888990e44bcde7aa87056b2d8cca4293d2ec0ef9a632c7a2364a60e3a"
+    },
+    {
+      "path": "docs/THESIS.md",
+      "sha256": "0087b8281bd103b984a318485e0155da9ba85bae1305faa836256ef816b51458"
+    },
+    {
+      "path": "docs/poc-portfolio.md",
+      "sha256": "c5ae1f91571edd9ff483cf9341ec09297c42f1e7039b7fa8eccd90b2e4df298c"
+    },
+    {
+      "path": "provenance/portfolio-provenance.schema.json",
+      "sha256": "3f79769df1225b7d7cd45d75ada86107389cad1ae8da2bad2e622c1b6d3c8e08"
+    },
+    {
+      "path": "scripts/verify_portfolio_provenance.py",
+      "sha256": "b8b4c766ed6da3a5dd1f16ecb18f1fab8cf3ce3091e944788730659ca675d285"
+    },
+    {
+      "path": "tests/test_portfolio_provenance.py",
+      "sha256": "72014026ecb34102629b89e4d0395b8f99e9bb4cd4aa4516abb44788ea1be6a7"
+    }
+  ],
+  "integrity": {
+    "algorithm": "sha256",
+    "canonicalization": "python-json-sort-keys-v1",
+    "digest": "2b364c7dfd3862dadbc3c98caf116a0c7385c40980964d51a404910d396d62bb"
+  }
+}

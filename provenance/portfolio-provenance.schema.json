@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/main/provenance/portfolio-provenance.schema.json",
+  "title": "SAABOL IaaP Portfolio Provenance",
+  "description": "A bounded authorship, origin, evidence-chain, and integrity assertion for the public portfolio record.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "statementId",
+    "fingerprint",
+    "authorship",
+    "origin",
+    "portfolioChain",
+    "claims",
+    "coveredArtifacts",
+    "integrity"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "saabol.portfolio-provenance/v1"
+    },
+    "statementId": {
+      "const": "urn:saabol:iaap:portfolio-provenance:v1"
+    },
+    "fingerprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["marker", "markerSha256"],
+      "properties": {
+        "marker": {
+          "const": "SAABOL-IaaP-PORTFOLIO-ORIGIN-v1"
+        },
+        "markerSha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "authorship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assertedAuthor",
+        "githubLogin",
+        "assertionBasis",
+        "humanIdentityCryptographicallyVerified",
+        "legalOwnershipDetermined"
+      ],
+      "properties": {
+        "assertedAuthor": {"const": "Larry Cureton"},
+        "githubLogin": {"const": "GEP-V"},
+        "assertionBasis": {
+          "type": "array",
+          "prefixItems": [
+            {"const": "maintainer assertion"},
+            {"const": "public repository history"}
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "humanIdentityCryptographicallyVerified": {"const": false},
+        "legalOwnershipDetermined": {"const": false}
+      }
+    },
+    "origin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonicalRepository",
+        "organization",
+        "publisher",
+        "baselineRevision",
+        "assertedAt",
+        "publicSource"
+      ],
+      "properties": {
+        "canonicalRepository": {
+          "const": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product"
+        },
+        "organization": {"const": "SAABOLImpactVenture"},
+        "publisher": {"const": "SAABOL Impact Venture"},
+        "baselineRevision": {
+          "const": "3586d41345dea2bdb1a51e53c83c8fb6f78bf5f0"
+        },
+        "assertedAt": {"const": "2026-09-03"},
+        "publicSource": {"const": true}
+      }
+    },
+    "portfolioChain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model", "stages"],
+      "properties": {
+        "model": {
+          "const": "guard-console-human-selection-forge-vanguard/v1"
+        },
+        "stages": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["sequence", "stage", "responsibility"],
+            "properties": {
+              "sequence": {"type": "integer", "minimum": 1, "maximum": 5},
+              "stage": {"type": "string", "minLength": 1},
+              "responsibility": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "license", "aiSafety", "authority"],
+      "properties": {
+        "scope": {
+          "const": "authorship and canonical origin of this public portfolio record and its digest-bound artifacts"
+        },
+        "license": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["spdx", "changedByStatement"],
+          "properties": {
+            "spdx": {"const": "Apache-2.0"},
+            "changedByStatement": {"const": false}
+          }
+        },
+        "aiSafety": {
+          "$ref": "#/$defs/falseFlags"
+        },
+        "authority": {
+          "$ref": "#/$defs/falseFlags"
+        }
+      }
+    },
+    "coveredArtifacts": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"$ref": "#/$defs/sha256"}
+        }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "canonicalization", "digest"],
+      "properties": {
+        "algorithm": {"const": "sha256"},
+        "canonicalization": {"const": "python-json-sort-keys-v1"},
+        "digest": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "falseFlags": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {"const": false}
+    }
+  }
+}
