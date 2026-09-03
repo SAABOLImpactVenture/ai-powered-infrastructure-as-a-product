@@ -143,6 +143,23 @@ class PortfolioProvenanceTests(unittest.TestCase):
                     with self.assertRaises(provenance.ProvenanceError):
                         provenance.refresh_manifest(root)
 
+    def test_markdown_resources_cannot_be_refreshed(self):
+        payloads = (
+            "![pixel](https://example.test/collect)",
+            "![pixel](//example.test/collect)",
+            "![pixel][collector]\n\n[collector]: https://example.test/collect",
+        )
+        for payload in payloads:
+            with self.subTest(payload=payload):
+                with tempfile.TemporaryDirectory() as temporary_directory:
+                    root = self.copied_root(temporary_directory)
+                    with (root / "docs/PORTFOLIO-PROVENANCE.md").open(
+                        "a", encoding="utf-8"
+                    ) as handle:
+                        handle.write(payload)
+                    with self.assertRaises(provenance.ProvenanceError):
+                        provenance.refresh_manifest(root)
+
     def test_schema_claim_flag_reduction_fails_closed(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = self.copied_root(temporary_directory)

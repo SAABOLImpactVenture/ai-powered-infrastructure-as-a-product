@@ -235,6 +235,15 @@ def validate_visible_text(text: str, label: str) -> None:
     if "<" in text or ">" in text:
         raise ProvenanceError(f"{label}: raw HTML or XML markup is not allowed")
 
+    # Provenance surfaces are intentionally text-only. Reject every Markdown
+    # image construct, including inline, reference, local, and remote forms,
+    # so a digest refresh cannot authorize a browser-triggered resource fetch.
+    # The broad rule avoids relying on partial Markdown URL parsing.
+    if "![" in text:
+        raise ProvenanceError(
+            f"{label}: Markdown embedded resources are not allowed"
+        )
+
 
 def read_text(path: Path, label: str) -> str:
     require(path.is_file(), f"{label}: required file is missing")
