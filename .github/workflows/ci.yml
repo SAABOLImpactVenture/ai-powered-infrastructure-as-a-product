@@ -24,7 +24,7 @@ jobs:
               json.loads(p.read_text())
               print('validated', p)
           PY
-      - name: Validate immutable phase manifests
+      - name: Validate phase manifests
         run: |
           while IFS= read -r manifest; do
             sha256sum --check "$manifest"

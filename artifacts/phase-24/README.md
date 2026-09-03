@@ -15,6 +15,6 @@ The accepted proof establishes that:
 - exact-head reviews were clean with zero unresolved threads; and
 - protected-main checks and the reproducible manifest passed.
 
-The Phase 24 manifest also binds immutable snapshots of the public README and portfolio map at this gate. The Phase 23 manifest now points to byte-identical snapshots of its previously accepted documentation, so later roadmap updates do not invalidate the historical proof.
+The Phase 24 manifest also binds versioned, digest-bound snapshots of the public README and portfolio map at this gate. The Phase 23 manifest now points to byte-identical snapshots of its previously accepted documentation, so later roadmap updates do not invalidate manifest verification. Repository protection and review remain the change-control boundary; the digests detect byte changes but do not independently prevent replacement of both content and digest.
 
 Vanguard remains at the existing Gate 6 prerelease. Guard, Console, and Storefront remain unchanged. This phase adds no live connection, credential, repository access, token scope, customer data, pilot, spending, approval, merge, apply, execution, provisioning, policy, privilege, or production authority.
