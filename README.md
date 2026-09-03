@@ -90,6 +90,8 @@ Forge Phases 11–19 are accepted at immutable revision [`6fb587cb3f521e99c33039
 
 The current sanitized compatibility lock is [`artifacts/phase-21/accepted-release-lock.json`](artifacts/phase-21/accepted-release-lock.json). Public Guard `v1.0.2` passed the bounded Guard → Console → Forge synthetic journey against accepted private component revisions. The retained proof records actual Guard-produced planning evidence, verified Console import, cross-language selection parity, verified Forge product binding, and an inert rendered product. The portfolio map now also pins the sanitized Vanguard Gate 6 prerelease `gate-6-bounded-pass-2026-09-02` to closure SHA `f96961c47f6866dd12025eca8afc43b376163520` with status `PASSED_FOR_BOUNDED_SYNTHETIC_PROOF`. Vanguard owns authority, custody, and continuous assurance; Guard, Console, Forge, and Storefront responsibilities are unchanged. This reconciliation remains synthetic-only and `CONTINUE_VALIDATION`; it authorizes no pilot, live data, or production action.
 
+The Step 4 public closure record is [`artifacts/phase-23/managed-interconnect-closure.json`](artifacts/phase-23/managed-interconnect-closure.json). It records `PASSED_BOUNDED_SYNTHETIC_INTERCONNECT_PROOF`, immutable commitments to the accepted private protected-main revisions, the retained proof and evidence digests, one deterministic synthetic AWS/Azure profile PASS, and thirteen unsafe profiles rejected `FAIL_CLOSED`. Private commit SHAs and fixture internals remain unpublished under the [publication boundary](docs/PUBLICATION-BOUNDARY.md). Vanguard remains at the existing Gate 6 prerelease; Console and Storefront remain unchanged. No live connection, credential, customer data, pilot, spending, provisioning, production, or privilege authority is part of this result.
+
 ---
 
 ## The modern accelerator
@@ -175,7 +177,7 @@ Backstage is deliberately replaceable. A different storefront can submit the sam
 ### Authority chain
 
 ```mermaid
-flowchart LR
+flowchart TB
   S[Storefront captures product intent] --> A[AI proposes and explains]
   A --> D[Schema, policy, and tests validate]
   D --> H[Authorized people approve]
@@ -506,7 +508,7 @@ flowchart TB
 | [`crossplane-multicloud-seed-poc`](https://github.com/SAABOLImpactVenture/crossplane-multicloud-seed-poc) | Internal · active | Minimal trusted Crossplane seed and control-plane bootstrap boundary. |
 | [`multicloud-foundation-product-poc`](https://github.com/SAABOLImpactVenture/multicloud-foundation-product-poc) | Internal · active | Stable `CloudFoundationEnvironment` product API and cloud-specific implementations. |
 | [`composite-ai-infrastructure-product-poc`](https://github.com/SAABOLImpactVenture/composite-ai-infrastructure-product-poc) | Internal · active | Bounded request, review, operations, and evidence agents without autonomous execution authority. |
-| [`multicloud-foundation-poc-integration`](https://github.com/SAABOLImpactVenture/multicloud-foundation-poc-integration) | Internal · active | Credential-free integrated acceptance and evidence harness, including the storefront handoff. |
+| [`multicloud-foundation-poc-integration`](https://github.com/SAABOLImpactVenture/multicloud-foundation-poc-integration) | Internal · active | Credential-free integrated acceptance and evidence harness, including the storefront handoff and retained managed-interconnect safety proof. |
 
 ### Retained validation repository
 
@@ -645,16 +647,19 @@ flowchart LR
   G4 --> G5[Vertex AI synthetic adapter]
   G5 --> G6[HCP Terraform Free proxy]
   G6 --> G7[Phase 20 architecture reconciliation]
-  G7 --> G8[Production pilot]
+  G7 --> G8[Accepted synthetic release chain]
+  G8 --> G9[Vanguard Gate 6 custody]
+  G9 --> G10[Managed interconnect synthetic proof]
+  G10 --> G11[Production pilot]
 
   classDef complete fill:#123A24,stroke:#22C55E,stroke-width:2px,color:#F8FAFC
   classDef future fill:#1F2937,stroke:#64748B,stroke-width:2px,color:#CBD5E1
-  class G0,G1,G2,G3,G4,G5,G6,G7 complete
-  class G8 future
+  class G0,G1,G2,G3,G4,G5,G6,G7,G8,G9,G10 complete
+  class G11 future
   linkStyle default stroke:#7DD3FC,stroke-width:2px
 ```
 
-The storefront-to-product flow, Forge credential-free successor phases, bounded AWS/Azure/GCP live-cloud validations, Vertex AI synthetic model-adapter validation, HCP Terraform Free proxy comparison, and this Phase 20 public architecture reconciliation are complete with retained sanitized evidence and verified teardown. Terraform Enterprise remains unvalidated and is not required for the demonstrated product path. A production pilot remains a future gate requiring separate authority, cost, security, support, recovery, SLO, and evidence approvals.
+The storefront-to-product flow, Forge credential-free successor phases, bounded AWS/Azure/GCP live-cloud validations, Vertex AI synthetic model-adapter validation, HCP Terraform Free proxy comparison, Phase 20 public architecture reconciliation, accepted synthetic release chain, Vanguard Gate 6 custody reference, and the bounded managed-interconnect proof are complete with retained sanitized evidence. Terraform Enterprise remains unvalidated and is not required for the demonstrated product path. A production pilot remains a future gate requiring separate authority, cost, security, support, recovery, SLO, and evidence approvals.
 
 ---
 
@@ -684,4 +689,3 @@ The bounded implementation repositories contain the runtime and experience code.
 ## License
 
 Apache License 2.0. See [LICENSE](LICENSE).
-

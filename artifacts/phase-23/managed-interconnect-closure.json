@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "managed-interconnect-public-closure/v1",
+  "phase": 23,
+  "recordedDate": "2026-09-03",
+  "fixture": "synthetic",
+  "decision": "CONTINUE_VALIDATION",
+  "status": "PASSED_BOUNDED_SYNTHETIC_INTERCONNECT_PROOF",
+  "acceptedRevisionCommitments": {
+    "algorithm": "sha256",
+    "canonicalization": "UTF-8 repository@full-lowercase-commit-sha",
+    "disclosure": "Raw private commit SHAs are withheld under docs/PUBLICATION-BOUNDARY.md.",
+    "forge": {
+      "repository": "SAABOLImpactVenture/iaap-forge",
+      "state": "ACCEPTED_PROTECTED_MAIN",
+      "commitment": "sha256:dc79bff27d3ab6f4e27c268058eec8e57ba9870af16a4ff4dee256a4c120034c"
+    },
+    "guardCore": {
+      "repository": "SAABOLImpactVenture/iaap-guard-core",
+      "state": "ACCEPTED_PROTECTED_MAIN",
+      "commitment": "sha256:742d096564b740b8b0d77a51182b16687d91e47e3a2ba79c1238abb8b8a1afb5"
+    },
+    "integration": {
+      "repository": "SAABOLImpactVenture/multicloud-foundation-poc-integration",
+      "state": "ACCEPTED_PROTECTED_MAIN",
+      "commitment": "sha256:ffc92613e3dc487b582d58e34e4696521fb7fcb1c617860e87ac73b5c4ee66df"
+    }
+  },
+  "acceptedComponentState": {
+    "forge": "MINIMAL_DECLARATIVE_CONTRACT_CHANGE_ACCEPTED",
+    "guardCore": "FAIL_CLOSED_VALIDATION_CHANGE_ACCEPTED",
+    "integration": "DETERMINISTIC_PROOF_AND_REPRODUCIBLE_MANIFEST_RETAINED",
+    "vanguard": {
+      "state": "UNCHANGED_GATE_6_PRERELEASE",
+      "publicReference": "artifacts/phase-22/vanguard-gate6-baseline.json",
+      "releaseTag": "gate-6-bounded-pass-2026-09-02",
+      "closureSha": "f96961c47f6866dd12025eca8afc43b376163520",
+      "acceptanceStatus": "PASSED_FOR_BOUNDED_SYNTHETIC_PROOF",
+      "owns": [
+        "authority",
+        "custody",
+        "continuous assurance"
+      ]
+    },
+    "console": "UNCHANGED_FROM_ACCEPTED_SYNTHETIC_RELEASE_CHAIN",
+    "storefront": "UNCHANGED_FROM_ACCEPTED_INTEGRATION_BASELINE"
+  },
+  "retainedEvidence": {
+    "managedInterconnect": {
+      "proofSchemaVersion": "managed-interconnect-integration-proof/v2",
+      "proofIntegrityDigest": "sha256:3d05000a3329ebcf3faa4e338c0e0d0cfd314ed254bdd654b0e6777aae2a5363",
+      "proofFileSha256": "sha256:3bf95608c04feb8ec7a5c5427a5853c5234fa6d109f8bf7d12ebab14a5a4ee09",
+      "artifactArchiveSha256": "sha256:fa547ef34988cb2db240e94e38bea280219959ed1fba7a9d7663171e74a8eead",
+      "positiveEvidenceDigest": "sha256:934a2bb0624124c02d48973ed14e6df84636c5622a61a3e5d8a858c5a50d5aa3",
+      "positiveAssessmentDigest": "sha256:51016d1c47d4506c96eebd1b5730ca3c5ef6a5f9422df8d3b7a3e1ab53d4fb28",
+      "negativeAssessmentSetDigest": "sha256:092fcb2f6af6a04a1877920810d010239c2e5105c5b3baf93182ce03a5e5f26b",
+      "positiveProfileResult": "PASS",
+      "negativeProfileCount": 13,
+      "negativeProfileResult": "FAIL_CLOSED"
+    },
+    "vanguardCustody": {
+      "publicBaselineDigest": "sha256:a8e03e2993f235720e7087eadf3084f333773201845ddfdb0eebdb4c9af5a85f",
+      "publicAcceptedChainDigest": "sha256:9640a78691bcfc445b45ca9dc12981955d80013aea609b1bd17136ecf37a788d",
+      "retainedJourneyManifestDigest": "sha256:898ad070fc9376c9c9e15916dddf86bbe41063bc8b761a1d07ffd71522d2e4f1",
+      "finalCustodyEnvelopeDigest": "sha256:1218392d50429f5c744d441b761eb5b6c27287cc3c3639f1c3617c03491eb0fd",
+      "artifactArchiveSha256": "sha256:ae7a9108613070d4aceb6f6b56bd89938a78cf67e93be6c09e910ac69ea2f267"
+    },
+    "reproducibleManifest": {
+      "repository": "SAABOLImpactVenture/multicloud-foundation-poc-integration",
+      "path": "MANIFEST.sha256",
+      "sha256": "sha256:32d7f47a7aad0e4349445ad8542985c81c276b8c4a935183470ba16a5e45198e",
+      "verification": "PASS"
+    }
+  },
+  "negativeResults": {
+    "managedInterconnect": [
+      {"id": "overlapping-aws-azure-address-spaces", "result": "FAIL_CLOSED"},
+      {"id": "broad-or-unauthorized-route-propagation", "result": "FAIL_CLOSED"},
+      {"id": "missing-high-availability-paths", "result": "FAIL_CLOSED"},
+      {"id": "ambiguous-dns-resolution-ownership", "result": "FAIL_CLOSED"},
+      {"id": "missing-encryption-requirement", "result": "FAIL_CLOSED"},
+      {"id": "missing-identity-requirement", "result": "FAIL_CLOSED"},
+      {"id": "provider-mismatch", "result": "FAIL_CLOSED"},
+      {"id": "region-mismatch", "result": "FAIL_CLOSED"},
+      {"id": "approval-authority", "result": "FAIL_CLOSED"},
+      {"id": "apply-authority", "result": "FAIL_CLOSED"},
+      {"id": "provisioning-authority", "result": "FAIL_CLOSED"},
+      {"id": "production-authority", "result": "FAIL_CLOSED"},
+      {"id": "privilege-authority", "result": "FAIL_CLOSED"}
+    ],
+    "custodyReferences": [
+      {"id": "missing-custody-reference", "result": "FAIL_CLOSED"},
+      {"id": "altered-custody-reference", "result": "FAIL_CLOSED"},
+      {"id": "mismatched-custody-reference", "result": "FAIL_CLOSED"}
+    ]
+  },
+  "verification": {
+    "deterministicReplay": "PASS",
+    "digestChain": "BOUND",
+    "exactHeadReviews": "CLEAN",
+    "unresolvedReviewThreads": 0,
+    "protectedMainChecks": "PASS",
+    "manifestVerification": "PASS"
+  },
+  "limitations": {
+    "scope": "SYNTHETIC_ONLY",
+    "implementationBinding": "UNRESOLVED",
+    "liveAwsAzureConnection": false,
+    "credentialsIncluded": false,
+    "customerDataIncluded": false,
+    "externalPilotAuthorized": false,
+    "spendingAuthorized": false,
+    "approvalAuthority": false,
+    "applyAuthority": false,
+    "provisioningAuthority": false,
+    "productionAuthority": false,
+    "privilegeAuthority": false,
+    "repositoryAccessExpanded": false,
+    "actionsPermissionsExpanded": false,
+    "artifactRetention": "SUBJECT_TO_SOURCE_REPOSITORY_RETENTION_POLICY"
+  }
+}
