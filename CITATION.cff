@@ -1,0 +1,23 @@
+{
+  "cff-version": "1.2.0",
+  "message": "If you use this portfolio, please cite the canonical repository and named author.",
+  "title": "AI-Powered Infrastructure as a Product",
+  "type": "software",
+  "authors": [
+    {
+      "family-names": "Cureton",
+      "given-names": "Larry",
+      "alias": "GEP-V"
+    }
+  ],
+  "abstract": "A governed portfolio for Infrastructure-as-a-Product architecture, product boundaries, and sanitized evidence.",
+  "repository-code": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product",
+  "url": "https://saabolimpactventure.github.io/ai-powered-infrastructure-as-a-product/",
+  "license": "Apache-2.0",
+  "keywords": [
+    "infrastructure-as-a-product",
+    "platform-engineering",
+    "provenance",
+    "governed-evidence"
+  ]
+}

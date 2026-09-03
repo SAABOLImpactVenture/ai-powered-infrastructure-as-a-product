@@ -1,0 +1,319 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/main/provenance/portfolio-provenance.schema.json",
+  "title": "SAABOL IaaP Portfolio Provenance",
+  "description": "A bounded authorship, origin, evidence-chain, and integrity assertion for the public portfolio record.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "statementId",
+    "fingerprint",
+    "authorship",
+    "origin",
+    "portfolioChain",
+    "claims",
+    "coveredArtifacts",
+    "integrity"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "saabol.portfolio-provenance/v1"
+    },
+    "statementId": {
+      "const": "urn:saabol:iaap:portfolio-provenance:v1"
+    },
+    "fingerprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["marker", "markerSha256"],
+      "properties": {
+        "marker": {
+          "const": "SAABOL-IaaP-PORTFOLIO-ORIGIN-v1"
+        },
+        "markerSha256": {
+          "const": "11417fe88f5fbcdde6859874eb35a921a27c701f96602e8b865b5310923038b2"
+        }
+      }
+    },
+    "authorship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assertedAuthor",
+        "githubLogin",
+        "assertionBasis",
+        "humanIdentityCryptographicallyVerified",
+        "legalOwnershipDetermined"
+      ],
+      "properties": {
+        "assertedAuthor": {"const": "Larry Cureton"},
+        "githubLogin": {"const": "GEP-V"},
+        "assertionBasis": {
+          "type": "array",
+          "prefixItems": [
+            {"const": "maintainer assertion"},
+            {"const": "public repository history"}
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "humanIdentityCryptographicallyVerified": {"const": false},
+        "legalOwnershipDetermined": {"const": false}
+      }
+    },
+    "origin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonicalRepository",
+        "organization",
+        "publisher",
+        "baselineRevision",
+        "assertedAt",
+        "publicSource"
+      ],
+      "properties": {
+        "canonicalRepository": {
+          "const": "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product"
+        },
+        "organization": {"const": "SAABOLImpactVenture"},
+        "publisher": {"const": "SAABOL Impact Venture"},
+        "baselineRevision": {
+          "const": "3586d41345dea2bdb1a51e53c83c8fb6f78bf5f0"
+        },
+        "assertedAt": {"const": "2026-09-03"},
+        "publicSource": {"const": true}
+      }
+    },
+    "portfolioChain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model", "stages"],
+      "properties": {
+        "model": {
+          "const": "guard-console-human-selection-forge-vanguard/v1"
+        },
+        "stages": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["sequence", "stage", "responsibility"],
+              "properties": {
+                "sequence": {"const": 1},
+                "stage": {"const": "guard"},
+                "responsibility": {"const": "deterministic assessment and evidence"}
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["sequence", "stage", "responsibility"],
+              "properties": {
+                "sequence": {"const": 2},
+                "stage": {"const": "console"},
+                "responsibility": {"const": "customer-hosted evidence and selection experience"}
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["sequence", "stage", "responsibility"],
+              "properties": {
+                "sequence": {"const": 3},
+                "stage": {"const": "human-selection"},
+                "responsibility": {"const": "authorized selection and approval boundary"}
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["sequence", "stage", "responsibility"],
+              "properties": {
+                "sequence": {"const": 4},
+                "stage": {"const": "forge"},
+                "responsibility": {"const": "governed product-building lifecycle"}
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["sequence", "stage", "responsibility"],
+              "properties": {
+                "sequence": {"const": 5},
+                "stage": {"const": "vanguard"},
+                "responsibility": {"const": "authority, custody, and continuous assurance"}
+              }
+            }
+          ],
+          "items": false,
+          "minItems": 5,
+          "maxItems": 5
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "license", "aiSafety", "authority"],
+      "properties": {
+        "scope": {
+          "const": "authorship and canonical origin of this public portfolio record and its digest-bound artifacts"
+        },
+        "license": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["spdx", "changedByStatement"],
+          "properties": {
+            "spdx": {"const": "Apache-2.0"},
+            "changedByStatement": {"const": false}
+          }
+        },
+        "aiSafety": {
+          "$ref": "#/$defs/aiSafetyFlags"
+        },
+        "authority": {
+          "$ref": "#/$defs/authorityFlags"
+        }
+      }
+    },
+    "coveredArtifacts": {
+      "type": "array",
+      "prefixItems": [
+        {"$ref": "#/$defs/ciWorkflowArtifact"},
+        {"$ref": "#/$defs/citationArtifact"},
+        {"$ref": "#/$defs/licenseArtifact"},
+        {"$ref": "#/$defs/makefileArtifact"},
+        {"$ref": "#/$defs/readmeArtifact"},
+        {"$ref": "#/$defs/provenanceDocArtifact"},
+        {"$ref": "#/$defs/publicationBoundaryArtifact"},
+        {"$ref": "#/$defs/thesisArtifact"},
+        {"$ref": "#/$defs/portfolioArtifact"},
+        {"$ref": "#/$defs/schemaArtifact"},
+        {"$ref": "#/$defs/verifierArtifact"},
+        {"$ref": "#/$defs/testArtifact"}
+      ],
+      "items": false,
+      "minItems": 12,
+      "maxItems": 12
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "canonicalization", "digest"],
+      "properties": {
+        "algorithm": {"const": "sha256"},
+        "canonicalization": {"const": "python-json-sort-keys-v1"},
+        "digest": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "aiSafetyFlags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hiddenUnicodeMarkers",
+        "modelDisruptionIntent",
+        "promptInjectionContent",
+        "runtimeInterference",
+        "telemetryOrPhoneHome",
+        "trainingDataPoisoningIntent"
+      ],
+      "properties": {
+        "hiddenUnicodeMarkers": {"const": false},
+        "modelDisruptionIntent": {"const": false},
+        "promptInjectionContent": {"const": false},
+        "runtimeInterference": {"const": false},
+        "telemetryOrPhoneHome": {"const": false},
+        "trainingDataPoisoningIntent": {"const": false}
+      }
+    },
+    "authorityFlags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cloudAccessAdded",
+        "credentialsAdded",
+        "liveDataAuthorized",
+        "pilotAuthorized",
+        "productionAuthorized",
+        "repositoryWriteAuthorityAdded",
+        "spendingAuthorized"
+      ],
+      "properties": {
+        "cloudAccessAdded": {"const": false},
+        "credentialsAdded": {"const": false},
+        "liveDataAuthorized": {"const": false},
+        "pilotAuthorized": {"const": false},
+        "productionAuthorized": {"const": false},
+        "repositoryWriteAuthorityAdded": {"const": false},
+        "spendingAuthorized": {"const": false}
+      }
+    },
+    "ciWorkflowArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": ".github/workflows/ci.yml"}}
+    },
+    "citationArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "CITATION.cff"}}
+    },
+    "licenseArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "LICENSE"}}
+    },
+    "makefileArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "Makefile"}}
+    },
+    "readmeArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "README.md"}}
+    },
+    "provenanceDocArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "docs/PORTFOLIO-PROVENANCE.md"}}
+    },
+    "publicationBoundaryArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "docs/PUBLICATION-BOUNDARY.md"}}
+    },
+    "thesisArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "docs/THESIS.md"}}
+    },
+    "portfolioArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "docs/poc-portfolio.md"}}
+    },
+    "schemaArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "provenance/portfolio-provenance.schema.json"}}
+    },
+    "verifierArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "scripts/verify_portfolio_provenance.py"}}
+    },
+    "testArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "tests/test_portfolio_provenance.py"}}
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

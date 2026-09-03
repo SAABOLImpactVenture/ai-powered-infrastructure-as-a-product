@@ -115,6 +115,7 @@ nav:
           - Provider and Partner Boundaries: bootstrap-foundation-readiness/responsibility-matrices/provider-partner-boundaries.md
   - Operating Model: OPERATING-MODEL.md
   - POC Portfolio: poc-portfolio.md
+  - Portfolio Provenance Gate: PORTFOLIO-PROVENANCE.md
   - Evidence Baseline: poc-baselines/2026-08-07-credential-free-multicloud-foundation.md
   - Interoperability: INTEROPERABILITY.md
   - TFE Investment: TFE-INVESTMENT.md
