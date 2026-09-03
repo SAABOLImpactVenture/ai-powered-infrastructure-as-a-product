@@ -160,6 +160,40 @@ class PortfolioProvenanceTests(unittest.TestCase):
                     with self.assertRaises(provenance.ProvenanceError):
                         provenance.refresh_manifest(root)
 
+    def test_markdown_attributes_cannot_be_refreshed(self):
+        payloads = (
+            '[text](#){style="background-image:url(https://example.test/collect)"}',
+            'text\n{: style="list-style-image:url(//example.test/collect)"}',
+            '[text](#){src="https://example.test/collect"}',
+        )
+        for payload in payloads:
+            with self.subTest(payload=payload):
+                with tempfile.TemporaryDirectory() as temporary_directory:
+                    root = self.copied_root(temporary_directory)
+                    with (root / "docs/PORTFOLIO-PROVENANCE.md").open(
+                        "a", encoding="utf-8"
+                    ) as handle:
+                        handle.write(payload)
+                    with self.assertRaises(provenance.ProvenanceError):
+                        provenance.refresh_manifest(root)
+
+    def test_active_markdown_cannot_be_refreshed(self):
+        payloads = (
+            "```mermaid\nflowchart LR\nA --> B\n```",
+            "[run](javascript:alert(1))",
+            "[payload](d&#x61;ta:text/plain,active)",
+        )
+        for payload in payloads:
+            with self.subTest(payload=payload):
+                with tempfile.TemporaryDirectory() as temporary_directory:
+                    root = self.copied_root(temporary_directory)
+                    with (root / "docs/PORTFOLIO-PROVENANCE.md").open(
+                        "a", encoding="utf-8"
+                    ) as handle:
+                        handle.write(payload)
+                    with self.assertRaises(provenance.ProvenanceError):
+                        provenance.refresh_manifest(root)
+
     def test_schema_claim_flag_reduction_fails_closed(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = self.copied_root(temporary_directory)

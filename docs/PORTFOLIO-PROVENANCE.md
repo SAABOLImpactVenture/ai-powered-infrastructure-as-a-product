@@ -50,7 +50,7 @@ The local digest gate and GitHub attestation serve different purposes: the local
 
 ## Deliberately benign design
 
-The gate contains no invisible watermark, bidirectional or zero-width marker, prompt injection, adversarial suffix, model-disruption payload, telemetry, callback, executable hook, or runtime behavior. Its fingerprint is ordinary visible UTF-8 text. The verifier rejects control, format, nonspacing, bidirectional, zero-width, filler, and other non-rendering Unicode, all raw HTML/XML markup, and all Markdown embedded-resource constructs on provenance surfaces. Ordinary hyperlinks remain allowed, while passive browser fetches do not.
+The gate contains no invisible watermark, bidirectional or zero-width marker, prompt injection, adversarial suffix, model-disruption payload, telemetry, callback, executable hook, or runtime behavior. Its fingerprint is ordinary visible UTF-8 text. The verifier rejects control, format, nonspacing, bidirectional, zero-width, filler, and other non-rendering Unicode, all raw HTML/XML markup, Markdown embedded resources, attribute lists, active renderers, and active URI schemes on provenance surfaces. Ordinary local and HTTPS hyperlinks remain allowed, while passive browser fetches and executable Markdown extensions do not.
 
 This design lets search, indexing, accessibility, static analysis, and AI-assisted review operate normally. Reuse monitors can search for the visible marker, canonical repository URI, statement ID, schema ID, exact chain identifier, or digest-bound document relationships without degrading downstream processing.
 

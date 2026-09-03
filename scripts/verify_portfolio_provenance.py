@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import html
 import json
 import re
 import sys
@@ -188,6 +189,10 @@ EXPECTED_ARTIFACT_SCHEMA_DEFINITIONS = [
     "testArtifact",
 ]
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
+ACTIVE_MARKDOWN_FENCE_PATTERN = re.compile(
+    r"^[ \t]*(?:`{3,}|~{3,})[ \t]*mermaid(?:[ \t].*)?$",
+    flags=re.IGNORECASE | re.MULTILINE,
+)
 
 
 class ProvenanceError(ValueError):
@@ -235,14 +240,29 @@ def validate_visible_text(text: str, label: str) -> None:
     if "<" in text or ">" in text:
         raise ProvenanceError(f"{label}: raw HTML or XML markup is not allowed")
 
-    # Provenance surfaces are intentionally text-only. Reject every Markdown
-    # image construct, including inline, reference, local, and remote forms,
-    # so a digest refresh cannot authorize a browser-triggered resource fetch.
-    # The broad rule avoids relying on partial Markdown URL parsing.
-    if "![" in text:
-        raise ProvenanceError(
-            f"{label}: Markdown embedded resources are not allowed"
-        )
+    if PurePosixPath(label).suffix == ".md":
+        # Provenance Markdown is intentionally limited to passive constructs.
+        # Broad source-level rules avoid partial parsing of Markdown extensions
+        # and remain effective even if the site renderer changes later.
+        if "![" in text:
+            raise ProvenanceError(
+                f"{label}: Markdown embedded resources are not allowed"
+            )
+        if "{" in text or "}" in text:
+            raise ProvenanceError(
+                f"{label}: Markdown attribute lists are not allowed"
+            )
+        if ACTIVE_MARKDOWN_FENCE_PATTERN.search(text):
+            raise ProvenanceError(
+                f"{label}: active Markdown renderers are not allowed"
+            )
+
+        normalized = html.unescape(text).replace("\\", "").casefold()
+        for active_scheme in ("data:", "javascript:", "vbscript:"):
+            if active_scheme in normalized:
+                raise ProvenanceError(
+                    f"{label}: active URI schemes are not allowed"
+                )
 
 
 def read_text(path: Path, label: str) -> str:
