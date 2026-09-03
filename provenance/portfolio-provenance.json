@@ -120,16 +120,16 @@
     },
     {
       "path": "scripts/verify_portfolio_provenance.py",
-      "sha256": "14b053791bbf91f44912cd36592728a2f5f2fa9b66282eb1c75bd0a5faaefd6f"
+      "sha256": "0979886743686310f485f1d0e7cb354c43945004a32cf5998e5837770e96ee7c"
     },
     {
       "path": "tests/test_portfolio_provenance.py",
-      "sha256": "fdae5fa170657af6acf0ff284b1d2a2e7d70a446783e85eae3850eb9921176d2"
+      "sha256": "2ae04882410c4b162b396fbf8c28080678e5fa94a0496bcbac46c9fa5d22800d"
     }
   ],
   "integrity": {
     "algorithm": "sha256",
     "canonicalization": "python-json-sort-keys-v1",
-    "digest": "cf4d170721bafd9daa4e132f99cc74932b4b18fe360950164add2b3f15c6109f"
+    "digest": "c96e537dc4583e5b6715ab882da2d12dcef06d6dd4f60716836ca2906a239d32"
   }
 }

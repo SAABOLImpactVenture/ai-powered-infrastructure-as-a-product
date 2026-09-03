@@ -180,6 +180,8 @@ class PortfolioProvenanceTests(unittest.TestCase):
     def test_active_markdown_cannot_be_refreshed(self):
         payloads = (
             "```mermaid\nflowchart LR\nA --> B\n```",
+            "1. ```mermaid\n   flowchart LR\n   A --> B\n   ```",
+            "> ~~~mermaid\n> flowchart LR\n> A --> B\n> ~~~",
             "[run](javascript:alert(1))",
             "[payload](d&#x61;ta:text/plain,active)",
         )

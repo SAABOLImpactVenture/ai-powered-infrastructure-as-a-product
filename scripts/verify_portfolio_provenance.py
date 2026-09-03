@@ -190,8 +190,8 @@ EXPECTED_ARTIFACT_SCHEMA_DEFINITIONS = [
 ]
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 ACTIVE_MARKDOWN_FENCE_PATTERN = re.compile(
-    r"^[ \t]*(?:`{3,}|~{3,})[ \t]*mermaid(?:[ \t].*)?$",
-    flags=re.IGNORECASE | re.MULTILINE,
+    r"(?:`{3,}|~{3,})[ \t]*mermaid\b",
+    flags=re.IGNORECASE,
 )
 
 
