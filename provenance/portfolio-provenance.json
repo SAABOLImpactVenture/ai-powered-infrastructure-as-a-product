@@ -96,11 +96,11 @@
     },
     {
       "path": "README.md",
-      "sha256": "cb0133464b2a9bc6e1417ca0bd284de8591a889138bb126f2650ce508870b8a7"
+      "sha256": "f38748565cd96cf4df3a3b376f1033d992432b8867c1b8032b2ebe029b132265"
     },
     {
       "path": "docs/PORTFOLIO-PROVENANCE.md",
-      "sha256": "de49a49e3c1ca9300875bca23938b31fc7c3ad3061942abfe64551a927469683"
+      "sha256": "055042ea48a5685df5305623058f0b9d0ccb5a3f10a49de5b2874e25a68ab85f"
     },
     {
       "path": "docs/PUBLICATION-BOUNDARY.md",
@@ -130,6 +130,6 @@
   "integrity": {
     "algorithm": "sha256",
     "canonicalization": "python-json-sort-keys-v1",
-    "digest": "c96e537dc4583e5b6715ab882da2d12dcef06d6dd4f60716836ca2906a239d32"
+    "digest": "909b3faea7600f49f01776d0ed716dc119c9dcf08bd8018c57815e849de514e8"
   }
 }
