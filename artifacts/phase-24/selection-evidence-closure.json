@@ -1,0 +1,166 @@
+{
+  "schemaVersion": "selection-evidence-public-closure/v1",
+  "phase": 24,
+  "recordedDate": "2026-09-03",
+  "fixture": "synthetic",
+  "decision": "CONTINUE_VALIDATION",
+  "status": "PASSED_BOUNDED_SYNTHETIC_SELECTION_EVIDENCE_PROOF",
+  "acceptedRevisionCommitments": {
+    "algorithm": "sha256",
+    "canonicalization": "UTF-8 repository@full-lowercase-commit-sha",
+    "disclosure": "Raw private commit SHAs are withheld under docs/PUBLICATION-BOUNDARY.md.",
+    "guard": {
+      "repository": "SAABOLImpactVenture/iaap-guard",
+      "release": "v1.0.2",
+      "state": "UNCHANGED_ACCEPTED_PUBLIC_RELEASE",
+      "commitment": "sha256:477acfce298e68755d8714a03e61227ee807f232dc9f94c2cc8bbfd506ddec4e"
+    },
+    "guardCore": {
+      "repository": "SAABOLImpactVenture/iaap-guard-core",
+      "state": "UNCHANGED_ACCEPTED_PRODUCER_REVISION",
+      "commitment": "sha256:2dffd8c34cbc1f8b43e5e535d0ef719d45759e2823e21deed9fb796f27375ed0"
+    },
+    "console": {
+      "repository": "SAABOLImpactVenture/iaap-console",
+      "release": "v0.1.1",
+      "state": "UNCHANGED_ACCEPTED_SELECTION_CONTRACT",
+      "commitment": "sha256:129b46d9319c05221a170b960c7b6a48021cdb1264e7e9c32576c6fe6afafc92"
+    },
+    "forge": {
+      "repository": "SAABOLImpactVenture/iaap-forge",
+      "baselineRelease": "v1.3.1",
+      "state": "ACCEPTED_PROTECTED_MAIN_DETACHED_ENVELOPE",
+      "commitment": "sha256:4c941101d42358abde078342d6be6fef9b0dad87f07586e20bf7df18c67cbc74"
+    },
+    "integration": {
+      "repository": "SAABOLImpactVenture/multicloud-foundation-poc-integration",
+      "state": "ACCEPTED_PROTECTED_MAIN",
+      "commitment": "sha256:b6acaefb2247983c10856d0016fb2c9cd05b16b50221d7d4a57ed101c09e88a2"
+    }
+  },
+  "acceptedComponentState": {
+    "guard": "UNCHANGED_FROM_ACCEPTED_PUBLIC_RELEASE",
+    "guardCore": "UNCHANGED_ACCEPTED_PRODUCER_REPLAYED",
+    "console": "UNCHANGED_FORGE_GUARD_SELECTION_V1",
+    "forge": "DETACHED_SELECTION_EVIDENCE_ACCEPTED_V1ALPHA1_RENDERER_UNCHANGED_BYTE_FOR_BYTE",
+    "integration": "EXACT_MAIN_SYNTHETIC_JOURNEY_AND_REPRODUCIBLE_PROOF_RETAINED",
+    "vanguard": {
+      "state": "UNCHANGED_GATE_6_PRERELEASE",
+      "publicReference": "artifacts/phase-22/vanguard-gate6-baseline.json",
+      "releaseTag": "gate-6-bounded-pass-2026-09-02",
+      "closureSha": "f96961c47f6866dd12025eca8afc43b376163520",
+      "acceptanceStatus": "PASSED_FOR_BOUNDED_SYNTHETIC_PROOF",
+      "owns": [
+        "authority",
+        "custody",
+        "continuous assurance"
+      ]
+    },
+    "storefront": "UNCHANGED_FROM_ACCEPTED_INTEGRATION_BASELINE"
+  },
+  "retainedEvidence": {
+    "integrationProof": {
+      "schemaVersion": "selection-evidence-integration-proof/v1",
+      "result": "PASS",
+      "proofIntegrityDigest": "sha256:b2d5b60ff0d6edacf85c57cfb0124195c1de4211e5b2315df63d410923b7dbb7",
+      "proofFileSha256": "sha256:b5e3de02f100d2187cb0c1ae518915f000f5450bb277bfbaa4ed7a787554a78d",
+      "artifactArchiveSha256": "sha256:bec51640240aaa8159697533f286232b4c4489add78c3282cba637d6a7a13b13"
+    },
+    "selectionBindings": {
+      "guardDigest": "sha256:bff6f68be906a49969d27b1cd63ca79941c96dbc480fb4356f5af317f739b490",
+      "acceptedGuardSourceRevision": "MATCHED_ACCEPTED_GUARD_COMMIT",
+      "acceptedGuardSourceRevisionCommitment": "sha256:477acfce298e68755d8714a03e61227ee807f232dc9f94c2cc8bbfd506ddec4e",
+      "syntheticSubjectRevision": "DISTINCT_AND_BOUND",
+      "syntheticSubjectRevisionCommitment": "sha256:db63cf79a60570d39c3077eb4d31753101b67f605d8daf76042552219320ba7d",
+      "selectedPlanningIds": "RETAINED_NOT_PUBLISHED",
+      "selectedPlanningIdCount": 1,
+      "selectionDigest": "sha256:fb6711816fad1ba1111f1cffce41a2662accb71ff4f31fe43c32a771a52a250e",
+      "selectionArtifactDigest": "sha256:7429d9dd0221b976361943d86ff9a8b71f47d8e5366bb0ebc959e69686a1b288",
+      "productBindingDigest": "sha256:96a01f465610b34b6b0afc89ab1fabf9684917c72c15180e64dac989398a4347",
+      "renderedProductBindingDigest": "sha256:6200771fe5ae05363190eccf20bdd7e78a6d290b7036a5d3974bdfe1536d5fc6"
+    },
+    "evidenceChain": {
+      "guardProducerEvidenceDigest": "sha256:269056f0e67ac4ea0344557b3b77aa12461aafb23d23bbd868560316720ca5f0",
+      "selectionEnvelopeIntegrityDigest": "sha256:3a5c09229c427bbaf1652648c049442eaffe2c5519b79de9d71cf969dd49ff1a",
+      "selectionEnvelopeFileSha256": "sha256:2c15952c4290d3eef579503bf4a8a4260e11f66bb5dc353e21b634fddebcba84",
+      "journeyDigest": "sha256:08d6c759439de824397b73ed8c013c80b28371a9e8d98e24b0416c4640e0825f",
+      "portfolioManifestDigest": "sha256:729602e568c59313ec1cdba7981cbbfd982343ac7d64b6f10acedb0c4cd64d1f"
+    },
+    "reproducibleManifest": {
+      "repository": "SAABOLImpactVenture/multicloud-foundation-poc-integration",
+      "path": "MANIFEST.sha256",
+      "sha256": "sha256:4a125b1def734959d480517209cbf5198330108093629d423b77c84fbf6f16b8",
+      "verification": "PASS"
+    }
+  },
+  "verification": {
+    "v1alpha1RendererBytes": "UNCHANGED_BYTE_FOR_BYTE",
+    "goldenTests": "PASS",
+    "migrationTests": "PASS",
+    "tamperTests": "FAIL_CLOSED",
+    "crossSelectionTests": "FAIL_CLOSED",
+    "acceptedGuardSourceRevisionBinding": "PASS",
+    "syntheticSubjectRevisionSeparation": "PASS",
+    "guardProducerReplay": "PASS",
+    "completeJourneyValidation": "PASS",
+    "completeCustodyManifestReconstruction": "PASS",
+    "syntheticJourney": "PASS",
+    "digestChain": "BOUND",
+    "exactHeadReviews": "CLEAN",
+    "unresolvedReviewThreads": 0,
+    "protectedMainChecks": "PASS",
+    "manifestVerification": "PASS"
+  },
+  "negativeResults": [
+    {
+      "id": "recomputed-integrity-source-revision-substitution",
+      "result": "FAIL_CLOSED"
+    },
+    {
+      "id": "synthetic-subject-and-accepted-guard-revision-conflation",
+      "result": "FAIL_CLOSED"
+    },
+    {
+      "id": "guard-producer-identity-or-digest-tamper",
+      "result": "FAIL_CLOSED"
+    },
+    {
+      "id": "selection-envelope-tamper",
+      "result": "FAIL_CLOSED"
+    },
+    {
+      "id": "cross-selection-substitution",
+      "result": "FAIL_CLOSED"
+    },
+    {
+      "id": "retained-journey-claim-rewrite",
+      "result": "FAIL_CLOSED"
+    },
+    {
+      "id": "custody-manifest-claim-or-authority-rewrite",
+      "result": "FAIL_CLOSED"
+    }
+  ],
+  "limitations": {
+    "scope": "SYNTHETIC_ONLY",
+    "humanIdentityCryptographicallyVerified": false,
+    "selectionAuthentication": "CANONICAL_SHA256_BYTE_RELATIONSHIPS_ONLY",
+    "liveCloudConnectionIncluded": false,
+    "credentialsIncluded": false,
+    "customerDataIncluded": false,
+    "externalPilotAuthorized": false,
+    "spendingAuthorized": false,
+    "approvalAuthority": false,
+    "mergeAuthority": false,
+    "applyAuthority": false,
+    "executionAuthority": false,
+    "provisioningAuthority": false,
+    "policyGrantAuthority": false,
+    "productionAuthority": false,
+    "privilegeAuthority": false,
+    "repositoryAccessExpanded": false,
+    "tokenScopeExpanded": false,
+    "actionsPermissionsExpanded": false,
+    "artifactRetention": "SUBJECT_TO_SOURCE_REPOSITORY_RETENTION_POLICY"
+  }
+}
