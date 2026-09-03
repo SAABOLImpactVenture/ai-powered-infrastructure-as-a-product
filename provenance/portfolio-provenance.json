@@ -84,7 +84,7 @@
     },
     {
       "path": "CITATION.cff",
-      "sha256": "1baa50b26319cd1595ea491da2a4ecd9df56c7fe3e0a4dbef071ca5e9747a2f7"
+      "sha256": "a9ad7cc525aa3b6d006cc0efcbd5f6c6653a0967bf51a66034c3cb0ff464cb79"
     },
     {
       "path": "LICENSE",
@@ -100,7 +100,7 @@
     },
     {
       "path": "docs/PORTFOLIO-PROVENANCE.md",
-      "sha256": "82b2223d53d324546044ef25aa3738f42d45e409a49e26d0d472a7cded8414d8"
+      "sha256": "8972aad281aa5d4fa06b287fc64c988ad3a69516d043542e573aa8e8e8cf34f8"
     },
     {
       "path": "docs/PUBLICATION-BOUNDARY.md",
@@ -120,16 +120,16 @@
     },
     {
       "path": "scripts/verify_portfolio_provenance.py",
-      "sha256": "2bb921a1408dec26424a582f57dbb8de5620aaf9a1ce1ea11d38fe91d3855eb0"
+      "sha256": "5c6f5650db024a4c679861d9ed37d4707d33a9299780a68066e2369196535dcf"
     },
     {
       "path": "tests/test_portfolio_provenance.py",
-      "sha256": "0d990a1120a17b9e56df89ed12a4ed080c54992995acf9f93cd9c5981fda5ba1"
+      "sha256": "930ea961cb8cb4e6245f763e8c3a53325c37333a11f5cf5ec77f3ed2e50df838"
     }
   ],
   "integrity": {
     "algorithm": "sha256",
     "canonicalization": "python-json-sort-keys-v1",
-    "digest": "fc23d4f98de4176885a78020b1f830a34863e93a4bc3a7b792151ef9dd3753fe"
+    "digest": "adc15e4b6c7dabe61578296b54c28af660a9e078c73edc3a5c497113e859b776"
   }
 }

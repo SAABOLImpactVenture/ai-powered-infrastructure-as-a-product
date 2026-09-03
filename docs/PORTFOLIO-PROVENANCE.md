@@ -19,7 +19,7 @@ The machine-readable statement at [`provenance/portfolio-provenance.json`](https
 - SHA-256 digests for the public thesis, portfolio map, publication boundary, citation metadata, license, schema, this explanation, and the gate's verifier, tests, Make entry point, and CI workflow; and
 - explicit zero-authority and non-disruption boundaries.
 
-`CITATION.cff` supplies standard citation metadata that GitHub and other tooling can render. The JSON Schema supplies a portable contract. The verifier checks the exact identity, origin, chain, claims, covered path set, artifact digests, statement digest, strict JSON, and text-safety rules.
+`CITATION.cff` supplies standard citation metadata that GitHub and other tooling can render. It uses JSON syntax, which is a strict subset of the required YAML 1.2 format, so the standard-library verifier can parse the complete document and reject duplicate keys. The JSON Schema supplies a portable contract whose complete bytes are version-pinned. The verifier checks the exact identity, origin, chain, claims, covered path set, artifact digests, statement digest, citation document, schema contract, strict JSON, and text-safety rules.
 
 ## Verification
 

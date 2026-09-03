@@ -135,6 +135,44 @@ EXPECTED_SCHEMA_ID = (
     "ai-powered-infrastructure-as-a-product/main/provenance/"
     "portfolio-provenance.schema.json"
 )
+EXPECTED_SCHEMA_SHA256 = (
+    "6bd22d7525ecf09d4d5d1f04f0bd84ce4039a4f074bd09aa0c689b84a79e7cff"
+)
+EXPECTED_CITATION: dict[str, Any] = {
+    "cff-version": "1.2.0",
+    "message": (
+        "If you use this portfolio, please cite the canonical repository "
+        "and named author."
+    ),
+    "title": "AI-Powered Infrastructure as a Product",
+    "type": "software",
+    "authors": [
+        {
+            "family-names": "Cureton",
+            "given-names": "Larry",
+            "alias": "GEP-V",
+        }
+    ],
+    "abstract": (
+        "A governed portfolio for Infrastructure-as-a-Product architecture, "
+        "product boundaries, and sanitized evidence."
+    ),
+    "repository-code": (
+        "https://github.com/SAABOLImpactVenture/"
+        "ai-powered-infrastructure-as-a-product"
+    ),
+    "url": (
+        "https://saabolimpactventure.github.io/"
+        "ai-powered-infrastructure-as-a-product/"
+    ),
+    "license": "Apache-2.0",
+    "keywords": [
+        "infrastructure-as-a-product",
+        "platform-engineering",
+        "provenance",
+        "governed-evidence",
+    ],
+}
 EXPECTED_ARTIFACT_SCHEMA_DEFINITIONS = [
     "ciWorkflowArtifact",
     "citationArtifact",
@@ -294,7 +332,12 @@ def validate_static_contract(manifest: dict[str, Any]) -> None:
 
 
 def validate_schema(root: Path) -> None:
-    schema = load_json(root / SCHEMA_RELATIVE, str(SCHEMA_RELATIVE))
+    schema_path = root / SCHEMA_RELATIVE
+    require(
+        sha256_file(schema_path) == EXPECTED_SCHEMA_SHA256,
+        "complete schema bytes changed without a gate version update",
+    )
+    schema = load_json(schema_path, str(SCHEMA_RELATIVE))
     require(
         schema.get("$schema") == "https://json-schema.org/draft/2020-12/schema",
         "schema draft changed",
@@ -409,17 +452,11 @@ def validate_schema(root: Path) -> None:
 
 
 def validate_citation(root: Path) -> None:
-    text = read_text(root / "CITATION.cff", "CITATION.cff")
-    required_lines = {
-        "cff-version: 1.2.0",
-        "    given-names: Larry",
-        "  - family-names: Cureton",
-        "    alias: GEP-V",
-        'repository-code: "https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product"',
-        "license: Apache-2.0",
-    }
-    lines = set(text.splitlines())
-    require(required_lines <= lines, "citation authorship or origin changed")
+    citation = load_json(root / "CITATION.cff", "CITATION.cff")
+    require(
+        citation == EXPECTED_CITATION,
+        "complete CFF 1.2 citation contract changed",
+    )
 
 
 def validate_surface_text(root: Path) -> None:

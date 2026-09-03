@@ -153,6 +153,36 @@ class PortfolioProvenanceTests(unittest.TestCase):
             with self.assertRaises(provenance.ProvenanceError):
                 provenance.validate_schema(root)
 
+    def test_schema_identity_substitution_cannot_be_refreshed(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = self.copied_root(temporary_directory)
+            schema_path = root / provenance.SCHEMA_RELATIVE
+            schema = json.loads(schema_path.read_text(encoding="utf-8"))
+            schema["properties"]["authorship"]["properties"]["assertedAuthor"][
+                "const"
+            ] = "Substitute Author"
+            schema_path.write_text(json.dumps(schema), encoding="utf-8")
+            with self.assertRaises(provenance.ProvenanceError):
+                provenance.refresh_manifest(root)
+
+    def test_malformed_citation_cannot_be_refreshed(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = self.copied_root(temporary_directory)
+            with (root / "CITATION.cff").open("a", encoding="utf-8") as handle:
+                handle.write("[")
+            with self.assertRaises(provenance.ProvenanceError):
+                provenance.refresh_manifest(root)
+
+    def test_citation_author_substitution_cannot_be_refreshed(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = self.copied_root(temporary_directory)
+            citation_path = root / "CITATION.cff"
+            citation = json.loads(citation_path.read_text(encoding="utf-8"))
+            citation["authors"][0]["given-names"] = "Substitute"
+            citation_path.write_text(json.dumps(citation), encoding="utf-8")
+            with self.assertRaises(provenance.ProvenanceError):
+                provenance.refresh_manifest(root)
+
     def test_duplicate_json_keys_fail_closed(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = self.copied_root(temporary_directory)
