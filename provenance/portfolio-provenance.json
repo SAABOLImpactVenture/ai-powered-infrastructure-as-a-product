@@ -100,7 +100,7 @@
     },
     {
       "path": "docs/PORTFOLIO-PROVENANCE.md",
-      "sha256": "85d1c6f9cb423e75a7e25c0481727818ec8315d44602517421783591cd2378c4"
+      "sha256": "82b2223d53d324546044ef25aa3738f42d45e409a49e26d0d472a7cded8414d8"
     },
     {
       "path": "docs/PUBLICATION-BOUNDARY.md",
@@ -116,20 +116,20 @@
     },
     {
       "path": "provenance/portfolio-provenance.schema.json",
-      "sha256": "3f79769df1225b7d7cd45d75ada86107389cad1ae8da2bad2e622c1b6d3c8e08"
+      "sha256": "6bd22d7525ecf09d4d5d1f04f0bd84ce4039a4f074bd09aa0c689b84a79e7cff"
     },
     {
       "path": "scripts/verify_portfolio_provenance.py",
-      "sha256": "b8b4c766ed6da3a5dd1f16ecb18f1fab8cf3ce3091e944788730659ca675d285"
+      "sha256": "2bb921a1408dec26424a582f57dbb8de5620aaf9a1ce1ea11d38fe91d3855eb0"
     },
     {
       "path": "tests/test_portfolio_provenance.py",
-      "sha256": "72014026ecb34102629b89e4d0395b8f99e9bb4cd4aa4516abb44788ea1be6a7"
+      "sha256": "0d990a1120a17b9e56df89ed12a4ed080c54992995acf9f93cd9c5981fda5ba1"
     }
   ],
   "integrity": {
     "algorithm": "sha256",
     "canonicalization": "python-json-sort-keys-v1",
-    "digest": "2b364c7dfd3862dadbc3c98caf116a0c7385c40980964d51a404910d396d62bb"
+    "digest": "fc23d4f98de4176885a78020b1f830a34863e93a4bc3a7b792151ef9dd3753fe"
   }
 }

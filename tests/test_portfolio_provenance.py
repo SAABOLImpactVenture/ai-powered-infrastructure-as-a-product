@@ -114,15 +114,44 @@ class PortfolioProvenanceTests(unittest.TestCase):
             with self.assertRaises(provenance.ProvenanceError):
                 provenance.verify(root)
 
-    def test_hidden_unicode_fails_closed(self):
+    def test_invisible_unicode_cannot_be_refreshed(self):
+        for character in ("\u00ad", "\u180e", "\u200b", "\ufe0f"):
+            with self.subTest(codepoint=f"U+{ord(character):04X}"):
+                with tempfile.TemporaryDirectory() as temporary_directory:
+                    root = self.copied_root(temporary_directory)
+                    with (root / "docs/PORTFOLIO-PROVENANCE.md").open(
+                        "a", encoding="utf-8"
+                    ) as handle:
+                        handle.write(character)
+                    with self.assertRaises(provenance.ProvenanceError):
+                        provenance.refresh_manifest(root)
+
+    def test_executable_html_cannot_be_refreshed(self):
+        payloads = (
+            "<!-- hidden -->",
+            '<img src="x" onerror="alert(1)">',
+            '<svg onload="alert(1)"></svg>',
+        )
+        for payload in payloads:
+            with self.subTest(payload=payload):
+                with tempfile.TemporaryDirectory() as temporary_directory:
+                    root = self.copied_root(temporary_directory)
+                    with (root / "docs/PORTFOLIO-PROVENANCE.md").open(
+                        "a", encoding="utf-8"
+                    ) as handle:
+                        handle.write(payload)
+                    with self.assertRaises(provenance.ProvenanceError):
+                        provenance.refresh_manifest(root)
+
+    def test_schema_claim_flag_reduction_fails_closed(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = self.copied_root(temporary_directory)
-            with (root / "docs/PORTFOLIO-PROVENANCE.md").open(
-                "a", encoding="utf-8"
-            ) as handle:
-                handle.write("\u200b")
+            schema_path = root / provenance.SCHEMA_RELATIVE
+            schema = json.loads(schema_path.read_text(encoding="utf-8"))
+            schema["$defs"]["aiSafetyFlags"]["required"].pop()
+            schema_path.write_text(json.dumps(schema), encoding="utf-8")
             with self.assertRaises(provenance.ProvenanceError):
-                provenance.verify(root)
+                provenance.validate_schema(root)
 
     def test_duplicate_json_keys_fail_closed(self):
         with tempfile.TemporaryDirectory() as temporary_directory:

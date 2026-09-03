@@ -8,6 +8,7 @@ import hashlib
 import json
 import re
 import sys
+import unicodedata
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -134,8 +135,21 @@ EXPECTED_SCHEMA_ID = (
     "ai-powered-infrastructure-as-a-product/main/provenance/"
     "portfolio-provenance.schema.json"
 )
+EXPECTED_ARTIFACT_SCHEMA_DEFINITIONS = [
+    "ciWorkflowArtifact",
+    "citationArtifact",
+    "licenseArtifact",
+    "makefileArtifact",
+    "readmeArtifact",
+    "provenanceDocArtifact",
+    "publicationBoundaryArtifact",
+    "thesisArtifact",
+    "portfolioArtifact",
+    "schemaArtifact",
+    "verifierArtifact",
+    "testArtifact",
+]
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
-FORBIDDEN_TEXT_FRAGMENTS = ("<!--", "<script", "<style", "<iframe", "<object")
 
 
 class ProvenanceError(ValueError):
@@ -163,29 +177,25 @@ def reject_constant(value: str) -> None:
 def validate_visible_text(text: str, label: str) -> None:
     for index, character in enumerate(text):
         codepoint = ord(character)
-        if character in "\t\n\r":
+        if character in " \t\n\r":
             continue
-        if codepoint < 0x20 or 0x7F <= codepoint <= 0x9F:
-            raise ProvenanceError(
-                f"{label}: control character U+{codepoint:04X} at offset {index}"
-            )
+        category = unicodedata.category(character)
+        name = unicodedata.name(character, "")
         if (
-            codepoint == 0x061C
-            or 0x200B <= codepoint <= 0x200F
-            or 0x202A <= codepoint <= 0x202E
-            or 0x2060 <= codepoint <= 0x206F
-            or codepoint == 0xFEFF
+            codepoint < 0x20
+            or 0x7F <= codepoint <= 0x9F
+            or character.isspace()
+            or category in {"Cf", "Cs", "Co", "Cn", "Mn", "Me"}
+            or "FILLER" in name
+            or name == "BRAILLE PATTERN BLANK"
         ):
             raise ProvenanceError(
-                f"{label}: hidden or bidirectional Unicode U+{codepoint:04X}"
+                f"{label}: non-rendering or unsafe Unicode U+{codepoint:04X} "
+                f"at offset {index}"
             )
 
-    lowered = text.casefold()
-    for fragment in FORBIDDEN_TEXT_FRAGMENTS:
-        if fragment in lowered:
-            raise ProvenanceError(
-                f"{label}: hidden or executable markup is not allowed"
-            )
+    if "<" in text or ">" in text:
+        raise ProvenanceError(f"{label}: raw HTML or XML markup is not allowed")
 
 
 def read_text(path: Path, label: str) -> str:
@@ -298,6 +308,103 @@ def validate_schema(root: Path) -> None:
         and set(required)
         == set(EXPECTED_STATIC) | {"coveredArtifacts", "integrity"},
         "schema required field set changed",
+    )
+    definitions = schema.get("$defs")
+    require(isinstance(definitions, dict), "schema definitions are missing")
+    properties = schema.get("properties")
+    require(isinstance(properties, dict), "schema properties are missing")
+    fingerprint_schema = properties.get("fingerprint", {}).get("properties", {})
+    require(
+        fingerprint_schema.get("markerSha256") == {"const": MARKER_SHA256},
+        "schema fingerprint digest became variable",
+    )
+    claims_schema = properties.get("claims", {}).get("properties", {})
+    require(
+        claims_schema.get("aiSafety") == {"$ref": "#/$defs/aiSafetyFlags"}
+        and claims_schema.get("authority")
+        == {"$ref": "#/$defs/authorityFlags"},
+        "schema claim references changed",
+    )
+    expected_false_contracts = {
+        "aiSafetyFlags": set(EXPECTED_STATIC["claims"]["aiSafety"]),
+        "authorityFlags": set(EXPECTED_STATIC["claims"]["authority"]),
+    }
+    for definition_name, expected_fields in expected_false_contracts.items():
+        definition = definitions.get(definition_name)
+        require(
+            isinstance(definition, dict)
+            and definition.get("type") == "object"
+            and definition.get("additionalProperties") is False
+            and set(definition.get("required", [])) == expected_fields
+            and set(definition.get("properties", {})) == expected_fields
+            and all(
+                value == {"const": False}
+                for value in definition.get("properties", {}).values()
+            ),
+            f"schema {definition_name} contract changed",
+        )
+
+    covered_schema = properties.get("coveredArtifacts", {})
+    require(
+        covered_schema.get("type") == "array"
+        and covered_schema.get("items") is False
+        and covered_schema.get("minItems") == len(EXPECTED_COVERED_PATHS)
+        and covered_schema.get("maxItems") == len(EXPECTED_COVERED_PATHS)
+        and covered_schema.get("prefixItems")
+        == [
+            {"$ref": f"#/$defs/{definition_name}"}
+            for definition_name in EXPECTED_ARTIFACT_SCHEMA_DEFINITIONS
+        ],
+        "schema covered artifact sequence changed",
+    )
+    for definition_name, expected_path in zip(
+        EXPECTED_ARTIFACT_SCHEMA_DEFINITIONS,
+        EXPECTED_COVERED_PATHS,
+        strict=True,
+    ):
+        require(
+            definitions.get(definition_name)
+            == {
+                "$ref": "#/$defs/artifact",
+                "properties": {"path": {"const": expected_path}},
+            },
+            f"schema artifact path changed: {definition_name}",
+        )
+
+    stage_schema = (
+        properties.get("portfolioChain", {})
+        .get("properties", {})
+        .get("stages", {})
+    )
+    stage_items = stage_schema.get("prefixItems")
+    require(
+        isinstance(stage_items, list)
+        and stage_schema.get("items") is False
+        and stage_schema.get("minItems") == 5
+        and stage_schema.get("maxItems") == 5
+        and len(stage_items) == 5,
+        "schema portfolio stage sequence changed",
+    )
+    observed_stages = []
+    for item in stage_items:
+        require(
+            isinstance(item, dict)
+            and item.get("type") == "object"
+            and item.get("additionalProperties") is False
+            and set(item.get("required", []))
+            == {"sequence", "stage", "responsibility"},
+            "schema portfolio stage shape changed",
+        )
+        stage_properties = item.get("properties", {})
+        observed_stages.append(
+            {
+                key: stage_properties.get(key, {}).get("const")
+                for key in ("sequence", "stage", "responsibility")
+            }
+        )
+    require(
+        observed_stages == EXPECTED_STATIC["portfolioChain"]["stages"],
+        "schema portfolio stage values changed",
     )
 
 

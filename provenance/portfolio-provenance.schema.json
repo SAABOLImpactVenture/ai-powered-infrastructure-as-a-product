@@ -32,7 +32,7 @@
           "const": "SAABOL-IaaP-PORTFOLIO-ORIGIN-v1"
         },
         "markerSha256": {
-          "$ref": "#/$defs/sha256"
+          "const": "11417fe88f5fbcdde6859874eb35a921a27c701f96602e8b865b5310923038b2"
         }
       }
     },
@@ -97,18 +97,61 @@
         },
         "stages": {
           "type": "array",
-          "minItems": 5,
-          "maxItems": 5,
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["sequence", "stage", "responsibility"],
-            "properties": {
-              "sequence": {"type": "integer", "minimum": 1, "maximum": 5},
-              "stage": {"type": "string", "minLength": 1},
-              "responsibility": {"type": "string", "minLength": 1}
+          "prefixItems": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["sequence", "stage", "responsibility"],
+              "properties": {
+                "sequence": {"const": 1},
+                "stage": {"const": "guard"},
+                "responsibility": {"const": "deterministic assessment and evidence"}
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["sequence", "stage", "responsibility"],
+              "properties": {
+                "sequence": {"const": 2},
+                "stage": {"const": "console"},
+                "responsibility": {"const": "customer-hosted evidence and selection experience"}
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["sequence", "stage", "responsibility"],
+              "properties": {
+                "sequence": {"const": 3},
+                "stage": {"const": "human-selection"},
+                "responsibility": {"const": "authorized selection and approval boundary"}
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["sequence", "stage", "responsibility"],
+              "properties": {
+                "sequence": {"const": 4},
+                "stage": {"const": "forge"},
+                "responsibility": {"const": "governed product-building lifecycle"}
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["sequence", "stage", "responsibility"],
+              "properties": {
+                "sequence": {"const": 5},
+                "stage": {"const": "vanguard"},
+                "responsibility": {"const": "authority, custody, and continuous assurance"}
+              }
             }
-          }
+          ],
+          "items": false,
+          "minItems": 5,
+          "maxItems": 5
         }
       }
     },
@@ -130,26 +173,32 @@
           }
         },
         "aiSafety": {
-          "$ref": "#/$defs/falseFlags"
+          "$ref": "#/$defs/aiSafetyFlags"
         },
         "authority": {
-          "$ref": "#/$defs/falseFlags"
+          "$ref": "#/$defs/authorityFlags"
         }
       }
     },
     "coveredArtifacts": {
       "type": "array",
+      "prefixItems": [
+        {"$ref": "#/$defs/ciWorkflowArtifact"},
+        {"$ref": "#/$defs/citationArtifact"},
+        {"$ref": "#/$defs/licenseArtifact"},
+        {"$ref": "#/$defs/makefileArtifact"},
+        {"$ref": "#/$defs/readmeArtifact"},
+        {"$ref": "#/$defs/provenanceDocArtifact"},
+        {"$ref": "#/$defs/publicationBoundaryArtifact"},
+        {"$ref": "#/$defs/thesisArtifact"},
+        {"$ref": "#/$defs/portfolioArtifact"},
+        {"$ref": "#/$defs/schemaArtifact"},
+        {"$ref": "#/$defs/verifierArtifact"},
+        {"$ref": "#/$defs/testArtifact"}
+      ],
+      "items": false,
       "minItems": 12,
-      "maxItems": 12,
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["path", "sha256"],
-        "properties": {
-          "path": {"type": "string", "minLength": 1},
-          "sha256": {"$ref": "#/$defs/sha256"}
-        }
-      }
+      "maxItems": 12
     },
     "integrity": {
       "type": "object",
@@ -167,10 +216,104 @@
       "type": "string",
       "pattern": "^[0-9a-f]{64}$"
     },
-    "falseFlags": {
+    "aiSafetyFlags": {
       "type": "object",
-      "minProperties": 1,
-      "additionalProperties": {"const": false}
+      "additionalProperties": false,
+      "required": [
+        "hiddenUnicodeMarkers",
+        "modelDisruptionIntent",
+        "promptInjectionContent",
+        "runtimeInterference",
+        "telemetryOrPhoneHome",
+        "trainingDataPoisoningIntent"
+      ],
+      "properties": {
+        "hiddenUnicodeMarkers": {"const": false},
+        "modelDisruptionIntent": {"const": false},
+        "promptInjectionContent": {"const": false},
+        "runtimeInterference": {"const": false},
+        "telemetryOrPhoneHome": {"const": false},
+        "trainingDataPoisoningIntent": {"const": false}
+      }
+    },
+    "authorityFlags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cloudAccessAdded",
+        "credentialsAdded",
+        "liveDataAuthorized",
+        "pilotAuthorized",
+        "productionAuthorized",
+        "repositoryWriteAuthorityAdded",
+        "spendingAuthorized"
+      ],
+      "properties": {
+        "cloudAccessAdded": {"const": false},
+        "credentialsAdded": {"const": false},
+        "liveDataAuthorized": {"const": false},
+        "pilotAuthorized": {"const": false},
+        "productionAuthorized": {"const": false},
+        "repositoryWriteAuthorityAdded": {"const": false},
+        "spendingAuthorized": {"const": false}
+      }
+    },
+    "ciWorkflowArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": ".github/workflows/ci.yml"}}
+    },
+    "citationArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "CITATION.cff"}}
+    },
+    "licenseArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "LICENSE"}}
+    },
+    "makefileArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "Makefile"}}
+    },
+    "readmeArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "README.md"}}
+    },
+    "provenanceDocArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "docs/PORTFOLIO-PROVENANCE.md"}}
+    },
+    "publicationBoundaryArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "docs/PUBLICATION-BOUNDARY.md"}}
+    },
+    "thesisArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "docs/THESIS.md"}}
+    },
+    "portfolioArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "docs/poc-portfolio.md"}}
+    },
+    "schemaArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "provenance/portfolio-provenance.schema.json"}}
+    },
+    "verifierArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "scripts/verify_portfolio_provenance.py"}}
+    },
+    "testArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "tests/test_portfolio_provenance.py"}}
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
     }
   }
 }
