@@ -63,10 +63,6 @@ flowchart TB
 - [`iaap-guard-adopter-validation`](https://github.com/SAABOLImpactVenture/iaap-guard-adopter-validation) is archived clean-adopter proof, not an active runtime or supported distribution.
 - [`ai-powered-infrastructure-as-a-product`](https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product) remains the public thesis, architecture, evidence, and portfolio front door.
 
-## Supporting POC governance
-
-As of September 3, 2026, the default branches of `crossplane-multicloud-seed-poc`, `multicloud-foundation-product-poc`, and `composite-ai-infrastructure-product-poc` are protected by active rulesets with no bypass actors. Each requires pull requests, resolved review conversations, and an up-to-date `validate` check; branch deletion and force pushes are blocked. These controls change repository governance only and add no collaborator, credential, token scope, visibility, runtime, or production access.
-
 ## Responsibilities
 
 ### `backstage-infrastructure-product-storefront-poc`
@@ -108,8 +104,6 @@ That acceptance does not authorize a pilot, live personal data, production conne
 Owns pinned upstream integration, including the storefront handoff, clean-cluster acceptance, active network-policy proof, AI authority checks, simulated reconciliation, evidence, teardown, scorecard, cross-repository storefront/product contract compatibility, and workflow/bootstrap reproducibility checks.
 
 The repository also retains the trusted-main managed-interconnect safety proof. One deterministic synthetic AWS/Azure profile passes the exact accepted Forge → Guard path, while thirteen unsafe address, route, resilience, DNS, encryption, identity, coordinate, and authority profiles fail closed. This remains an inert validation result, not a live-cloud connection or provisioning path.
-
-The trusted-main Phase 24 proof also preserves Forge's `v1alpha1` renderer byte-for-byte while validating a detached selection-evidence envelope across Guard, Console, recorded human selection, Forge, and the existing Vanguard custody reference. The accepted Guard source revision and the distinct synthetic subject revision are separately bound; producer, journey, custody, tamper, cross-selection, and source-substitution failures are rejected. The proof establishes canonical byte relationships, not a cryptographically authenticated human identity or operational authority.
 
 The integrated consumer path is:
 
@@ -179,10 +173,7 @@ Owns the thesis, architecture, product operating model, decisions, frozen eviden
 12. **Phase 20 architecture reconciliation** — **complete** at pinned Forge revision `6fb587cb3f521e99c33039c61090fe8b738836cc`, preserving the frozen Guard boundary and public sanitized claims.
 13. **Vanguard Gate 6 portfolio custody** — **passed only for the bounded synthetic proof** at prerelease `gate-6-bounded-pass-2026-09-02` and closure SHA `f96961c47f6866dd12025eca8afc43b376163520`. The public map pins the sanitized record by digest and preserves Vanguard ownership of authority, custody, and continuous assurance without changing Guard, Console, Forge, or Storefront responsibilities.
 14. **Managed AWS/Azure interconnect** — **passed only for one bounded deterministic synthetic profile**. The [Step 4 public closure record](https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/blob/main/artifacts/phase-23/managed-interconnect-closure.json) binds the sanitized proof digests and accepted private revision commitments, records all thirteen unsafe profiles as `FAIL_CLOSED`, and preserves the existing Vanguard custody/authority reference. Forge and Guard Core contain the minimal contract/validation change; Vanguard, Console, and Storefront remain unchanged.
-15. **Versioned human-selection traceability** — **passed only for the bounded synthetic proof**. The [Phase 24 public closure record](https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/blob/main/artifacts/phase-24/selection-evidence-closure.json) binds the accepted Guard source, distinct synthetic subject, recorded selection, Forge product output, producer evidence, complete journey, and Vanguard custody manifest while preserving the existing `v1alpha1` renderer byte-for-byte. Golden and migration cases pass; unsafe substitutions and rewrites fail closed. Guard, Console, Storefront, and Vanguard implementation remain unchanged.
-16. **Production pilot** — future and unauthorized; requires separate authorization, SLOs, recovery, support, lifecycle evidence, Developer NPS, adoption, and repeat-consumption evidence.
-
-Downloadable workflow archives remain subject to their source repository retention windows. The accepted public digests and reproducible manifests remain committed; any longer-lived private archive requires a separate custody, access, retention, recovery, deletion, and spending decision.
+15. **Production pilot** — future and unauthorized; requires separate authorization, SLOs, recovery, support, lifecycle evidence, Developer NPS, adoption, and repeat-consumption evidence.
 
 The v5 runtime proof is intentionally narrower than a production Backstage deployment: the GitHub publication action ran in dry-run mode, no browser/UI journey was executed, and the generated Backstage dependency graph is not claimed immutable across future runs.
 

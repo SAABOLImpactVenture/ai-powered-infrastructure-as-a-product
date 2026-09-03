@@ -92,8 +92,6 @@ The current sanitized compatibility lock is [`artifacts/phase-21/accepted-releas
 
 The Step 4 public closure record is [`artifacts/phase-23/managed-interconnect-closure.json`](artifacts/phase-23/managed-interconnect-closure.json). It records `PASSED_BOUNDED_SYNTHETIC_INTERCONNECT_PROOF`, immutable commitments to the accepted private protected-main revisions, the retained proof and evidence digests, one deterministic synthetic AWS/Azure profile PASS, and thirteen unsafe profiles rejected `FAIL_CLOSED`. Private commit SHAs and fixture internals remain unpublished under the [publication boundary](docs/PUBLICATION-BOUNDARY.md). Vanguard remains at the existing Gate 6 prerelease; Console and Storefront remain unchanged. No live connection, credential, customer data, pilot, spending, provisioning, production, or privilege authority is part of this result.
 
-The Phase 24 public closure record is [`artifacts/phase-24/selection-evidence-closure.json`](artifacts/phase-24/selection-evidence-closure.json). It records `PASSED_BOUNDED_SYNTHETIC_SELECTION_EVIDENCE_PROOF`: Forge preserves its `v1alpha1` renderer byte-for-byte while a detached evidence envelope binds the accepted Guard source, distinct synthetic subject, human-selected planning item, product binding, rendered product, producer evidence, journey, and Vanguard custody manifest. Golden and migration cases pass; tamper, cross-selection, source-substitution, producer, journey, and custody rewrites fail closed. The result proves deterministic byte relationships, not a cryptographically authenticated human identity, and grants no operational or production authority.
-
 ---
 
 ## The modern accelerator
@@ -652,17 +650,16 @@ flowchart LR
   G7 --> G8[Accepted synthetic release chain]
   G8 --> G9[Vanguard Gate 6 custody]
   G9 --> G10[Managed interconnect synthetic proof]
-  G10 --> G11[Detached selection evidence]
-  G11 --> G12[Production pilot]
+  G10 --> G11[Production pilot]
 
   classDef complete fill:#123A24,stroke:#22C55E,stroke-width:2px,color:#F8FAFC
   classDef future fill:#1F2937,stroke:#64748B,stroke-width:2px,color:#CBD5E1
-  class G0,G1,G2,G3,G4,G5,G6,G7,G8,G9,G10,G11 complete
-  class G12 future
+  class G0,G1,G2,G3,G4,G5,G6,G7,G8,G9,G10 complete
+  class G11 future
   linkStyle default stroke:#7DD3FC,stroke-width:2px
 ```
 
-The storefront-to-product flow, Forge credential-free successor phases, bounded AWS/Azure/GCP live-cloud validations, Vertex AI synthetic model-adapter validation, HCP Terraform Free proxy comparison, Phase 20 public architecture reconciliation, accepted synthetic release chain, Vanguard Gate 6 custody reference, bounded managed-interconnect proof, and detached selection-evidence proof are complete with retained sanitized evidence. Terraform Enterprise remains unvalidated and is not required for the demonstrated product path. A production pilot remains a future gate requiring separate authority, cost, security, support, recovery, SLO, and evidence approvals.
+The storefront-to-product flow, Forge credential-free successor phases, bounded AWS/Azure/GCP live-cloud validations, Vertex AI synthetic model-adapter validation, HCP Terraform Free proxy comparison, Phase 20 public architecture reconciliation, accepted synthetic release chain, Vanguard Gate 6 custody reference, and the bounded managed-interconnect proof are complete with retained sanitized evidence. Terraform Enterprise remains unvalidated and is not required for the demonstrated product path. A production pilot remains a future gate requiring separate authority, cost, security, support, recovery, SLO, and evidence approvals.
 
 ---
 

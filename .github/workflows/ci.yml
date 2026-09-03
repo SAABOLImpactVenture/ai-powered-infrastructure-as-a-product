@@ -24,6 +24,24 @@ jobs:
               json.loads(p.read_text())
               print('validated', p)
           PY
+      - name: Validate phase manifests
+        run: |
+          set -euo pipefail
+          manifests=(
+            artifacts/phase-23/MANIFEST.sha256
+            artifacts/phase-24/MANIFEST.sha256
+          )
+          expected="$(printf '%s\n' "${manifests[@]}" | sort)"
+          actual="$(find artifacts -type f -name MANIFEST.sha256 -print | sort)"
+          if [[ "$actual" != "$expected" ]]; then
+            echo "::error::Phase manifest set is missing, renamed, or unregistered."
+            diff -u <(printf '%s\n' "$expected") <(printf '%s\n' "$actual") || true
+            exit 1
+          fi
+          for manifest in "${manifests[@]}"; do
+            test -f "$manifest"
+            sha256sum --check "$manifest"
+          done
 
   docs:
     runs-on: ubuntu-latest
