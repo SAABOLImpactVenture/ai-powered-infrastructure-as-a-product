@@ -24,7 +24,11 @@ jobs:
               json.loads(p.read_text())
               print('validated', p)
           PY
-
+      - name: Validate immutable phase manifests
+        run: |
+          while IFS= read -r manifest; do
+            sha256sum --check "$manifest"
+          done < <(find artifacts -type f -name MANIFEST.sha256 -print | sort)
   docs:
     runs-on: ubuntu-latest
     steps:
