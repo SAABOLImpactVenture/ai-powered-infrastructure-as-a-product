@@ -103,6 +103,8 @@ That acceptance does not authorize a pilot, live personal data, production conne
 
 Owns pinned upstream integration, including the storefront handoff, clean-cluster acceptance, active network-policy proof, AI authority checks, simulated reconciliation, evidence, teardown, scorecard, cross-repository storefront/product contract compatibility, and workflow/bootstrap reproducibility checks.
 
+The repository also retains the trusted-main managed-interconnect safety proof. One deterministic synthetic AWS/Azure profile passes the exact accepted Forge → Guard path, while thirteen unsafe address, route, resilience, DNS, encryption, identity, coordinate, and authority profiles fail closed. This remains an inert validation result, not a live-cloud connection or provisioning path.
+
 The integrated consumer path is:
 
 ```mermaid
@@ -170,7 +172,8 @@ Owns the thesis, architecture, product operating model, decisions, frozen eviden
 11. **HCP Terraform Free remote-run proxy** — **proxy passed** with a zero-resource fixture, protected VCS status, sanitized evidence, workspace deletion, and token revocation. Terraform Enterprise was not accessed or validated.
 12. **Phase 20 architecture reconciliation** — **complete** at pinned Forge revision `6fb587cb3f521e99c33039c61090fe8b738836cc`, preserving the frozen Guard boundary and public sanitized claims.
 13. **Vanguard Gate 6 portfolio custody** — **passed only for the bounded synthetic proof** at prerelease `gate-6-bounded-pass-2026-09-02` and closure SHA `f96961c47f6866dd12025eca8afc43b376163520`. The public map pins the sanitized record by digest and preserves Vanguard ownership of authority, custody, and continuous assurance without changing Guard, Console, Forge, or Storefront responsibilities.
-14. **Production pilot** — future and unauthorized; requires separate authorization, SLOs, recovery, support, lifecycle evidence, Developer NPS, adoption, and repeat-consumption evidence.
+14. **Managed AWS/Azure interconnect** — **passed only for one bounded deterministic synthetic profile**. The [Step 4 public closure record](../artifacts/phase-23/managed-interconnect-closure.json) binds the sanitized proof digests and accepted private revision commitments, records all thirteen unsafe profiles as `FAIL_CLOSED`, and preserves the existing Vanguard custody/authority reference. Forge and Guard Core contain the minimal contract/validation change; Vanguard, Console, and Storefront remain unchanged.
+15. **Production pilot** — future and unauthorized; requires separate authorization, SLOs, recovery, support, lifecycle evidence, Developer NPS, adoption, and repeat-consumption evidence.
 
 The v5 runtime proof is intentionally narrower than a production Backstage deployment: the GitHub publication action ran in dry-run mode, no browser/UI journey was executed, and the generated Backstage dependency graph is not claimed immutable across future runs.
 
