@@ -183,6 +183,9 @@ class PortfolioProvenanceTests(unittest.TestCase):
             "1. ```mermaid\n   flowchart LR\n   A --> B\n   ```",
             "> ~~~mermaid\n> flowchart LR\n> A --> B\n> ~~~",
             "[run](javascript:alert(1))",
+            "[run](java&#x0A;script:alert(1))",
+            "[run](java&#13;script:alert(1))",
+            "[run](java&Tab;script:alert(1))",
             "[payload](d&#x61;ta:text/plain,active)",
         )
         for payload in payloads:

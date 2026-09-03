@@ -257,7 +257,9 @@ def validate_visible_text(text: str, label: str) -> None:
                 f"{label}: active Markdown renderers are not allowed"
             )
 
-        normalized = html.unescape(text).replace("\\", "").casefold()
+        normalized = html.unescape(text).casefold().translate(
+            {ord(character): None for character in "\\\t\n\r"}
+        )
         for active_scheme in ("data:", "javascript:", "vbscript:"):
             if active_scheme in normalized:
                 raise ProvenanceError(
