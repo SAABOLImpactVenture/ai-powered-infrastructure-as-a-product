@@ -217,7 +217,7 @@ def reject_constant(value: str) -> None:
     raise ProvenanceError(f"non-finite JSON number: {value}")
 
 
-def validate_visible_text(text: str, label: str) -> None:
+def validate_characters(text: str, label: str) -> None:
     for index, character in enumerate(text):
         codepoint = ord(character)
         if character in " \t\n\r":
@@ -236,6 +236,10 @@ def validate_visible_text(text: str, label: str) -> None:
                 f"{label}: non-rendering or unsafe Unicode U+{codepoint:04X} "
                 f"at offset {index}"
             )
+
+
+def validate_visible_text(text: str, label: str) -> None:
+    validate_characters(text, label)
 
     if "<" in text or ">" in text:
         raise ProvenanceError(f"{label}: raw HTML or XML markup is not allowed")
@@ -257,7 +261,9 @@ def validate_visible_text(text: str, label: str) -> None:
                 f"{label}: active Markdown renderers are not allowed"
             )
 
-        normalized = html.unescape(text).casefold().translate(
+        decoded = html.unescape(text)
+        validate_characters(decoded, f"{label}: entity-decoded text")
+        normalized = decoded.casefold().translate(
             {ord(character): None for character in "\\\t\n\r"}
         )
         for active_scheme in ("data:", "javascript:", "vbscript:"):

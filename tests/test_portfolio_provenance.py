@@ -126,6 +126,18 @@ class PortfolioProvenanceTests(unittest.TestCase):
                     with self.assertRaises(provenance.ProvenanceError):
                         provenance.refresh_manifest(root)
 
+    def test_encoded_invisible_unicode_cannot_be_refreshed(self):
+        for payload in ("&#x200B;", "&#x202E;", "&lrm;", "&#173;"):
+            with self.subTest(payload=payload):
+                with tempfile.TemporaryDirectory() as temporary_directory:
+                    root = self.copied_root(temporary_directory)
+                    with (root / "docs/PORTFOLIO-PROVENANCE.md").open(
+                        "a", encoding="utf-8"
+                    ) as handle:
+                        handle.write(payload)
+                    with self.assertRaises(provenance.ProvenanceError):
+                        provenance.refresh_manifest(root)
+
     def test_executable_html_cannot_be_refreshed(self):
         payloads = (
             "<!-- hidden -->",
