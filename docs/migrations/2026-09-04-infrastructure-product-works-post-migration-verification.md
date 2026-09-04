@@ -35,6 +35,10 @@ repository layer:
 The parent enterprise layer is intentionally outside this result and remains
 deferred to a separate audit-and-rename decision.
 
+The public/API evidence and the authenticated custodian observations used to
+close each required checkpoint surface are distinguished below. A custodian
+observation is not represented as independently reproducible public proof.
+
 ## Repository continuity
 
 | Repository | Repository ID | Verified `main` | Protected |
@@ -72,6 +76,17 @@ The five consuming workflows use the current organization namespace and retain
 the accepted IaaP Guard action revision
 `66f5cf9bf466e7653ae7c8b07a6af5382c64d503`. The retired organization name
 remains in IaaP Guard only as an explicit leak-detection compatibility case.
+
+## Required platform-surface checks
+
+| Checkpoint surface | Result | Evidence and boundary |
+|---|---|---|
+| Actions and upstream locks | passed | The six protected migrations and exact-main results above establish the current workflow namespace and retained immutable IaaP Guard revision. |
+| Release tags | passed | The accepted [hub `v0.1.0`](https://github.com/InfrastructureProductWorks/ai-powered-infrastructure-as-a-product/releases/tag/v0.1.0), [IaaP Guard `v1.0.2`](https://github.com/InfrastructureProductWorks/iaap-guard/releases/tag/v1.0.2), [IaaP Forge `v1.3.1`](https://github.com/InfrastructureProductWorks/iaap-forge/releases/tag/v1.3.1), [IaaP Console `v0.1.1`](https://github.com/InfrastructureProductWorks/iaap-console/releases/tag/v0.1.1), and [IaaP Assurance Gate 6](https://github.com/InfrastructureProductWorks/iaap-assurance/releases/tag/gate-6-bounded-pass-2026-09-02) release objects resolve under the current namespace. The other retained repositories had no GitHub Release objects at observation time. |
+| Existing attestation | passed | [Attestation `45298685`](https://github.com/InfrastructureProductWorks/ai-powered-infrastructure-as-a-product/attestations/45298685) resolves under the current namespace and binds repository ID `1071094103`, source revision `7716bf32fdb4bb17a029c574fb4dba53aea2daec`, and the trusted-main workflow. Embedded pre-migration URIs remain historical attestation content. |
+| GitHub Pages | passed | GitHub reported the site live from Actions, and the [current Pages URL](https://infrastructureproductworks.github.io/ai-powered-infrastructure-as-a-product/) loaded successfully from deployment [run `33895723658`](https://github.com/InfrastructureProductWorks/ai-powered-infrastructure-as-a-product/actions/runs/33895723658). |
+| Organization and repository webhooks | custodian-observed, no hooks | At `2026-09-04T18:43:29Z`, authenticated settings inspection showed no organization webhook and no repository webhook in any of the twelve retained repositories. These access-controlled settings are a custodian observation, not independently reproducible public proof. The separately configured IaaP Guard App delivery endpoint remained present and was not disclosed. |
+| GitHub App installation scope | custodian-observed, selected repositories | At the same observation time, authenticated installation settings showed `Only select repositories` and listed the public hub, Foundation Product POC, and Storefront POC. This is a current-state custodian observation, not public proof of historical before/after state. |
 
 ## IaaP Assurance naming verification
 
@@ -115,10 +130,14 @@ No bypass actor, collaborator, or repository visibility change was introduced.
 - The [IaaP Guard GitHub App](https://github.com/apps/iaap-guard) retains its
   name and public identifier.
 - Its homepage is `https://github.com/InfrastructureProductWorks/iaap-guard`.
-- Its installation remains limited to selected repositories rather than all
-  repositories: the public hub, Foundation Product POC, and Storefront POC.
-- No App permission, webhook, credential, installation owner, or selected
-  repository was added during the namespace migration.
+- The access-controlled installation settings were observed by the named
+  custodian at `2026-09-04T18:43:29Z`. They showed selected-repository access,
+  not all-repository access, and listed the public hub, Foundation Product
+  POC, and Storefront POC.
+- That observation records current state only. It is not independently
+  reproducible public proof of historical App permissions, installation
+  ownership, or before/after repository selection.
+- No App setting was changed as part of this verification pass.
 
 ## Provenance and historical evidence
 
