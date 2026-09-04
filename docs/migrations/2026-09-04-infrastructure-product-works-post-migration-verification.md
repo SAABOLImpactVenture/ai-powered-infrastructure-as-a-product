@@ -120,7 +120,10 @@ The three formerly unprotected active POC repositories now have active
 | `multicloud-foundation-product-poc` | [22202430](https://github.com/InfrastructureProductWorks/multicloud-foundation-product-poc/rules/22202430) | default branch only; pull request; resolved conversations; strict `validate`; deletion and force-push protection; empty bypass list |
 | `composite-ai-infrastructure-product-poc` | [22202547](https://github.com/InfrastructureProductWorks/composite-ai-infrastructure-product-poc/rules/22202547) | default branch only; pull request; resolved conversations; strict `validate`; deletion and force-push protection; empty bypass list |
 
-No bypass actor, collaborator, or repository visibility change was introduced.
+The three ruleset APIs verify empty bypass lists. The named custodian asserts
+that the migration work did not intentionally add a collaborator or change
+repository visibility. No independently archived before/after collaborator or
+visibility snapshot is claimed.
 
 ## App and publishing verification
 
@@ -170,9 +173,13 @@ organization and repository migration.
 
 ## Authority and ownership boundary
 
-This migration added no credentials, token scopes, collaborators, bypass
-actors, repository visibility, cloud access, live data, spending authority,
-pilot authority, or production authority.
+The named custodian asserts that the migration work performed did not add
+credentials, token scopes, collaborators, bypass actors, repository
+visibility, cloud access, live data, spending authority, pilot authority, or
+production authority. The empty bypass lists are independently visible in the
+three rulesets cited above; the broader access-controlled before/after state
+was not independently archived. This paragraph records no-change intent and a
+custodian assertion, not proof that no concurrent external change occurred.
 
 `InfrastructureProductWorks` is an administrative and publishing namespace,
 not an asserted legal entity or separate IP owner. Nothing in this record
