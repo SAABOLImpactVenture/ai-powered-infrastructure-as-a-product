@@ -2,7 +2,10 @@
 
 **Recorded:** 2026-09-04  
 **Status:** Pre-migration evidence checkpoint  
-**Asserted author and repository custodian:** Larry Cureton (`GEP-V`)\n\nThis record preserves an authorship and custody assertion only. It does not make\nor resolve any legal conclusion about inventorship, ownership, or patentability.
+**Asserted author and repository custodian:** Larry Cureton (`GEP-V`)
+
+This record preserves an authorship and custody assertion only. It does not make
+or resolve any legal conclusion about inventorship, ownership, or patentability.
 
 ## Naming decision
 
@@ -39,7 +42,8 @@ the namespace migration.
 | Repository | GitHub repository ID | Accepted `main` revision | Visibility |
 |---|---:|---|---|
 | `ai-powered-infrastructure-as-a-product` | 1071094103 | `3be604a2396b9b69b6c039e02163870170b54535` | public |
-| `iaap-guard-adopter-validation` (archived retained evidence) | 1335448475 | `533b802b3b7afc24a0bfdd4f7480f0c7691ded6f` | public |\n| `crossplane-multicloud-seed-poc` | 1325855160 | `f7e1166670b18fdfe3eb393dc6a7dc2720e19a94` | internal |
+| `iaap-guard-adopter-validation` (archived retained evidence) | 1335448475 | `533b802b3b7afc24a0bfdd4f7480f0c7691ded6f` | public |
+| `crossplane-multicloud-seed-poc` | 1325855160 | `f7e1166670b18fdfe3eb393dc6a7dc2720e19a94` | internal |
 | `multicloud-foundation-product-poc` | 1325858364 | `a1b495b8327dc4ebabdeda124fccee6d25c82303` | internal |
 | `composite-ai-infrastructure-product-poc` | 1325912761 | `a3399192d61df63e41206b03a209c0e990c3f58e` | internal |
 | `multicloud-foundation-poc-integration` | 1325941868 | `ba4170fcd58c776a597cc19f87b062abb9bad63c` | internal |
