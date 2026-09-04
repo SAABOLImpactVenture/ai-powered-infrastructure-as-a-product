@@ -8,7 +8,7 @@ SPDX-License-Identifier: Apache-2.0
 
 ## Reporting a vulnerability
 
-Report security issues privately to **security@saabolimpactventure.org** with the affected path/repository, reproduction steps, impact, and any suggested mitigation.
+Report suspected security vulnerabilities privately through [GitHub private vulnerability reporting](https://github.com/InfrastructureProductWorks/ai-powered-infrastructure-as-a-product/security/advisories/new). Include the affected path or repository, reproduction steps, impact, and any suggested mitigation. Do not disclose suspected vulnerabilities in a public issue.
 
 ## Security principles
 
