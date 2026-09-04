@@ -96,7 +96,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "f38748565cd96cf4df3a3b376f1033d992432b8867c1b8032b2ebe029b132265"
+      "sha256": "1bcb0e726b614425596a73c5f8d821cb788fe6dafa2f920a7e3b8db49ceca341"
     },
     {
       "path": "docs/PORTFOLIO-PROVENANCE.md",
@@ -108,7 +108,7 @@
     },
     {
       "path": "docs/THESIS.md",
-      "sha256": "0087b8281bd103b984a318485e0155da9ba85bae1305faa836256ef816b51458"
+      "sha256": "8a67b25343ea67bdcde880cb700defa2d0cec5f6c4715bf0bba589d68a54ba47"
     },
     {
       "path": "docs/poc-portfolio.md",
@@ -130,6 +130,6 @@
   "integrity": {
     "algorithm": "sha256",
     "canonicalization": "python-json-sort-keys-v1",
-    "digest": "3efb425f1740c9384e8f67194bdbdab5c220c71c1fc793f0ae8ff714b84ed20f"
+    "digest": "7c90ba69c8c63ae612679cef084fa28034c0dfb0b61e71010be5ccbc11f05f91"
   }
 }
