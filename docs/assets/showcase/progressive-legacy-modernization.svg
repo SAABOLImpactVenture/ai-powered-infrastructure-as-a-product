@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="980" viewBox="0 0 1600 980" role="img" aria-labelledby="title desc">
+  <title id="title">Progressive legacy modernization through Infrastructure as a Product</title>
+  <desc id="desc">Four stages show a government agency stabilizing a legacy estate, operating legacy and modern capabilities together, transferring domain and data authority, and retiring proven legacy dependencies. Guard, Forge, Vanguard, and Crossplane govern the portable destination across AWS, Azure, Google Cloud, and on-premises infrastructure.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111f"/>
+      <stop offset="0.5" stop-color="#0b1730"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <radialGradient id="centerGlow" cx="52%" cy="50%" r="65%">
+      <stop offset="0" stop-color="#22c55e" stop-opacity="0.12"/>
+      <stop offset="0.5" stop-color="#38bdf8" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#07111f" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="legacyStrong" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#7f1d1d"/>
+      <stop offset="1" stop-color="#9a3412"/>
+    </linearGradient>
+    <linearGradient id="legacyFade" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#78350f"/>
+      <stop offset="1" stop-color="#4b5563"/>
+    </linearGradient>
+    <linearGradient id="modernGrow" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#0e7490"/>
+      <stop offset="1" stop-color="#15803d"/>
+    </linearGradient>
+    <linearGradient id="modernStrong" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#0369a1"/>
+      <stop offset="1" stop-color="#16a34a"/>
+    </linearGradient>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000000" flood-opacity="0.30"/>
+    </filter>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#7dd3fc"/>
+    </marker>
+    <style>
+      .kicker{font:700 17px Inter,Segoe UI,Arial,sans-serif;letter-spacing:3px;fill:#7dd3fc}
+      .mainTitle{font:800 43px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}
+      .subtitle{font:600 18px Inter,Segoe UI,Arial,sans-serif;fill:#cbd5e1}
+      .stageNumber{font:800 15px Inter,Segoe UI,Arial,sans-serif;letter-spacing:1.5px;fill:#7dd3fc}
+      .stageTitle{font:800 25px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}
+      .stageLead{font:700 17px Inter,Segoe UI,Arial,sans-serif;fill:#e2e8f0}
+      .stageBody{font:500 15px Inter,Segoe UI,Arial,sans-serif;fill:#cbd5e1}
+      .sectionLabel{font:800 17px Inter,Segoe UI,Arial,sans-serif;letter-spacing:2px;fill:#94a3b8}
+      .laneTitle{font:800 17px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}
+      .laneText{font:700 15px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}
+      .principle{font:700 16px Inter,Segoe UI,Arial,sans-serif;fill:#fef3c7}
+      .roleTitle{font:800 19px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}
+      .roleBody{font:600 14px Inter,Segoe UI,Arial,sans-serif;fill:#dbeafe}
+      .boundaryTitle{font:800 16px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}
+      .boundaryBody{font:600 14px Inter,Segoe UI,Arial,sans-serif;fill:#cbd5e1}
+      .cloudText{font:800 15px Inter,Segoe UI,Arial,sans-serif;fill:#f8fafc}
+      .footer{font:600 13px Inter,Segoe UI,Arial,sans-serif;fill:#94a3b8}
+    </style>
+  </defs>
+
+  <rect width="1600" height="980" rx="34" fill="url(#background)"/>
+  <rect width="1600" height="980" rx="34" fill="url(#centerGlow)"/>
+
+  <text x="72" y="58" class="kicker">PROGRESSIVE LEGACY MODERNIZATION</text>
+  <text x="72" y="108" class="mainTitle">Transfer capability and authority—not the monolith.</text>
+  <text x="72" y="142" class="subtitle">Keep the mission stable while the governed modern estate earns responsibility one bounded domain at a time.</text>
+
+  <!-- Four-stage modernization path -->
+  <g transform="translate(72,180)">
+    <g filter="url(#shadow)">
+      <rect width="340" height="168" rx="24" fill="#1d2636" stroke="#64748b" stroke-width="1.5"/>
+      <text x="26" y="34" class="stageNumber">01  STABILIZE</text>
+      <text x="26" y="72" class="stageTitle">Protect the mission</text>
+      <text x="26" y="105" class="stageLead">Legacy remains authoritative</text>
+      <text x="26" y="132" class="stageBody">Establish the approved product</text>
+      <text x="26" y="153" class="stageBody">destination and evidence baseline.</text>
+    </g>
+    <g transform="translate(372,0)" filter="url(#shadow)">
+      <rect width="340" height="168" rx="24" fill="#172d3a" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="26" y="34" class="stageNumber">02  COEXIST</text>
+      <text x="26" y="72" class="stageTitle">Build beside legacy</text>
+      <text x="26" y="105" class="stageLead">Old and new operate together</text>
+      <text x="26" y="132" class="stageBody">Use APIs, events, batch contracts,</text>
+      <text x="26" y="153" class="stageBody">or controlled data replication.</text>
+    </g>
+    <g transform="translate(744,0)" filter="url(#shadow)">
+      <rect width="340" height="168" rx="24" fill="#17352c" stroke="#22c55e" stroke-width="1.5"/>
+      <text x="26" y="34" class="stageNumber">03  TRANSFER</text>
+      <text x="26" y="72" class="stageTitle">Move domain authority</text>
+      <text x="26" y="105" class="stageLead">Modern becomes authoritative</text>
+      <text x="26" y="132" class="stageBody">Approve bounded cutover with</text>
+      <text x="26" y="153" class="stageBody">reconciliation and rollback.</text>
+    </g>
+    <g transform="translate(1116,0)" filter="url(#shadow)">
+      <rect width="340" height="168" rx="24" fill="#25331f" stroke="#84cc16" stroke-width="1.5"/>
+      <text x="26" y="34" class="stageNumber">04  RETIRE</text>
+      <text x="26" y="72" class="stageTitle">Remove what is obsolete</text>
+      <text x="26" y="105" class="stageLead">Legacy has nothing left to do</text>
+      <text x="26" y="132" class="stageBody">Retire jobs, writes, interfaces,</text>
+      <text x="26" y="153" class="stageBody">capacity, stores, and licenses.</text>
+    </g>
+    <g stroke="#7dd3fc" stroke-width="3" fill="none" marker-end="url(#arrowBlue)">
+      <path d="M340 84 H365"/>
+      <path d="M712 84 H737"/>
+      <path d="M1084 84 H1109"/>
+    </g>
+  </g>
+
+  <!-- Authority transfer trajectory -->
+  <text x="72" y="397" class="sectionLabel">AUTHORITY TRANSFER ACROSS THE TWO ESTATES</text>
+  <g transform="translate(72,420)">
+    <rect width="1456" height="202" rx="26" fill="#0b1525" stroke="#334155" stroke-width="1.4"/>
+    <text x="28" y="43" class="laneTitle">Legacy mission estate</text>
+    <text x="28" y="135" class="laneTitle">Governed modern products</text>
+
+    <g transform="translate(248,18)">
+      <rect width="278" height="58" rx="16" fill="url(#legacyStrong)"/>
+      <text x="139" y="35" text-anchor="middle" class="laneText">AUTHORITATIVE</text>
+      <rect x="302" y="8" width="278" height="50" rx="15" fill="#78350f"/>
+      <text x="441" y="39" text-anchor="middle" class="laneText">COEXISTING</text>
+      <rect x="604" y="20" width="278" height="38" rx="14" fill="url(#legacyFade)"/>
+      <text x="743" y="45" text-anchor="middle" class="laneText">READ-ONLY / RESIDUAL</text>
+      <rect x="906" y="30" width="112" height="28" rx="12" fill="#374151" stroke="#64748b"/>
+      <text x="962" y="49" text-anchor="middle" class="laneText">ARCHIVE</text>
+
+      <rect y="118" width="118" height="34" rx="14" fill="#164e63" stroke="#0891b2"/>
+      <text x="59" y="140" text-anchor="middle" class="laneText">SEED</text>
+      <rect x="302" y="102" width="278" height="50" rx="15" fill="#0e7490"/>
+      <text x="441" y="133" text-anchor="middle" class="laneText">SHADOW / LIMITED SERVICE</text>
+      <rect x="604" y="86" width="278" height="66" rx="16" fill="url(#modernGrow)"/>
+      <text x="743" y="126" text-anchor="middle" class="laneText">DOMAIN AUTHORITATIVE</text>
+      <rect x="906" y="72" width="278" height="80" rx="17" fill="url(#modernStrong)"/>
+      <text x="1045" y="119" text-anchor="middle" class="laneText">MISSION OPERATING ESTATE</text>
+    </g>
+
+    <g transform="translate(248,168)">
+      <rect width="1208" height="24" rx="12" fill="#3b2a0d" stroke="#f59e0b" stroke-opacity="0.8"/>
+      <text x="604" y="17" text-anchor="middle" class="principle">One clearly identified authoritative system for each governed transaction and data element</text>
+    </g>
+  </g>
+
+  <!-- IaaP/Vanguard control strip -->
+  <text x="72" y="674" class="sectionLabel">THE GOVERNED MODERNIZATION LANDING SYSTEM</text>
+  <g transform="translate(72,697)">
+    <g filter="url(#shadow)">
+      <rect width="310" height="100" rx="22" fill="#33240d" stroke="#f59e0b"/>
+      <text x="24" y="38" class="roleTitle">Guard validates</text>
+      <text x="24" y="66" class="roleBody">architecture • policy • materiality</text>
+      <text x="24" y="86" class="roleBody">deterministic evidence decisions</text>
+    </g>
+    <g transform="translate(382,0)" filter="url(#shadow)">
+      <rect width="310" height="100" rx="22" fill="#123a34" stroke="#14b8a6"/>
+      <text x="24" y="38" class="roleTitle">Forge productizes</text>
+      <text x="24" y="66" class="roleBody">approved intent • stable contracts</text>
+      <text x="24" y="86" class="roleBody">bounded lifecycle artifacts</text>
+    </g>
+    <g transform="translate(764,0)" filter="url(#shadow)">
+      <rect width="310" height="100" rx="22" fill="#351b45" stroke="#a855f7"/>
+      <text x="24" y="38" class="roleTitle">Vanguard protects</text>
+      <text x="24" y="66" class="roleBody">authority • custody • safeguards</text>
+      <text x="24" y="86" class="roleBody">expiration • rollback • assurance</text>
+    </g>
+    <g transform="translate(1146,0)" filter="url(#shadow)">
+      <rect width="310" height="100" rx="22" fill="#102d55" stroke="#3b82f6"/>
+      <text x="24" y="38" class="roleTitle">Crossplane reconciles</text>
+      <text x="24" y="66" class="roleBody">approved product claims</text>
+      <text x="24" y="86" class="roleBody">desired state • observed status</text>
+    </g>
+    <g stroke="#7dd3fc" stroke-width="2.5" fill="none" marker-end="url(#arrowBlue)">
+      <path d="M310 50 H375"/>
+      <path d="M692 50 H757"/>
+      <path d="M1074 50 H1139"/>
+    </g>
+  </g>
+
+  <!-- Responsibility boundary and portable destination -->
+  <g transform="translate(72,838)">
+    <rect width="446" height="86" rx="20" fill="#201a33" stroke="#8b5cf6"/>
+    <text x="22" y="31" class="boundaryTitle">External modernization tools inform</text>
+    <text x="22" y="57" class="boundaryBody">discover • extract rules • transform • test</text>
+    <text x="22" y="77" class="boundaryBody">No infrastructure or retirement authority</text>
+
+    <g transform="translate(480,0)">
+      <rect width="410" height="86" rx="20" fill="#3b2315" stroke="#fb923c"/>
+      <text x="205" y="31" text-anchor="middle" class="boundaryTitle">Authorized people decide</text>
+      <text x="205" y="57" text-anchor="middle" class="boundaryBody">business meaning • data authority • cutover</text>
+      <text x="205" y="77" text-anchor="middle" class="boundaryBody">equivalence • rollback • retirement</text>
+    </g>
+
+    <g transform="translate(924,0)">
+      <rect width="532" height="86" rx="20" fill="#102c34" stroke="#22c55e"/>
+      <text x="20" y="30" class="boundaryTitle">One product contract • replaceable implementations</text>
+      <g transform="translate(20,44)">
+        <rect width="104" height="28" rx="12" fill="#1f2937" stroke="#f59e0b"/><text x="52" y="19" text-anchor="middle" class="cloudText">AWS</text>
+        <rect x="122" width="104" height="28" rx="12" fill="#1f2937" stroke="#38bdf8"/><text x="174" y="19" text-anchor="middle" class="cloudText">Azure</text>
+        <rect x="244" width="104" height="28" rx="12" fill="#1f2937" stroke="#22c55e"/><text x="296" y="19" text-anchor="middle" class="cloudText">GCP</text>
+        <rect x="366" width="126" height="28" rx="12" fill="#1f2937" stroke="#a78bfa"/><text x="429" y="19" text-anchor="middle" class="cloudText">On-premises</text>
+      </g>
+    </g>
+  </g>
+
+  <text x="72" y="958" class="footer">Desired strategic capability • bounded by deterministic controls, human authority, and evidence</text>
+  <text x="1528" y="958" text-anchor="end" class="footer">InfrastructureProductWorks • reference architecture</text>
+</svg>

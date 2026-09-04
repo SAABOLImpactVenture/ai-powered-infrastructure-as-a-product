@@ -188,6 +188,7 @@
         {"$ref": "#/$defs/licenseArtifact"},
         {"$ref": "#/$defs/makefileArtifact"},
         {"$ref": "#/$defs/readmeArtifact"},
+        {"$ref": "#/$defs/modernizationVisualArtifact"},
         {"$ref": "#/$defs/provenanceDocArtifact"},
         {"$ref": "#/$defs/publicationBoundaryArtifact"},
         {"$ref": "#/$defs/thesisArtifact"},
@@ -197,8 +198,8 @@
         {"$ref": "#/$defs/testArtifact"}
       ],
       "items": false,
-      "minItems": 12,
-      "maxItems": 12
+      "minItems": 13,
+      "maxItems": 13
     },
     "integrity": {
       "type": "object",
@@ -277,6 +278,10 @@
     "readmeArtifact": {
       "$ref": "#/$defs/artifact",
       "properties": {"path": {"const": "README.md"}}
+    },
+    "modernizationVisualArtifact": {
+      "$ref": "#/$defs/artifact",
+      "properties": {"path": {"const": "docs/assets/showcase/progressive-legacy-modernization.svg"}}
     },
     "provenanceDocArtifact": {
       "$ref": "#/$defs/artifact",

@@ -26,6 +26,7 @@ EXPECTED_COVERED_PATHS = [
     "LICENSE",
     "Makefile",
     "README.md",
+    "docs/assets/showcase/progressive-legacy-modernization.svg",
     "docs/PORTFOLIO-PROVENANCE.md",
     "docs/PUBLICATION-BOUNDARY.md",
     "docs/THESIS.md",
@@ -137,7 +138,7 @@ EXPECTED_SCHEMA_ID = (
     "portfolio-provenance.schema.json"
 )
 EXPECTED_SCHEMA_SHA256 = (
-    "6bd22d7525ecf09d4d5d1f04f0bd84ce4039a4f074bd09aa0c689b84a79e7cff"
+    "7426821e605374c3c6d8c6c2131dc0e21b55575cc9b3b5fb0fa4ff3f0294f2a5"
 )
 EXPECTED_CITATION: dict[str, Any] = {
     "cff-version": "1.2.0",
@@ -180,6 +181,7 @@ EXPECTED_ARTIFACT_SCHEMA_DEFINITIONS = [
     "licenseArtifact",
     "makefileArtifact",
     "readmeArtifact",
+    "modernizationVisualArtifact",
     "provenanceDocArtifact",
     "publicationBoundaryArtifact",
     "thesisArtifact",

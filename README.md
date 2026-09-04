@@ -123,6 +123,45 @@ A **new bounded Backstage storefront** now lives independently in [`backstage-in
 
 ---
 
+## Strategic capability position: progressive legacy replacement
+
+> **IaaP provides the governed, portable destination for replacement capabilities; it is not a COBOL conversion engine or an autonomous migration authority.**
+
+Government agencies and other regulated enterprises do not have to choose between an indefinite legacy estate and a high-risk big-bang rewrite. They can maintain mission-critical systems while building replacement applications, services, and data stores by bounded business capability. IaaP is intended to make the modern side of that transition consumable, governed, portable, and measurable.
+
+<p align="center">
+  <img src="docs/assets/showcase/progressive-legacy-modernization.svg" alt="Progressive legacy modernization: stabilize, coexist, transfer authority, and retire through a governed IaaP and Vanguard landing system across AWS, Azure, GCP, and on-premises infrastructure" width="1100"/>
+</p>
+
+<p align="center"><em>Modernization succeeds when business capability and data authority move—not when the legacy runtime merely changes location.</em></p>
+
+| Transition stage | IaaP and Vanguard position |
+|---|---|
+| **Stabilize** | Keep the legacy capability authoritative while approved infrastructure-product contracts establish the replacement destination. |
+| **Coexist** | Run replacement capabilities through governed APIs, events, batch interfaces, or controlled data replication without creating new direct dependencies on legacy data stores. |
+| **Transfer** | Move transaction and data authority by bounded domain, with deterministic controls, authorized approval, rollback, and custody evidence. |
+| **Retire** | Tie successful modern operation to evidence that legacy jobs, interfaces, write paths, data structures, capacity, and licenses can be removed. |
+
+The architectural responsibilities remain separated:
+
+- AI-assisted discovery, business-rule extraction, code transformation, and functional-equivalence tooling may inform modernization work but remain outside the IaaP authority boundary.
+- Application and domain teams remain responsible for business meaning, target design, data migration, equivalence, cutover, and retirement decisions.
+- Guard validates infrastructure-product architecture, policy, materiality, and evidence; it does not certify application equivalence.
+- Forge turns approved intent into stable product proposals and lifecycle artifacts.
+- Vanguard preserves the bounded authority, custody, safeguard-continuity, rollback, and assurance chain needed while old and new estates coexist.
+- Crossplane reconciles approved infrastructure-product claims; it does not migrate business data, rewrite legacy applications, or decide when a legacy system may be retired.
+- Provider-specific implementations remain behind stable product contracts so the target environment can span AWS, Azure, GCP, or approved on-premises infrastructure without making a provider tool the consumer boundary.
+
+A safe transition maintains one clearly identified authoritative system for each transaction and governed data element at every stage. Portability is demonstrated through replaceable provider implementations and recoverable workload/data patterns—not asserted merely because a workload runs in containers.
+
+The desired outcome is measurable capability transfer: each modern product increment should have a corresponding legacy-reduction objective. Useful measures include legacy write paths removed, jobs and interfaces retired, shared-data dependencies eliminated, capacity and licenses released, and restoration or portability tests passed.
+
+This is a strategic target capability. The repository's current evidence remains bounded and does not claim live mainframe migration, production data cutover, application functional equivalence, autonomous retirement authority, certification, or an ATO.
+
+See [Infrastructure-as-a-Product Thesis](docs/THESIS.md) for the durable position.
+
+---
+
 ## Strategic architecture
 
 ```mermaid

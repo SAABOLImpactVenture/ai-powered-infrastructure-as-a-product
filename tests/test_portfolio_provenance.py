@@ -56,6 +56,18 @@ class PortfolioProvenanceTests(unittest.TestCase):
             with self.assertRaises(provenance.ProvenanceError):
                 provenance.verify(root)
 
+    def test_modernization_visual_tamper_fails_closed(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = self.copied_root(temporary_directory)
+            visual = (
+                root
+                / "docs/assets/showcase/progressive-legacy-modernization.svg"
+            )
+            with visual.open("a", encoding="utf-8") as handle:
+                handle.write("\n<!-- tampered -->\n")
+            with self.assertRaises(provenance.ProvenanceError):
+                provenance.verify(root)
+
     def test_verifier_tamper_fails_closed(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = self.copied_root(temporary_directory)
