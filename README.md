@@ -129,6 +129,12 @@ A **new bounded Backstage storefront** now lives independently in [`backstage-in
 
 Government agencies and other regulated enterprises do not have to choose between an indefinite legacy estate and a high-risk big-bang rewrite. They can maintain mission-critical systems while building replacement applications, services, and data stores by bounded business capability. IaaP is intended to make the modern side of that transition consumable, governed, portable, and measurable.
 
+<p align="center">
+  <img src="docs/assets/showcase/progressive-legacy-modernization.svg" alt="Progressive legacy modernization: stabilize, coexist, transfer authority, and retire through a governed IaaP and Vanguard landing system across AWS, Azure, GCP, and on-premises infrastructure" width="1100"/>
+</p>
+
+<p align="center"><em>Modernization succeeds when business capability and data authority move—not when the legacy runtime merely changes location.</em></p>
+
 | Transition stage | IaaP and Vanguard position |
 |---|---|
 | **Stabilize** | Keep the legacy capability authoritative while approved infrastructure-product contracts establish the replacement destination. |
