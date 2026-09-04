@@ -91,7 +91,7 @@ The separation of responsibility is deliberate:
 - IaaP owns the stable infrastructure-product boundary, approved profiles, lifecycle, portability model, and infrastructure evidence.
 - Guard owns deterministic infrastructure-product assessment and evidence decisions within its declared scope.
 - Forge converts approved intent into bounded product proposals and lifecycle artifacts.
-- Vanguard carries authority, custody, safeguard-continuity, rollback, and continuous-assurance references across the coexistence path.
+- IaaP Assurance carries authority, custody, safeguard-continuity, rollback, and continuous-assurance references across the coexistence path.
 - Crossplane reconciles approved infrastructure-product claims but does not rewrite applications, migrate business data, or authorize retirement.
 
 One system must remain authoritative for each governed transaction and data element at every stage. New applications should integrate through APIs, events, controlled batch contracts, or approved data-replication boundaries rather than creating fresh direct coupling to legacy data stores.

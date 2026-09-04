@@ -8,7 +8,8 @@ The program separates responsibilities into bounded repositories so each archite
 flowchart TB
   HUB["ai-powered-infrastructure-as-a-product<br/>thesis • architecture • evidence"]
   GUARD["iaap-guard<br/>public product surface"]
-  VANGUARD["vanguard-suite<br/>authority • custody • continuous assurance"]
+  CONSOLE["iaap-console<br/>evidence • review • selection"]
+  ASSURANCE["iaap-assurance<br/>authority • custody • continuous assurance"]
   CORE["iaap-guard-core<br/>private hosted runtime"]
   FORGE["iaap-forge<br/>product-building system"]
   STORE["backstage-infrastructure-product-storefront-poc"]
@@ -20,9 +21,10 @@ flowchart TB
   OUT["platform product outcomes<br/>NPS • time • adoption • escape rate"]
 
   HUB --> GUARD
-  HUB --> VANGUARD
-  HUB --> FORGE
   GUARD --> CORE
+  GUARD --> CONSOLE
+  CONSOLE --> FORGE
+  FORGE --> ASSURANCE
   FORGE --> STORE
   FORGE --> SEED
   FORGE --> PRODUCT
@@ -45,9 +47,7 @@ flowchart TB
 
   class HUB front
   class GUARD public
-  class VANGUARD private
-  class CORE private
-  class FORGE internal
+  class CORE,CONSOLE,FORGE,ASSURANCE private
   class STORE,SEED,PRODUCT,AI,INT poc
   class ADOPTER archived
   class OUT outcome
@@ -56,12 +56,13 @@ flowchart TB
 
 ## Product repositories around the POCs
 
-- [`iaap-guard`](https://github.com/SAABOLImpactVenture/iaap-guard) is the active public product, adoption, contract, support, security, and sanitized assurance surface.
-- [`iaap-guard-core`](https://github.com/SAABOLImpactVenture/iaap-guard-core) is the protected private engine, hosted GitHub App runtime, deployment, internal test, and operational-evidence repository.
-- [`iaap-forge`](https://github.com/SAABOLImpactVenture/iaap-forge) consumes bounded Guard evidence and owns the active product-building, Composite AI, GitHub governance, Crossplane lifecycle, and outcome system.
-- [`vanguard-suite`](https://github.com/SAABOLImpactVenture/vanguard-suite) owns bounded authority, protected-data custody, and continuous assurance. Its sanitized Gate 6 prerelease is pinned at `gate-6-bounded-pass-2026-09-02` / `f96961c47f6866dd12025eca8afc43b376163520`; the acceptance is only `PASSED_FOR_BOUNDED_SYNTHETIC_PROOF`.
-- [`iaap-guard-adopter-validation`](https://github.com/SAABOLImpactVenture/iaap-guard-adopter-validation) is archived clean-adopter proof, not an active runtime or supported distribution.
-- [`ai-powered-infrastructure-as-a-product`](https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product) remains the public thesis, architecture, evidence, and portfolio front door.
+- [`iaap-guard`](https://github.com/InfrastructureProductWorks/iaap-guard) is the active public product, adoption, contract, support, security, and sanitized assurance surface.
+- [`iaap-guard-core`](https://github.com/InfrastructureProductWorks/iaap-guard-core) is the protected private engine, hosted GitHub App runtime, deployment, internal test, and operational-evidence repository.
+- [`iaap-console`](https://github.com/InfrastructureProductWorks/iaap-console) owns the customer-hosted evidence, review, selection, and traceability experience.
+- [`iaap-forge`](https://github.com/InfrastructureProductWorks/iaap-forge) consumes bounded Guard evidence and owns the active product-building, Composite AI, GitHub governance, Crossplane lifecycle, and outcome system.
+- [`iaap-assurance`](https://github.com/InfrastructureProductWorks/iaap-assurance) owns bounded authority, protected-data custody, and continuous assurance. Its sanitized Gate 6 prerelease was accepted under the former Vanguard Suite name and remains pinned at `gate-6-bounded-pass-2026-09-02` / `f96961c47f6866dd12025eca8afc43b376163520`; the acceptance is only `PASSED_FOR_BOUNDED_SYNTHETIC_PROOF`.
+- [`iaap-guard-adopter-validation`](https://github.com/InfrastructureProductWorks/iaap-guard-adopter-validation) is archived clean-adopter proof, not an active runtime or supported distribution.
+- [`ai-powered-infrastructure-as-a-product`](https://github.com/InfrastructureProductWorks/ai-powered-infrastructure-as-a-product) remains the public thesis, architecture, evidence, and portfolio front door.
 
 ## Supporting POC governance
 
@@ -97,7 +98,7 @@ Owns the `CloudFoundationEnvironment` contract, provider-specific implementation
 
 Owns bounded request, review, operations, and evidence-agent contracts and evaluations. No direct execution authority.
 
-### `vanguard-suite`
+### `iaap-assurance`
 
 Owns authority, protected-data custody, and continuous assurance across the bounded portfolio evidence relationship. Gate 6 is accepted only for the deterministic synthetic proof at prerelease `gate-6-bounded-pass-2026-09-02` and closure SHA `f96961c47f6866dd12025eca8afc43b376163520`.
 
@@ -109,7 +110,7 @@ Owns pinned upstream integration, including the storefront handoff, clean-cluste
 
 The repository also retains the trusted-main managed-interconnect safety proof. One deterministic synthetic AWS/Azure profile passes the exact accepted Forge → Guard path, while thirteen unsafe address, route, resilience, DNS, encryption, identity, coordinate, and authority profiles fail closed. This remains an inert validation result, not a live-cloud connection or provisioning path.
 
-The trusted-main Phase 24 proof also preserves Forge's `v1alpha1` renderer byte-for-byte while validating a detached selection-evidence envelope across Guard, Console, recorded human selection, Forge, and the existing Vanguard custody reference. The accepted Guard source revision and the distinct synthetic subject revision are separately bound; producer, journey, custody, tamper, cross-selection, and source-substitution failures are rejected. The proof establishes canonical byte relationships, not a cryptographically authenticated human identity or operational authority.
+The trusted-main Phase 24 proof also preserves Forge's `v1alpha1` renderer byte-for-byte while validating a detached selection-evidence envelope across Guard, Console, recorded human selection, Forge, and the existing IaaP Assurance custody reference. The accepted Guard source revision and the distinct synthetic subject revision are separately bound; producer, journey, custody, tamper, cross-selection, and source-substitution failures are rejected. The proof establishes canonical byte relationships, not a cryptographically authenticated human identity or operational authority.
 
 The integrated consumer path is:
 
@@ -151,7 +152,7 @@ Owns the thesis, architecture, product operating model, decisions, frozen eviden
 | Guard product | `iaap-guard` | Public product, contracts, adoption, support, security, and assurance. |
 | Guard implementation | `iaap-guard-core` | Private deterministic engine, hosted runtime, deployment, and regression evidence. |
 | Product builder | `iaap-forge` | Guard consumption, bounded Composite AI, governed proposals, Crossplane lifecycle, and outcomes. |
-| Assurance authority | `vanguard-suite` | Authority, protected-data custody, and continuous assurance within explicitly accepted bounds. |
+| Assurance authority | `iaap-assurance` | Authority, protected-data custody, and continuous assurance within explicitly accepted bounds. |
 | Experience | `backstage-infrastructure-product-storefront-poc` | Browse, configure, order, track. |
 | Intelligence | `composite-ai-infrastructure-product-poc` | Interpret, propose, review, explain, diagnose, evidence. |
 | Governance | GitHub + deterministic policy + people | Change, tests, approval, traceability. |
@@ -177,9 +178,9 @@ Owns the thesis, architecture, product operating model, decisions, frozen eviden
 10. **Live model adapter** — **passed** on Vertex AI in `us-east4` using synthetic fixtures only and a fixed model-usage ceiling.
 11. **HCP Terraform Free remote-run proxy** — **proxy passed** with a zero-resource fixture, protected VCS status, sanitized evidence, workspace deletion, and token revocation. Terraform Enterprise was not accessed or validated.
 12. **Phase 20 architecture reconciliation** — **complete** at pinned Forge revision `6fb587cb3f521e99c33039c61090fe8b738836cc`, preserving the frozen Guard boundary and public sanitized claims.
-13. **Vanguard Gate 6 portfolio custody** — **passed only for the bounded synthetic proof** at prerelease `gate-6-bounded-pass-2026-09-02` and closure SHA `f96961c47f6866dd12025eca8afc43b376163520`. The public map pins the sanitized record by digest and preserves Vanguard ownership of authority, custody, and continuous assurance without changing Guard, Console, Forge, or Storefront responsibilities.
-14. **Managed AWS/Azure interconnect** — **passed only for one bounded deterministic synthetic profile**. The [Step 4 public closure record](https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/blob/main/artifacts/phase-23/managed-interconnect-closure.json) binds the sanitized proof digests and accepted private revision commitments, records all thirteen unsafe profiles as `FAIL_CLOSED`, and preserves the existing Vanguard custody/authority reference. Forge and Guard Core contain the minimal contract/validation change; Vanguard, Console, and Storefront remain unchanged.
-15. **Versioned human-selection traceability** — **passed only for the bounded synthetic proof**. The [Phase 24 public closure record](https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/blob/main/artifacts/phase-24/selection-evidence-closure.json) binds the accepted Guard source, distinct synthetic subject, recorded selection, Forge product output, producer evidence, complete journey, and Vanguard custody manifest while preserving the existing `v1alpha1` renderer byte-for-byte. Golden and migration cases pass; unsafe substitutions and rewrites fail closed. Guard, Console, Storefront, and Vanguard implementation remain unchanged.
+13. **IaaP Assurance Gate 6 portfolio custody** — **passed only for the bounded synthetic proof** at prerelease `gate-6-bounded-pass-2026-09-02` and closure SHA `f96961c47f6866dd12025eca8afc43b376163520`. The gate was accepted under the former Vanguard Suite name; versioned historical identifiers remain unchanged. The public map pins the sanitized record by digest and preserves IaaP Assurance ownership of authority, custody, and continuous assurance without changing Guard, Console, Forge, or Storefront responsibilities.
+14. **Managed AWS/Azure interconnect** — **passed only for one bounded deterministic synthetic profile**. The [Step 4 public closure record](https://github.com/InfrastructureProductWorks/ai-powered-infrastructure-as-a-product/blob/main/artifacts/phase-23/managed-interconnect-closure.json) binds the sanitized proof digests and accepted private revision commitments, records all thirteen unsafe profiles as `FAIL_CLOSED`, and preserves the existing IaaP Assurance custody/authority reference. Forge and Guard Core contain the minimal contract/validation change; IaaP Assurance, Console, and Storefront remain unchanged.
+15. **Versioned human-selection traceability** — **passed only for the bounded synthetic proof**. The [Phase 24 public closure record](https://github.com/InfrastructureProductWorks/ai-powered-infrastructure-as-a-product/blob/main/artifacts/phase-24/selection-evidence-closure.json) binds the accepted Guard source, distinct synthetic subject, recorded selection, Forge product output, producer evidence, complete journey, and IaaP Assurance custody manifest while preserving the existing `v1alpha1` renderer byte-for-byte. Golden and migration cases pass; unsafe substitutions and rewrites fail closed. Guard, Console, Storefront, and IaaP Assurance implementation remain unchanged.
 16. **Production pilot** — future and unauthorized; requires separate authorization, SLOs, recovery, support, lifecycle evidence, Developer NPS, adoption, and repeat-consumption evidence.
 
 Downloadable workflow archives remain subject to their source repository retention windows. The accepted public digests and reproducible manifests remain committed; any longer-lived private archive requires a separate custody, access, retention, recovery, deletion, and spending decision.

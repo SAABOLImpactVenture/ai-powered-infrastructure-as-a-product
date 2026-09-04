@@ -4,6 +4,8 @@
 
 <h1 align="center">AI-Powered Infrastructure as a Product</h1>
 
+<p align="center"><strong>Published by Infrastructure Product Works™</strong> · <a href="TRADEMARKS.md">Trademark and naming notice</a></p>
+
 <p align="center"><strong>IaaS is what we buy; infrastructure-as-a-product is what we build.</strong></p>
 
 <p align="center"><strong>Backstage is where developers shop; Crossplane is where the product is controlled.</strong></p>
@@ -41,7 +43,7 @@ Platform value is therefore measured at the consumer boundary. Lines of infrastr
 
 ## Get IaaP Guard
 
-**IaaP Guard** is the installable GitHub-native Infrastructure-as-a-Product architecture and evidence guard built from this program's deterministic product rules.
+**IaaP Guard™** is the installable GitHub-native Infrastructure-as-a-Product architecture and evidence guard built from this program's deterministic product rules.
 
 > **IaaS is what you buy. Infrastructure-as-a-Product is what you build. IaaP Guard makes sure you keep building it that way.**
 
@@ -49,7 +51,7 @@ Its central question is:
 
 > **Is this infrastructure actually being designed, delivered, and governed as a product?**
 
-**[Install IaaP Guard](https://github.com/apps/iaap-guard/installations/new)** · [View the GitHub App](https://github.com/apps/iaap-guard) · [V1 guide](docs/IAAP-GUARD.md) · [Release v1.0.2](https://github.com/SAABOLImpactVenture/iaap-guard/releases/tag/v1.0.2)
+**[Install IaaP Guard](https://github.com/apps/iaap-guard/installations/new)** · [View the GitHub App](https://github.com/apps/iaap-guard) · [V1 guide](docs/IAAP-GUARD.md) · [Release v1.0.2](https://github.com/InfrastructureProductWorks/iaap-guard/releases/tag/v1.0.2)
 
 The supported V1 release evaluates pull requests and publishes an **`IaaP Guard / Architecture`** Check. It is deliberately narrow: deterministic architecture/evidence evaluation in GitHub, not infrastructure provisioning and not a generic IaC vulnerability scanner.
 
@@ -74,29 +76,29 @@ Every proposed planning item remains traceable to the deterministic Guard rule a
 
 IaaP Guard requires **no customer cloud, Kubernetes, Terraform/TFE, AI, or PAT credentials**. It does not execute repository code, provision infrastructure, auto-remediate findings, merge pull requests, or generate AI verdicts.
 
-GitHub Marketplace is not required to install V1. IaaP Guard completed its bounded product roadmap through external-adoption validation and the supported `v1.0.2` release. Future Forge development remains separate from Guard. The retained Guard evidence and support policies live in the [`iaap-guard`](https://github.com/SAABOLImpactVenture/iaap-guard) repository.
+GitHub Marketplace is not required to install V1. IaaP Guard completed its bounded product roadmap through external-adoption validation and the supported `v1.0.2` release. Future Forge development remains separate from Guard. The retained Guard evidence and support policies live in the [`iaap-guard`](https://github.com/InfrastructureProductWorks/iaap-guard) repository.
 
 ---
 
 ## Build with IaaP Forge
 
-**IaaP Forge** consumes frozen Guard evidence and turns approved intent into stable infrastructure-product proposals, bounded Composite AI advice, GitHub-governed change, and Crossplane lifecycle artifacts.
+**IaaP Forge™** consumes frozen Guard evidence and turns approved intent into stable infrastructure-product proposals, bounded Composite AI advice, GitHub-governed change, and Crossplane lifecycle artifacts.
 
-[View IaaP Forge](https://github.com/SAABOLImpactVenture/iaap-forge) · [Guard-to-Forge transition](docs/FORGE-TRANSITION.md) · [Pinned reconciliation evidence](artifacts/phase-20/forge-reconciliation.json)
+[View IaaP Forge](https://github.com/InfrastructureProductWorks/iaap-forge) · [Guard-to-Forge transition](docs/FORGE-TRANSITION.md) · [Pinned reconciliation evidence](artifacts/phase-20/forge-reconciliation.json)
 
-Forge Phases 11–19 are accepted at immutable revision [`6fb587cb3f521e99c33039c61090fe8b738836cc`](https://github.com/SAABOLImpactVenture/iaap-forge/commit/6fb587cb3f521e99c33039c61090fe8b738836cc). Phase 19 retained bounded non-production **PASS** evidence for AWS, Azure, and GCP workload-identity reconciliation, Vertex AI model-adapter validation with synthetic fixtures, and an HCP Terraform Free remote-run proxy, with sanitized evidence and verified teardown. The proxy does **not** validate Terraform Enterprise; no production deployment, certification, assessment conclusion, or ATO is authorized or claimed.
+Forge Phases 11–19 are accepted at immutable revision [`6fb587cb3f521e99c33039c61090fe8b738836cc`](https://github.com/InfrastructureProductWorks/iaap-forge/commit/6fb587cb3f521e99c33039c61090fe8b738836cc). Phase 19 retained bounded non-production **PASS** evidence for AWS, Azure, and GCP workload-identity reconciliation, Vertex AI model-adapter validation with synthetic fixtures, and an HCP Terraform Free remote-run proxy, with sanitized evidence and verified teardown. The proxy does **not** validate Terraform Enterprise; no production deployment, certification, assessment conclusion, or ATO is authorized or claimed.
 
 ### Accepted synthetic release chain
 
-The current sanitized compatibility lock is [`artifacts/phase-21/accepted-release-lock.json`](artifacts/phase-21/accepted-release-lock.json). Public Guard `v1.0.2` passed the bounded Guard → Console → Forge synthetic journey against accepted private component revisions. The retained proof records actual Guard-produced planning evidence, verified Console import, cross-language selection parity, verified Forge product binding, and an inert rendered product. The portfolio map now also pins the sanitized Vanguard Gate 6 prerelease `gate-6-bounded-pass-2026-09-02` to closure SHA `f96961c47f6866dd12025eca8afc43b376163520` with status `PASSED_FOR_BOUNDED_SYNTHETIC_PROOF`. Vanguard owns authority, custody, and continuous assurance; Guard, Console, Forge, and Storefront responsibilities are unchanged. This reconciliation remains synthetic-only and `CONTINUE_VALIDATION`; it authorizes no pilot, live data, or production action.
+The current sanitized compatibility lock is [`artifacts/phase-21/accepted-release-lock.json`](artifacts/phase-21/accepted-release-lock.json). Public Guard `v1.0.2` passed the bounded Guard → IaaP Console™ → Forge synthetic journey against accepted private component revisions. The retained proof records actual Guard-produced planning evidence, verified Console import, cross-language selection parity, verified Forge product binding, and an inert rendered product. The portfolio map also pins the sanitized IaaP Assurance™ Gate 6 prerelease `gate-6-bounded-pass-2026-09-02`, accepted under the former Vanguard Suite name, to closure SHA `f96961c47f6866dd12025eca8afc43b376163520` with status `PASSED_FOR_BOUNDED_SYNTHETIC_PROOF`. IaaP Assurance owns authority, custody, and continuous assurance; Guard, Console, Forge, and Storefront responsibilities are unchanged. This reconciliation remains synthetic-only and `CONTINUE_VALIDATION`; it authorizes no pilot, live data, or production action.
 
-The Step 4 public closure record is [`artifacts/phase-23/managed-interconnect-closure.json`](artifacts/phase-23/managed-interconnect-closure.json). It records `PASSED_BOUNDED_SYNTHETIC_INTERCONNECT_PROOF`, immutable commitments to the accepted private protected-main revisions, the retained proof and evidence digests, one deterministic synthetic AWS/Azure profile PASS, and thirteen unsafe profiles rejected `FAIL_CLOSED`. Private commit SHAs and fixture internals remain unpublished under the [publication boundary](docs/PUBLICATION-BOUNDARY.md). Vanguard remains at the existing Gate 6 prerelease; Console and Storefront remain unchanged. No live connection, credential, customer data, pilot, spending, provisioning, production, or privilege authority is part of this result.
+The Step 4 public closure record is [`artifacts/phase-23/managed-interconnect-closure.json`](artifacts/phase-23/managed-interconnect-closure.json). It records `PASSED_BOUNDED_SYNTHETIC_INTERCONNECT_PROOF`, immutable commitments to the accepted private protected-main revisions, the retained proof and evidence digests, one deterministic synthetic AWS/Azure profile PASS, and thirteen unsafe profiles rejected `FAIL_CLOSED`. Private commit SHAs and fixture internals remain unpublished under the [publication boundary](docs/PUBLICATION-BOUNDARY.md). IaaP Assurance remains at the existing Gate 6 prerelease; Console and Storefront remain unchanged. No live connection, credential, customer data, pilot, spending, provisioning, production, or privilege authority is part of this result.
 
-The Phase 24 public closure record is [`artifacts/phase-24/selection-evidence-closure.json`](artifacts/phase-24/selection-evidence-closure.json). It records `PASSED_BOUNDED_SYNTHETIC_SELECTION_EVIDENCE_PROOF`: Forge preserves its `v1alpha1` renderer byte-for-byte while a detached evidence envelope binds the accepted Guard source, distinct synthetic subject, human-selected planning item, product binding, rendered product, producer evidence, journey, and Vanguard custody manifest. Golden and migration cases pass; tamper, cross-selection, source-substitution, producer, journey, and custody rewrites fail closed. The result proves deterministic byte relationships, not a cryptographically authenticated human identity, and grants no operational or production authority.
+The Phase 24 public closure record is [`artifacts/phase-24/selection-evidence-closure.json`](artifacts/phase-24/selection-evidence-closure.json). It records `PASSED_BOUNDED_SYNTHETIC_SELECTION_EVIDENCE_PROOF`: Forge preserves its `v1alpha1` renderer byte-for-byte while a detached evidence envelope binds the accepted Guard source, distinct synthetic subject, human-selected planning item, product binding, rendered product, producer evidence, journey, and IaaP Assurance custody manifest. Golden and migration cases pass; tamper, cross-selection, source-substitution, producer, journey, and custody rewrites fail closed. The result proves deterministic byte relationships, not a cryptographically authenticated human identity, and grants no operational or production authority.
 
 ### Portfolio Provenance Gate
 
-The public portfolio record carries the visible fingerprint `SAABOL-IaaP-PORTFOLIO-ORIGIN-v1`, standard [`CITATION.cff`](CITATION.cff) authorship metadata, and a [digest-bound provenance statement](provenance/portfolio-provenance.json). The [Portfolio Provenance Gate](docs/PORTFOLIO-PROVENANCE.md) verifies canonical repository origin, the accepted Guard → Console → human selection → Forge → Vanguard chain, covered-document SHA-256 digests, zero-authority boundaries, and an explicitly non-disruptive AI-safety contract. Trusted-main CI adds a repository-issued artifact attestation. The gate artifacts add no DRM, legal-title claim, hidden watermarking, prompt injection, telemetry, callback, or AI-processing interference, and they do not change the Apache-2.0 license. The published documentation shell's separately declared site-wide Mermaid dependency is outside the gate's raw-artifact and offline-verification boundary.
+The version-1 public portfolio record carries the historical visible fingerprint `SAABOL-IaaP-PORTFOLIO-ORIGIN-v1`, standard [`CITATION.cff`](CITATION.cff) authorship metadata, and a [digest-bound provenance statement](provenance/portfolio-provenance.json). The [Portfolio Provenance Gate](docs/PORTFOLIO-PROVENANCE.md) verifies the pre-migration canonical origin, the accepted historical Guard → Console → human selection → Forge → Vanguard contract chain, covered-document SHA-256 digests, zero-authority boundaries, and an explicitly non-disruptive AI-safety contract. The [post-migration verification](docs/migrations/2026-09-04-infrastructure-product-works-post-migration-verification.md) establishes continuity to the current namespace and IaaP Assurance name without rewriting version 1. Trusted-main CI adds a repository-issued artifact attestation. The gate artifacts add no DRM, legal-title claim, hidden watermarking, prompt injection, telemetry, callback, or AI-processing interference, and they do not change the Apache-2.0 license. The published documentation shell's separately declared site-wide Mermaid dependency is outside the gate's raw-artifact and offline-verification boundary.
 
 ---
 
@@ -117,7 +119,7 @@ The maintained reference architecture is intentionally small and opinionated:
 
 The earlier accelerator embedded Backstage together with Terraform/TFE, Azure Arc, legacy execution MCP servers, and cloud-specific implementation code. That embedded stack is superseded and preserved on `archive/legacy-accelerator-v1`.
 
-A **new bounded Backstage storefront** now lives independently in [`backstage-infrastructure-product-storefront-poc`](https://github.com/SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc). It is an experience layer, not an inherited control-plane dependency.
+A **new bounded Backstage storefront** now lives independently in [`backstage-infrastructure-product-storefront-poc`](https://github.com/InfrastructureProductWorks/backstage-infrastructure-product-storefront-poc). It is an experience layer, not an inherited control-plane dependency.
 
 > **The accelerator demonstrates the product model without requiring the historical implementation stack.**
 
@@ -130,12 +132,12 @@ A **new bounded Backstage storefront** now lives independently in [`backstage-in
 Government agencies and other regulated enterprises do not have to choose between an indefinite legacy estate and a high-risk big-bang rewrite. They can maintain mission-critical systems while building replacement applications, services, and data stores by bounded business capability. IaaP is intended to make the modern side of that transition consumable, governed, portable, and measurable.
 
 <p align="center">
-  <img src="docs/assets/showcase/progressive-legacy-modernization.svg" alt="Progressive legacy modernization: stabilize, coexist, transfer authority, and retire through a governed IaaP and Vanguard landing system across AWS, Azure, GCP, and on-premises infrastructure" width="1100"/>
+  <img src="docs/assets/showcase/progressive-legacy-modernization.svg" alt="Progressive legacy modernization: stabilize, coexist, transfer authority, and retire through a governed IaaP and IaaP Assurance landing system across AWS, Azure, GCP, and on-premises infrastructure" width="1100"/>
 </p>
 
 <p align="center"><em>Modernization succeeds when business capability and data authority move—not when the legacy runtime merely changes location.</em></p>
 
-| Transition stage | IaaP and Vanguard position |
+| Transition stage | IaaP and IaaP Assurance position |
 |---|---|
 | **Stabilize** | Keep the legacy capability authoritative while approved infrastructure-product contracts establish the replacement destination. |
 | **Coexist** | Run replacement capabilities through governed APIs, events, batch interfaces, or controlled data replication without creating new direct dependencies on legacy data stores. |
@@ -148,7 +150,7 @@ The architectural responsibilities remain separated:
 - Application and domain teams remain responsible for business meaning, target design, data migration, equivalence, cutover, and retirement decisions.
 - Guard validates infrastructure-product architecture, policy, materiality, and evidence; it does not certify application equivalence.
 - Forge turns approved intent into stable product proposals and lifecycle artifacts.
-- Vanguard preserves the bounded authority, custody, safeguard-continuity, rollback, and assurance chain needed while old and new estates coexist.
+- IaaP Assurance preserves the bounded authority, custody, safeguard-continuity, rollback, and assurance chain needed while old and new estates coexist.
 - Crossplane reconciles approved infrastructure-product claims; it does not migrate business data, rewrite legacy applications, or decide when a legacy system may be retired.
 - Provider-specific implementations remain behind stable product contracts so the target environment can span AWS, Azure, GCP, or approved on-premises infrastructure without making a provider tool the consumer boundary.
 
@@ -483,7 +485,9 @@ The desired architecture makes the opposite true:
 
 ## Repository portfolio
 
-This repository is the public front door for a deliberately separated product system. The inventory below includes every repository that currently implements, operates, demonstrates, or retains acceptance evidence for this Infrastructure-as-a-Product program. Unrelated SAABOL Impact Venture repositories are outside this portfolio.
+This repository is the public front door for a deliberately separated product system. The inventory below includes every repository that currently implements, operates, demonstrates, or retains acceptance evidence for this Infrastructure-as-a-Product program. Other repositories in the publishing organization are outside this portfolio unless this inventory explicitly includes them.
+
+The current named product family is **IaaP Guard™**, **IaaP Forge™**, **IaaP Console™**, and **IaaP Assurance™**. The names are claimed by Larry Cureton; the GitHub organization is a publishing namespace, not a separately asserted owner. See the [trademark and naming notice](TRADEMARKS.md).
 
 ```mermaid
 flowchart TB
@@ -492,7 +496,9 @@ flowchart TB
   subgraph PRODUCTS["Supported product repositories"]
     GUARD["iaap-guard<br/>Public contracts, guidance, and assurance"]
     CORE["iaap-guard-core<br/>Private Guard engine and hosted runtime"]
-    FORGE["iaap-forge<br/>Internal product-building and lifecycle system"]
+    CONSOLE["iaap-console<br/>Private evidence and selection experience"]
+    FORGE["iaap-forge<br/>Private product-building and lifecycle system"]
+    ASSURANCE["iaap-assurance<br/>Private authority, custody, and assurance"]
   end
 
   subgraph POCS["Bounded reference POCs"]
@@ -508,8 +514,10 @@ flowchart TB
   end
 
   FRONT --> GUARD
-  FRONT --> FORGE
   GUARD --> CORE
+  GUARD --> CONSOLE
+  CONSOLE --> FORGE
+  FORGE --> ASSURANCE
   FORGE --> STORE
   FORGE --> SEED
   FORGE --> FOUNDATION
@@ -529,8 +537,7 @@ flowchart TB
 
   class FRONT front
   class GUARD public
-  class CORE private
-  class FORGE internal
+  class CORE,CONSOLE,FORGE,ASSURANCE private
   class STORE,SEED,FOUNDATION,COMPOSITE,INTEGRATION poc
   class ADOPTER archived
   linkStyle default stroke:#7DD3FC,stroke-width:2px
@@ -541,25 +548,27 @@ flowchart TB
 | Repository | Visibility / status | Responsibility |
 |---|---|---|
 | **This repository** | Public · active | Thesis, architecture, decisions, operating model, evidence baseline, investment framing, and proven-revision reconciliation. |
-| [`iaap-guard`](https://github.com/SAABOLImpactVenture/iaap-guard) | Public · active | IaaP Guard product, adoption, interface, schema, support, security, and sanitized assurance surface. The former public Action is retired. |
-| [`iaap-guard-core`](https://github.com/SAABOLImpactVenture/iaap-guard-core) | Private · active | Protected deterministic engine, rules, GitHub App runtime, deployment assets, internal fixtures, tests, and operational evidence. The link is visible only to authorized collaborators. |
-| [`iaap-forge`](https://github.com/SAABOLImpactVenture/iaap-forge) | Internal · active | Guard consumption, bounded Composite AI, stable product contracts, GitHub governance, Crossplane lifecycle, evidence, and product outcomes. |
+| [`iaap-guard`](https://github.com/InfrastructureProductWorks/iaap-guard) | Public · active | IaaP Guard product, adoption, interface, schema, support, security, and sanitized assurance surface. The former public Action is retired. |
+| [`iaap-guard-core`](https://github.com/InfrastructureProductWorks/iaap-guard-core) | Private · active | Protected deterministic engine, rules, GitHub App runtime, deployment assets, internal fixtures, tests, and operational evidence. The link is visible only to authorized collaborators. |
+| [`iaap-console`](https://github.com/InfrastructureProductWorks/iaap-console) | Private · active | Customer-hosted evidence, review, selection, and traceability experience. The link is visible only to authorized collaborators. |
+| [`iaap-forge`](https://github.com/InfrastructureProductWorks/iaap-forge) | Private · active | Guard consumption, bounded Composite AI, stable product contracts, GitHub governance, Crossplane lifecycle, evidence, and product outcomes. The link is visible only to authorized collaborators. |
+| [`iaap-assurance`](https://github.com/InfrastructureProductWorks/iaap-assurance) | Private · active | Authority, protected-data custody, safeguard continuity, and continuous assurance within explicitly accepted bounds. The link is visible only to authorized collaborators. |
 
 ### Bounded reference POCs
 
 | Repository | Visibility / status | Responsibility |
 |---|---|---|
-| [`backstage-infrastructure-product-storefront-poc`](https://github.com/SAABOLImpactVenture/backstage-infrastructure-product-storefront-poc) | Internal · active | Optional developer storefront for browse, configure, order, and track. It has no provisioning authority. |
-| [`crossplane-multicloud-seed-poc`](https://github.com/SAABOLImpactVenture/crossplane-multicloud-seed-poc) | Internal · active | Minimal trusted Crossplane seed and control-plane bootstrap boundary. |
-| [`multicloud-foundation-product-poc`](https://github.com/SAABOLImpactVenture/multicloud-foundation-product-poc) | Internal · active | Stable `CloudFoundationEnvironment` product API and cloud-specific implementations. |
-| [`composite-ai-infrastructure-product-poc`](https://github.com/SAABOLImpactVenture/composite-ai-infrastructure-product-poc) | Internal · active | Bounded request, review, operations, and evidence agents without autonomous execution authority. |
-| [`multicloud-foundation-poc-integration`](https://github.com/SAABOLImpactVenture/multicloud-foundation-poc-integration) | Internal · active | Credential-free integrated acceptance and evidence harness, including the storefront handoff and retained managed-interconnect safety proof. |
+| [`backstage-infrastructure-product-storefront-poc`](https://github.com/InfrastructureProductWorks/backstage-infrastructure-product-storefront-poc) | Internal · active | Optional developer storefront for browse, configure, order, and track. It has no provisioning authority. |
+| [`crossplane-multicloud-seed-poc`](https://github.com/InfrastructureProductWorks/crossplane-multicloud-seed-poc) | Internal · active | Minimal trusted Crossplane seed and control-plane bootstrap boundary. |
+| [`multicloud-foundation-product-poc`](https://github.com/InfrastructureProductWorks/multicloud-foundation-product-poc) | Internal · active | Stable `CloudFoundationEnvironment` product API and cloud-specific implementations. |
+| [`composite-ai-infrastructure-product-poc`](https://github.com/InfrastructureProductWorks/composite-ai-infrastructure-product-poc) | Internal · active | Bounded request, review, operations, and evidence agents without autonomous execution authority. |
+| [`multicloud-foundation-poc-integration`](https://github.com/InfrastructureProductWorks/multicloud-foundation-poc-integration) | Internal · active | Credential-free integrated acceptance and evidence harness, including the storefront handoff and retained managed-interconnect safety proof. |
 
 ### Retained validation repository
 
 | Repository | Visibility / status | Responsibility |
 |---|---|---|
-| [`iaap-guard-adopter-validation`](https://github.com/SAABOLImpactVenture/iaap-guard-adopter-validation) | Public · archived | Retained clean-adopter validation evidence. It is not a supported runtime, distribution, or active development repository. |
+| [`iaap-guard-adopter-validation`](https://github.com/InfrastructureProductWorks/iaap-guard-adopter-validation) | Public · archived | Retained clean-adopter validation evidence. It is not a supported runtime, distribution, or active development repository. |
 
 See [POC Portfolio](docs/poc-portfolio.md) for the implementation boundaries and pinned evidence relationships.
 
@@ -693,7 +702,7 @@ flowchart LR
   G5 --> G6[HCP Terraform Free proxy]
   G6 --> G7[Phase 20 architecture reconciliation]
   G7 --> G8[Accepted synthetic release chain]
-  G8 --> G9[Vanguard Gate 6 custody]
+  G8 --> G9[IaaP Assurance Gate 6]
   G9 --> G10[Managed interconnect synthetic proof]
   G10 --> G11[Detached selection evidence]
   G11 --> G12[Production pilot]
@@ -705,7 +714,7 @@ flowchart LR
   linkStyle default stroke:#7DD3FC,stroke-width:2px
 ```
 
-The storefront-to-product flow, Forge credential-free successor phases, bounded AWS/Azure/GCP live-cloud validations, Vertex AI synthetic model-adapter validation, HCP Terraform Free proxy comparison, Phase 20 public architecture reconciliation, accepted synthetic release chain, Vanguard Gate 6 custody reference, bounded managed-interconnect proof, and detached selection-evidence proof are complete with retained sanitized evidence. Terraform Enterprise remains unvalidated and is not required for the demonstrated product path. A production pilot remains a future gate requiring separate authority, cost, security, support, recovery, SLO, and evidence approvals.
+The storefront-to-product flow, Forge credential-free successor phases, bounded AWS/Azure/GCP live-cloud validations, Vertex AI synthetic model-adapter validation, HCP Terraform Free proxy comparison, Phase 20 public architecture reconciliation, accepted synthetic release chain, IaaP Assurance Gate 6 custody reference, bounded managed-interconnect proof, and detached selection-evidence proof are complete with retained sanitized evidence. Terraform Enterprise remains unvalidated and is not required for the demonstrated product path. A production pilot remains a future gate requiring separate authority, cost, security, support, recovery, SLO, and evidence approvals.
 
 ---
 
@@ -714,6 +723,7 @@ The storefront-to-product flow, Forge credential-free successor phases, bounded 
 ```text
 .
 ├── README.md
+├── TRADEMARKS.md
 ├── docs/
 │   ├── THESIS.md
 │   ├── architecture/product-control-plane.md
@@ -735,3 +745,10 @@ The bounded implementation repositories contain the runtime and experience code.
 ## License
 
 Apache License 2.0. See [LICENSE](LICENSE).
+
+## Trademarks
+
+The current product and publishing names are covered by the
+[trademark and naming notice](TRADEMARKS.md). The ™ symbol denotes claimed
+unregistered marks; this repository does not use ® or claim federal
+registration.
