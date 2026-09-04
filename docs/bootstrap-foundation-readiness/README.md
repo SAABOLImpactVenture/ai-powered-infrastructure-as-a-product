@@ -346,7 +346,7 @@ production approval.
 ## Relationship to existing decisions
 
 This package implements the documentation decision recorded by
-[ADR-0006: Bootstrap and Foundation Readiness](https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/blob/main/adr/ADR-0006-bootstrap-foundation-readiness.md).
+[ADR-0006: Bootstrap and Foundation Readiness](https://github.com/InfrastructureProductWorks/ai-powered-infrastructure-as-a-product/blob/main/adr/ADR-0006-bootstrap-foundation-readiness.md).
 It remains subordinate to the established product-contract, Crossplane,
 bounded-AI, TFE-optionality, supersession, and public publication boundaries.
 

@@ -4,7 +4,7 @@
 
 This Privacy Policy describes how the current **IaaP Guard public beta** processes information when the IaaP Guard GitHub App is installed on a GitHub account or organization and evaluates pull requests.
 
-IaaP Guard is operated through the `SAABOLImpactVenture` GitHub organization. The current beta is intentionally narrow: it evaluates repository architecture/evidence using deterministic rules and publishes an `IaaP Guard / Architecture` Check in GitHub.
+IaaP Guard is operated through the `InfrastructureProductWorks` GitHub organization. The current beta is intentionally narrow: it evaluates repository architecture/evidence using deterministic rules and publishes an `IaaP Guard / Architecture` Check in GitHub.
 
 ## 1. Information IaaP Guard processes
 
@@ -114,7 +114,7 @@ After uninstalling the App, IaaP Guard can no longer use that installation to ob
 
 For non-sensitive product questions or beta feedback, use the public feedback thread:
 
-https://github.com/SAABOLImpactVenture/ai-powered-infrastructure-as-a-product/issues/111
+https://github.com/InfrastructureProductWorks/ai-powered-infrastructure-as-a-product/issues/111
 
 **Do not post sensitive personal information, private repository content, credentials, or confidential architecture in a public GitHub issue.**
 
