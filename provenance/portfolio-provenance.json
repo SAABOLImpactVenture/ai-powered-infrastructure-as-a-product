@@ -96,7 +96,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "1bcb0e726b614425596a73c5f8d821cb788fe6dafa2f920a7e3b8db49ceca341"
+      "sha256": "d37e3fb64168d8577199151f8e1fdf0e55b148f55befe08cf8bff51cb886b62c"
     },
     {
       "path": "docs/PORTFOLIO-PROVENANCE.md",
@@ -130,6 +130,6 @@
   "integrity": {
     "algorithm": "sha256",
     "canonicalization": "python-json-sort-keys-v1",
-    "digest": "7c90ba69c8c63ae612679cef084fa28034c0dfb0b61e71010be5ccbc11f05f91"
+    "digest": "b6906c469a8c40f5eff45c958a402a5bdd85b37ffb450f738d61ac280ab3a656"
   }
 }
